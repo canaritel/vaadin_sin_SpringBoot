@@ -14,7 +14,7 @@ If you want to run your app locally in the production mode, run `mvn jetty:run -
 
 ### No uso Spring Boot
 
-Para simplificar en la mayor medida el despliegue de esta aplicación no hemos añadido Spring Boot.
+Para simplificar en la mayor medida el despliegue de esta aplicación no he añadido Spring Boot.
 Unicamente es necesario un servidor Tomcat.
 
 
