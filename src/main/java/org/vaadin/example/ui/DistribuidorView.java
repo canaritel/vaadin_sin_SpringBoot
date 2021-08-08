@@ -10,41 +10,39 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import java.text.SimpleDateFormat;
-import org.vaadin.example.entities.Juego;
-import org.vaadin.example.services.JuegoService;
+import org.vaadin.example.entities.Distribuye;
+import org.vaadin.example.services.DistribuyeService;
 
-@Route(value = "juegos", layout = MainLayout.class)
-@PageTitle("Juegos | Vaadin CRM")
+@Route(value = "distribuidores", layout = MainLayout.class)
+@PageTitle("Distribuidores | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class JuegoView extends VerticalLayout {
+public class DistribuidorView extends VerticalLayout {
 
-    private JuegoService juegoService;
+    private DistribuyeService distribuyeService;
 
-    private final Grid<Juego> grid = new Grid(Juego.class);  //creamos grid de tipo usuario, similar a una tabla
+    private final Grid<Distribuye> grid = new Grid(Distribuye.class);  //creamos grid de tipo distribuye, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactForm form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private final ContactFormDistribuye form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-    public JuegoView() {
-        if (juegoService == null) {
-            juegoService = new JuegoService();
+    public DistribuidorView() {
+        if (distribuyeService == null) {
+            distribuyeService = new DistribuyeService();
         }
 
         //Le da al componente un nombre de clase CSS
-        addClassName("juego-view");  //nombre del componente CSS
+        addClassName("distribuye-view");  //nombre del componente CSS
         setSizeFull();
         configureGrid();
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactForm();
-        //form.addListener(ContactForm.SaveEvent.class, this::saveContact);
-        //form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
-        //form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());
+        form = new ContactFormDistribuye();
 
-        //Crea un Div que envuelve el grid el form, le da un nombre de clase CSS y lo convierte en tamaño completo
+        form.addListener(ContactFormDistribuye.SaveEvent.class, this::saveContact);
+        form.addListener(ContactFormDistribuye.DeleteEvent.class, this::deleteContact);
+        form.addListener(ContactFormDistribuye.CloseEvent.class, e -> closeEditor());
+
+        //Crea un Div que envuelve el grid el formDis, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
         content.addClassName("content");
         content.setSizeFull();
@@ -59,26 +57,23 @@ public class JuegoView extends VerticalLayout {
         grid.addClassName("contact-grid"); //añadimos la clase al grid
         grid.setSizeFull(); //ocupamos todo el espacio
         //mostramos las columnas con una función de mostrar listar
-        grid.setItems(juegoService.listar("")); //sin orden al colocarse
+        grid.setItems(distribuyeService.listar("")); //sin orden al colocarse
         grid.removeAllColumns();
+        //grid.removeColumnByKey("idDistribuidor");
+        //grid.removeColumnByKey("direccion");
+        //grid.removeColumnByKey("ciudad");
+        //grid.removeColumnByKey("pais");
 
         //añadimos las columna y ponemos nombre a cada columna
-        grid.addColumn("titulo").setHeader("TÍTULO");
-        grid.addColumn("sistemaOperativo").setHeader("S.O.");
-        //grid.addColumn("fechaJuego").setHeader("Fecha");
-        grid.addColumn(bean -> formatter.format(bean.getFechaJuego()))
-                .setHeader("FECHA").setSortable(true);
-        grid.addColumn("precio").setHeader("PRECIO");
-        grid.addColumn(e -> e.getDistribuidor().getIdDistribuidor())
-                .setHeader("DISTRIBUIDOR").setSortable(true);
-        grid.addColumn(e -> e.getUsuario().getNombre()).
-                setHeader("USUARIO").setSortable(true);
+        grid.addColumn("idDistribuidor").setHeader("DISTRIBUIDOR");
+        grid.addColumn("direccion").setHeader("DIRECCIÓN");
+        grid.addColumn("ciudad").setHeader("CIUDAD");
+        grid.addColumn("pais").setHeader("PAÍS");
 
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro
         grid.asSingleSelect().addValueChangeListener(evt -> editContact(evt.getValue()));
-
     }
 
     private void configureFilter() {
@@ -90,7 +85,7 @@ public class JuegoView extends VerticalLayout {
     }
 
     private HorizontalLayout getToolBar() {
-        Button button = new Button("Añadir juego", click -> addContact());
+        Button button = new Button("Añadir distribuidor", click -> addContact());
         add(button);
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, button);
@@ -98,35 +93,40 @@ public class JuegoView extends VerticalLayout {
         return toolbar;
     }
 
-    private void saveContact(ContactForm.SaveEvent evt) {
-        if (evt.getContact().getIdUsuario() == null) {
-            //     juegoService.insertar(evt.getContact());
+    private void saveContact(ContactFormDistribuye.SaveEvent evt) {
+        String id = evt.getContact().getIdDistribuidor();
+
+        if (distribuyeService.existe(id)) {
+            distribuyeService.actualizar(evt.getContact());
         } else {
-            //     usuarioService.actualizar(evt.getContact());
+            distribuyeService.insertar(evt.getContact());
         }
         updateList();
         closeEditor();
     }
 
-    private void deleteContact(ContactForm.DeleteEvent evt) {
-        //juegoService.eliminar(evt.getContact());
+    private void deleteContact(ContactFormDistribuye.DeleteEvent evt) {
+        distribuyeService.eliminar(evt.getContact());
         updateList();
         closeEditor();
+
     }
 
-    private void editContact(Juego juego) {
-        if (juego == null) {
+    private void editContact(Distribuye distribuye) {
+        if (distribuye == null) {
             closeEditor();
         } else {
-            //form.setContact(juego);
+            form.setContact(distribuye);
             form.setVisible(true);
             addClassName("editing");
         }
+        form.EncenderCampo(false);
     }
 
     private void addContact() {
         grid.asSingleSelect().clear();
-        editContact(new Juego());
+        editContact(new Distribuye());
+        form.EncenderCampo(true);
     }
 
     private void closeEditor() {
@@ -137,7 +137,7 @@ public class JuegoView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(juegoService.listar(filterText.getValue()));
+        grid.setItems(distribuyeService.listar(filterText.getValue()));
     }
 
 }

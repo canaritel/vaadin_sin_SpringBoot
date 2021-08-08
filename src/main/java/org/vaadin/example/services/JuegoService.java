@@ -1,21 +1,21 @@
 package org.vaadin.example.services;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.vaadin.example.entities.Juego;
-import org.vaadin.example.interfaces.CrudDAOInterface;
-import org.vaadin.example.repositories.JuegoJpaController1;
+import org.vaadin.example.repositories.JuegoJpaRepository;
+import org.vaadin.example.interfaces.CrudInterface;
 
-public class JuegoService implements CrudDAOInterface<Juego> {
+public class JuegoService implements CrudInterface<Juego> {
 
-    private final JuegoJpaController1 juegoJpa = new JuegoJpaController1();
+    private final JuegoJpaRepository juegoRepository = new JuegoJpaRepository();
     private List<Juego> juegoList;
+    String respuesta = "";
 
     @Override
     public List<Juego> listar(String texto) {
-        juegoList = juegoJpa.findJuegoEntities();
+        juegoList = juegoRepository.findJuegoEntities();
         return juegoList;
     }
 
@@ -31,11 +31,6 @@ public class JuegoService implements CrudDAOInterface<Juego> {
 
     @Override
     public void eliminar(Juego obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean existe(Juego obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

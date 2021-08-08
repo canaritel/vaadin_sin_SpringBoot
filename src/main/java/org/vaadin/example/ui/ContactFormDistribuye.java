@@ -6,63 +6,47 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import org.vaadin.example.entities.Usuario;
+import org.vaadin.example.entities.Distribuye;
 
-public class ContactForm extends FormLayout {
+public class ContactFormDistribuye extends FormLayout {
 
     private final TextField textNombre = new TextField("Nombre");
-    private final TextField textApellidos = new TextField("Apellidos");
-    //private final TextField numberEdad = new TextField("Edad");
-    private final IntegerField numberEdad = new IntegerField("Edad");
-    private final TextField textTelefono = new TextField("Teléfono");
-    private final ComboBox<String> estadoCombo = new ComboBox("Activo");
+    private final TextField textDireccion = new TextField("Dirección");
+    private final TextField textCiudad = new TextField("Ciudad");
+    private final TextField textPais = new TextField("País");
 
     private final Button save = new Button("Grabar");
     private final Button delete = new Button("Eliminar");
     private final Button close = new Button("Cancelar");
+    
+    private final Binder<Distribuye> binder = new Binder<>(Distribuye.class);
 
-    private final Usuario usuario = new Usuario();
-
-    private final Binder<Usuario> binder = new Binder<>(Usuario.class);
-
-    public ContactForm() {
+    public ContactFormDistribuye() {
         addClassName("contact-form");
 
         VerticalLayout layout = new VerticalLayout(); //creo componente de línea vertical
 
-        numberEdad.setValue(20);
-        numberEdad.setHasControls(true);
-        numberEdad.setMin(1);
-        numberEdad.setMax(110);
+        binder.bind(textNombre, Distribuye::getIdDistribuidor, Distribuye::setIdDistribuidor);
+        binder.bind(textDireccion, Distribuye::getDireccion, Distribuye::setDireccion);
+        binder.bind(textCiudad, Distribuye::getCiudad, Distribuye::setCiudad);
+        binder.bind(textPais, Distribuye::getPais, Distribuye::setPais);
 
-        binder.bind(textNombre, Usuario::getNombre, Usuario::setNombre);
-        binder.bind(textApellidos, Usuario::getApellidos, Usuario::setApellidos);
-        //binder.forField(numberEdad).withConverter(Integer::valueOf, String::valueOf).bind(Usuario::getEdad, Usuario::setEdad);
-        binder.forField(numberEdad).withConverter(Integer::valueOf, Integer::valueOf).bind(Usuario::getEdad, Usuario::setEdad);
-        binder.bind(textTelefono, Usuario::getTelefono, Usuario::setTelefono);
-        binder.forField(estadoCombo).withConverter(Boolean::valueOf, String::valueOf).bind(Usuario::getActivo, Usuario::setActivo);
-
-        //creo valores para el comboBox
-        estadoCombo.setItems("true", "false");
-
-        //estadoCombo.setValue("SI");
+        textNombre.setEnabled(false);
         //añado los componentes a la vista
-        add(textNombre, textApellidos, numberEdad, textTelefono, estadoCombo);
+        add(textNombre, textDireccion, textCiudad, textPais);
         add(layout); //añado la línea verticaly así poner los botones debajo
         add(createButtonsLayout());
     }
 
-    public void setContact(Usuario usuario) {
-        binder.setBean(usuario);
+    public void setContact(Distribuye distribuye) {
+        binder.setBean(distribuye);
 
     }
 
@@ -91,43 +75,39 @@ public class ContactForm extends FormLayout {
             Notification.show("Error en la validación");
         }
     }
-    
-    private void cerrando(){
-        
-    }
 
     // Eventos declarados en la misma clase
-    public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
+    public static abstract class ContactFormEvent extends ComponentEvent<ContactFormDistribuye> {
 
-        private final Usuario usuario;
+        private final Distribuye distribuye;
 
-        public ContactFormEvent(ContactForm source, Usuario usuario) {
+        public ContactFormEvent(ContactFormDistribuye source, Distribuye distribuye) {
             super(source, false);
-            this.usuario = usuario;
+            this.distribuye = distribuye;
         }
 
-        public Usuario getContact() {
-            return usuario;
+        public Distribuye getContact() {
+            return distribuye;
         }
     }
 
     public static class SaveEvent extends ContactFormEvent {
 
-        SaveEvent(ContactForm source, Usuario usuario) {
-            super(source, usuario);
+        SaveEvent(ContactFormDistribuye source, Distribuye distribuye) {
+            super(source, distribuye);
         }
     }
 
     public static class DeleteEvent extends ContactFormEvent {
 
-        DeleteEvent(ContactForm source, Usuario usuario) {
-            super(source, usuario);
+        DeleteEvent(ContactFormDistribuye source, Distribuye distribuye) {
+            super(source, distribuye);
         }
     }
 
     public static class CloseEvent extends ContactFormEvent {
 
-        CloseEvent(ContactForm source) {
+        CloseEvent(ContactFormDistribuye source) {
             super(source, null);
         }
     }
@@ -136,4 +116,7 @@ public class ContactForm extends FormLayout {
         return getEventBus().addListener(eventType, listener);
     }
 
+    public void EncenderCampo (boolean valor){
+        textNombre.setEnabled(valor);
+    }
 }

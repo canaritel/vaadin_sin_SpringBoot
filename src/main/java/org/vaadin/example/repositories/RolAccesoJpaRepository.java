@@ -15,9 +15,9 @@ import org.vaadin.example.repositories.exceptions.NonexistentEntityException;
  *
  * @author telev
  */
-public class RolAccesoJpaController1 implements Serializable {
+public class RolAccesoJpaRepository implements Serializable {
 
-    public RolAccesoJpaController1(EntityManagerFactory emf) {
+    public RolAccesoJpaRepository(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;

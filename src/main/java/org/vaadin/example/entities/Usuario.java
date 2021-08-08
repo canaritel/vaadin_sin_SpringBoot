@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.vaadin.example.interfaces.ClonarClase;
 
 @Entity
 @Table(name = "usuario")
@@ -27,7 +26,7 @@ import org.vaadin.example.interfaces.ClonarClase;
     @NamedQuery(name = "Usuario.findByApellidos", query = "SELECT u FROM Usuario u WHERE u.apellidos = :apellidos"),
     @NamedQuery(name = "Usuario.findByEdad", query = "SELECT u FROM Usuario u WHERE u.edad = :edad"),
     @NamedQuery(name = "Usuario.findByTelefono", query = "SELECT u FROM Usuario u WHERE u.telefono = :telefono")})
-public class Usuario implements ClonarClase, Serializable {
+public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -160,17 +159,7 @@ public class Usuario implements ClonarClase, Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "idUsuario=" + idUsuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", edad=" + edad + ", telefono=" + telefono + ", juegoList=" + juegoList + '}';
-    }
-
-    @Override
-    public ClonarClase clonar() {
-        Usuario usuario = null;
-        try {
-            usuario = (Usuario) clone();
-        } catch (CloneNotSupportedException e) {
-        }
-        return usuario;
+        return "Usuario{" + "idUsuario=" + idUsuario + '}';
     }
 
 }

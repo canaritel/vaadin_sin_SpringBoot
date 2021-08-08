@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.vaadin.example.entities;
 
 import java.io.Serializable;
@@ -25,10 +20,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- *
- * @author telev
- */
 @Entity
 @Table(name = "juego")
 @NamedQueries({
@@ -46,32 +37,39 @@ public class Juego implements Serializable {
     @Basic(optional = false)
     @Column(name = "idJuego")
     private Integer idJuego;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "titulo")
     private String titulo;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "sistema_operativo")
     private String sistemaOperativo;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_juego")
     @Temporal(TemporalType.DATE)
     private Date fechaJuego;
+    
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "precio")
     private BigDecimal precio;
+    
     @Lob
     @Column(name = "imagen")
     private byte[] imagen;
+    
     @JoinColumn(name = "distribuidor", referencedColumnName = "idDistribuidor")
     @ManyToOne(optional = false)
     private Distribuye distribuidor;
+    
     @JoinColumn(name = "usuario", referencedColumnName = "idUsuario")
     @ManyToOne(optional = false)
     private Usuario usuario;
@@ -179,5 +177,5 @@ public class Juego implements Serializable {
     public String toString() {
         return "org.vaadin.example.backend.entity.Juego[ idJuego=" + idJuego + " ]";
     }
-    
+
 }

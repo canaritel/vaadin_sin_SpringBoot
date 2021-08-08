@@ -12,9 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-import org.vaadin.example.entities.Usuario;
+import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.repositories.exceptions.IllegalOrphanException;
 import org.vaadin.example.repositories.exceptions.NonexistentEntityException;
+import org.vaadin.example.repositories.exceptions.PreexistingEntityException;
 
 /**
  *
@@ -25,13 +26,13 @@ import org.vaadin.example.repositories.exceptions.NonexistentEntityException;
  * https://youtu.be/osdl2--KRyc
  *
  */
-public class UsuarioJpaController1 implements Serializable {
+public class DistribuyeJpaRepository implements Serializable {
 
     //Creamos constructor vacío
-    public UsuarioJpaController1() {
+    public DistribuyeJpaRepository() {
     }
 
-    public UsuarioJpaController1(EntityManagerFactory emf) {
+    public DistribuyeJpaRepository(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
@@ -42,31 +43,36 @@ public class UsuarioJpaController1 implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuario usuario) {
-        if (usuario.getJuegoList() == null) {
-            usuario.setJuegoList(new ArrayList<Juego>());
+    public void create(Distribuye distribuye) throws PreexistingEntityException, Exception {
+        if (distribuye.getJuegoList() == null) {
+            distribuye.setJuegoList(new ArrayList<Juego>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             List<Juego> attachedJuegoList = new ArrayList<Juego>();
-            for (Juego juegoListJuegoToAttach : usuario.getJuegoList()) {
+            for (Juego juegoListJuegoToAttach : distribuye.getJuegoList()) {
                 juegoListJuegoToAttach = em.getReference(juegoListJuegoToAttach.getClass(), juegoListJuegoToAttach.getIdJuego());
                 attachedJuegoList.add(juegoListJuegoToAttach);
             }
-            usuario.setJuegoList(attachedJuegoList);
-            em.persist(usuario);
-            for (Juego juegoListJuego : usuario.getJuegoList()) {
-                Usuario oldUsuarioOfJuegoListJuego = juegoListJuego.getUsuario();
-                juegoListJuego.setUsuario(usuario);
+            distribuye.setJuegoList(attachedJuegoList);
+            em.persist(distribuye);
+            for (Juego juegoListJuego : distribuye.getJuegoList()) {
+                Distribuye oldDistribuidorOfJuegoListJuego = juegoListJuego.getDistribuidor();
+                juegoListJuego.setDistribuidor(distribuye);
                 juegoListJuego = em.merge(juegoListJuego);
-                if (oldUsuarioOfJuegoListJuego != null) {
-                    oldUsuarioOfJuegoListJuego.getJuegoList().remove(juegoListJuego);
-                    oldUsuarioOfJuegoListJuego = em.merge(oldUsuarioOfJuegoListJuego);
+                if (oldDistribuidorOfJuegoListJuego != null) {
+                    oldDistribuidorOfJuegoListJuego.getJuegoList().remove(juegoListJuego);
+                    oldDistribuidorOfJuegoListJuego = em.merge(oldDistribuidorOfJuegoListJuego);
                 }
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findDistribuye(distribuye.getIdDistribuidor()) != null) {
+                throw new PreexistingEntityException("Distribuye " + distribuye + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -74,20 +80,20 @@ public class UsuarioJpaController1 implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Distribuye distribuye) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             //añadimos las columnas de la parte inferior
-            Integer id = usuario.getIdUsuario();
-            if (findUsuario(id) == null) {
+            String id = distribuye.getIdDistribuidor();
+            if (findDistribuye(id) == null) {
                 throw new NonexistentEntityException("El id " + id + " no existe.");
             } else { //añadimos y creamos la condición si existe el ID
 
-                Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
-                List<Juego> juegoListOld = persistentUsuario.getJuegoList();
-                List<Juego> juegoListNew = usuario.getJuegoList();
+                Distribuye persistentDistribuye = em.find(Distribuye.class, distribuye.getIdDistribuidor());
+                List<Juego> juegoListOld = persistentDistribuye.getJuegoList();
+                List<Juego> juegoListNew = distribuye.getJuegoList();
                 List<String> illegalOrphanMessages = null;
                 for (Juego juegoListOldJuego : juegoListOld) {
                     if (!juegoListNew.contains(juegoListOldJuego)) {
@@ -106,16 +112,16 @@ public class UsuarioJpaController1 implements Serializable {
                     attachedJuegoListNew.add(juegoListNewJuegoToAttach);
                 }
                 juegoListNew = attachedJuegoListNew;
-                usuario.setJuegoList(juegoListNew);
-                usuario = em.merge(usuario);
+                distribuye.setJuegoList(juegoListNew);
+                distribuye = em.merge(distribuye);
                 for (Juego juegoListNewJuego : juegoListNew) {
                     if (!juegoListOld.contains(juegoListNewJuego)) {
-                        Usuario oldUsuarioOfJuegoListNewJuego = juegoListNewJuego.getUsuario();
-                        juegoListNewJuego.setUsuario(usuario);
+                        Distribuye oldDistribuidorOfJuegoListNewJuego = juegoListNewJuego.getDistribuidor();
+                        juegoListNewJuego.setDistribuidor(distribuye);
                         juegoListNewJuego = em.merge(juegoListNewJuego);
-                        if (oldUsuarioOfJuegoListNewJuego != null && !oldUsuarioOfJuegoListNewJuego.equals(usuario)) {
-                            oldUsuarioOfJuegoListNewJuego.getJuegoList().remove(juegoListNewJuego);
-                            oldUsuarioOfJuegoListNewJuego = em.merge(oldUsuarioOfJuegoListNewJuego);
+                        if (oldDistribuidorOfJuegoListNewJuego != null && !oldDistribuidorOfJuegoListNewJuego.equals(distribuye)) {
+                            oldDistribuidorOfJuegoListNewJuego.getJuegoList().remove(juegoListNewJuego);
+                            oldDistribuidorOfJuegoListNewJuego = em.merge(oldDistribuidorOfJuegoListNewJuego);
                         }
                     }
                 }
@@ -124,13 +130,13 @@ public class UsuarioJpaController1 implements Serializable {
         } catch (Exception ex) {
             // String msg = ex.getLocalizedMessage();
             // if (msg == null || msg.length() == 0) {
-            /*  
-            //Estas líneas de abajo las pasamos arriba
-            Integer id = usuario.getIdUsuario();
-            if (findUsuario(id) == null) {
-                throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
-            } */
 
+            // Estas líneas de abajo las pasamos arriba
+            //    String id = distribuye.getIdDistribuidor();
+            //    if (findDistribuye(id) == null) {
+            //        throw new NonexistentEntityException("The distribuye with id " + id + " no longer exists.");
+            //    }
+            // }
             throw ex;
         } finally {
             if (em != null) {
@@ -139,31 +145,30 @@ public class UsuarioJpaController1 implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Usuario usuario;
+            Distribuye distribuye;
             try {
-                usuario = em.getReference(Usuario.class,
-                                          id);
-                usuario.getIdUsuario();
+                distribuye = em.getReference(Distribuye.class, id);
+                distribuye.getIdDistribuidor();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("El usuario con id " + id + " no existe.", enfe);
+                throw new NonexistentEntityException("El distribuidor con id " + id + " no existe.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Juego> juegoListOrphanCheck = usuario.getJuegoList();
+            List<Juego> juegoListOrphanCheck = distribuye.getJuegoList();
             for (Juego juegoListOrphanCheckJuego : juegoListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("El Usuario con id " + id + " no puede ser eliminado dado que está siendo referenciado en la tabla Juego " + juegoListOrphanCheckJuego);
+                illegalOrphanMessages.add("El Distribuidor con id " + id + " no puede ser eliminado dado que está siendo referenciado en la tabla Juego " + juegoListOrphanCheckJuego);
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            em.remove(usuario);
+            em.remove(distribuye);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -172,20 +177,19 @@ public class UsuarioJpaController1 implements Serializable {
         }
     }
 
-    public List<Usuario> findUsuarioEntities() {
-        return findUsuarioEntities(true, -1, -1);
+    public List<Distribuye> findDistribuyeEntities() {
+        return findDistribuyeEntities(true, -1, -1);
     }
 
-    public List<Usuario> findUsuarioEntities(int maxResults, int firstResult) {
-        return findUsuarioEntities(false, maxResults, firstResult);
+    public List<Distribuye> findDistribuyeEntities(int maxResults, int firstResult) {
+        return findDistribuyeEntities(false, maxResults, firstResult);
     }
 
-    private List<Usuario> findUsuarioEntities(boolean all, int maxResults, int firstResult) {
+    private List<Distribuye> findDistribuyeEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Usuario.class
-            ));
+            cq.select(cq.from(Distribuye.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -197,20 +201,20 @@ public class UsuarioJpaController1 implements Serializable {
         }
     }
 
-    public Usuario findUsuario(Integer id) {
+    public Distribuye findDistribuye(String id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Usuario.class, id);
+            return em.find(Distribuye.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getUsuarioCount() {
+    public int getDistribuyeCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Usuario> rt = cq.from(Usuario.class);
+            Root<Distribuye> rt = cq.from(Distribuye.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -219,32 +223,28 @@ public class UsuarioJpaController1 implements Serializable {
         }
     }
 
-    public List<Usuario> ListUsuarioByFilter(String filtra) {
+    public List<Distribuye> ListDistribuyeByFilter(String filtra) {
         filtra = filtra.toUpperCase();
 
-        String QUERY = "SELECT u FROM Usuario u WHERE u.nombre LIKE :nombre OR u.apellidos LIKE :apellidos"
-                + " OR u.telefono LIKE :telefono OR u.edad LIKE :edad";
+        String QUERY = "SELECT d FROM Distribuye d WHERE d.idDistribuidor LIKE :idDistribuidor OR d.direccion LIKE :direccion"
+                + " OR d.ciudad LIKE :ciudad OR d.pais LIKE :pais";
 
         EntityManager em = getEntityManager();
-        List<Usuario> usertmp = new ArrayList<>();
-        //boolean respuesta = false;
-        try {
-            //TypedQuery<Usuario> consultaAlumnos = em.createNamedQuery("Usuario.findByNombre", Usuario.class); //Cuando uso las QUERY creadas en la entidad
-            TypedQuery<Usuario> consulta = em.createQuery(QUERY, Usuario.class); //preparamos la consulta QUERY a realizar
-            consulta.setParameter("nombre", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
-            consulta.setParameter("apellidos", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
-            consulta.setParameter("edad", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
-            consulta.setParameter("telefono", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
-            usertmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+        List<Distribuye> distribuyetmp = new ArrayList<>();
 
-            //if (!usertmp.isEmpty()) {   //si el resultado es distinto de nulo es que no existe
-            //    respuesta = true;
-            //}
+        try {
+            TypedQuery<Distribuye> consulta = em.createQuery(QUERY, Distribuye.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("idDistribuidor", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
+            consulta.setParameter("direccion", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            consulta.setParameter("ciudad", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
+            consulta.setParameter("pais", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            distribuyetmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
         } catch (Exception e) {
         } finally {
             em.close();
         }
-        return usertmp;
+        return distribuyetmp;
     }
 
 }

@@ -23,13 +23,13 @@ import org.vaadin.example.repositories.exceptions.NonexistentEntityException;
  * https://youtu.be/osdl2--KRyc
  *
  */
-public class JuegoJpaController1 implements Serializable {
+public class JuegoJpaRepository implements Serializable {
 
     //Creamos constructor vacío
-    public JuegoJpaController1() {
+    public JuegoJpaRepository() {
     }
 
-    public JuegoJpaController1(EntityManagerFactory emf) {
+    public JuegoJpaRepository(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
