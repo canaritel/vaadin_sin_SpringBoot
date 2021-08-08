@@ -1,8 +1,10 @@
 package org.vaadin.example.ui;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -16,10 +18,24 @@ import com.vaadin.flow.router.RouterLink;
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class MainLayout extends AppLayout {
 
+    private Tabs menu;
+    private H2 viewTitle;
+
     public MainLayout() {
         createHeader();
         createDrawer(createTabs());
 
+        /*
+        // Use the drawer for the menu
+        setPrimarySection(Section.DRAWER);
+
+        // Make the nav bar a header
+        addToNavbar(true, createHeaderContent());
+
+        // Put the menu in the drawer
+        menu = createTabs();
+        addToDrawer(createDrawerContent(menu));
+         */
         // Ejemplo para aplicar en lectura de imágenes desde mi base datos ********************
         // byte[] imageBytes = getImageFromDB();
         // StreamResource resource = new StreamResource("fakeImageName.jpg", () -> new ByteArrayInputStream(imageBytes));
@@ -32,13 +48,71 @@ public class MainLayout extends AppLayout {
         Image img = new Image("images/logo.png", "Vaadin Televoip logo");
         img.setHeight("48px");
 
+        Image img2 = new Image("images/avatar_60px.png", "avatar");
+        img2.setHeight("48px");
+
         HorizontalLayout header = new HorizontalLayout();
         header.addClassName("header");
         header.add(new HorizontalLayout(new DrawerToggle(), img));
-        header.setWidth("100%");
+        //header.setWidth("100%");
+        header.setWidthFull();
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
-        addToNavbar(header);
+        HorizontalLayout header2 = new HorizontalLayout();
+        header2.add(new HorizontalLayout(img2));
+        header2.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+
+        addToNavbar(header, header2);
+    }
+
+    private Component createHeaderContent() {
+        HorizontalLayout layout = new HorizontalLayout();
+
+        // Configure styling for the header
+        layout.setId("header");
+        layout.getThemeList().set("light", true);
+        layout.setWidthFull();
+        layout.setSpacing(false);
+        layout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        // Have the drawer toggle button on the left
+        layout.add(new DrawerToggle());
+
+        // Placeholder for the title of the current view.
+        // The title will be set after navigation.
+        viewTitle = new H2("Hola");
+        layout.add(viewTitle);
+
+        // A user icon
+        layout.add(new Image("images/avatar_60px.png", "Avatar"));
+
+        return layout;
+    }
+
+    private Component createDrawerContent(Tabs menu) {
+        Image img = new Image("images/logo.png", "Vaadin Televoip logo");
+        img.setHeight("48px");
+
+        VerticalLayout layout = new VerticalLayout();
+
+        // Configure styling for the drawer
+        layout.setSizeFull();
+        layout.setPadding(false);
+        layout.setSpacing(false);
+        layout.getThemeList().set("spacing-s", true);
+        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
+        // Have a drawer header with an application logo
+        HorizontalLayout logoLayout = new HorizontalLayout();
+        logoLayout.setId("logo");
+        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        layout.add(img);
+
+        //logoLayout.add(new H1("My Project"));
+        // Display the logo and the menu in the drawer
+        layout.add(logoLayout, menu);
+        return layout;
     }
 
     private void createDrawer(Tabs tabs) {
