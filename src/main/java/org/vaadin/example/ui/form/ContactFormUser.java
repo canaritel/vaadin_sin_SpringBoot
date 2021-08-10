@@ -1,4 +1,4 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.form;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -19,7 +19,7 @@ import org.vaadin.example.entities.Usuario;
 // importamos una nueva función para comprobaciones numéricas en campos de texto
 import org.vaadin.textfieldformatter.phone.PhoneI18nFieldFormatter;
 
-public class ContactForm extends FormLayout {
+public class ContactFormUser extends FormLayout {
 
     private final TextField textNombre = new TextField("Nombre");
     private final TextField textApellidos = new TextField("Apellidos");
@@ -34,7 +34,7 @@ public class ContactForm extends FormLayout {
 
     private final Binder<Usuario> binder = new Binder<>(Usuario.class);
 
-    public ContactForm() {
+    public ContactFormUser() {
         addClassName("contact-form");
 
         VerticalLayout layout = new VerticalLayout(); //creo componente de línea vertical
@@ -111,26 +111,26 @@ public class ContactForm extends FormLayout {
     }
 
     private void validateAndClose() {
-        //no es necesario validad los campos para Cerrar
+        //no es necesario validar los campos para Cerrar
         //if (binder.isValid()) {
         fireEvent(new CloseEvent(this));
         // }
     }
 
     private void validateAndDelete() {
-        //no es necesario validad los campos para Eliminar
-        //if (binder.isValid()) {
+        //no es necesario validar los campos para Eliminar
+        //if (!binder.equals(null)) {
         fireEvent(new DeleteEvent(this, binder.getBean()));
-        // } 
+        // }
     }
 
     // Eventos declarados en la misma clase
     // Podremos de esta forma llamar a los métodos desde el método superior UsuarioView
-    public static abstract class ContactFormEvent extends ComponentEvent<ContactForm> {
+    public static abstract class ContactFormEvent extends ComponentEvent<ContactFormUser> {
 
         private final Usuario usuario;
 
-        public ContactFormEvent(ContactForm source, Usuario usuario) {
+        public ContactFormEvent(ContactFormUser source, Usuario usuario) {
             super(source, false);
             this.usuario = usuario;
         }
@@ -142,21 +142,21 @@ public class ContactForm extends FormLayout {
 
     public static class SaveEvent extends ContactFormEvent {
 
-        SaveEvent(ContactForm source, Usuario usuario) {
+        SaveEvent(ContactFormUser source, Usuario usuario) {
             super(source, usuario);
         }
     }
 
     public static class DeleteEvent extends ContactFormEvent {
 
-        DeleteEvent(ContactForm source, Usuario usuario) {
+        DeleteEvent(ContactFormUser source, Usuario usuario) {
             super(source, usuario);
         }
     }
 
     public static class CloseEvent extends ContactFormEvent {
 
-        CloseEvent(ContactForm source) {
+        CloseEvent(ContactFormUser source) {
             super(source, null);
         }
     }

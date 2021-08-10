@@ -1,5 +1,6 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.form;
 
+import org.vaadin.example.util.CountryList;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -33,12 +34,13 @@ public class ContactFormDistribuye extends FormLayout {
 
     public ContactFormDistribuye() {
         addClassName("contact-form");
-        List<String> departmentList = CountryList.listadoPaises();
+        // cargamos en paisesList el listado de países
+        List<String> paisestList = CountryList.listadoPaises();
 
         VerticalLayout layout = new VerticalLayout(); //creo componente de línea vertical
 
         // establecemos valores para el comboBox
-        comboBox.setItems(departmentList);
+        comboBox.setItems(paisestList);
         comboBox.setLabel("País");
         comboBox.setPlaceholder("Elija país o busque introduciendo el nombre del país");
 

@@ -44,6 +44,7 @@
     "@vaadin/vaadin-time-picker": "2.4.0",
     "@vaadin/vaadin-upload": "4.4.1",
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "cleave.js": "1.6.0",
     "construct-style-sheets-polyfill": "2.4.16",
     "lit-element": "2.5.1",
     "lit-html": "1.4.1"
@@ -115,6 +116,7 @@
       "@vaadin/vaadin-time-picker": "2.4.0",
       "@vaadin/vaadin-upload": "4.4.1",
       "@webcomponents/webcomponentsjs": "^2.2.10",
+      "cleave.js": "1.6.0",
       "construct-style-sheets-polyfill": "2.4.16",
       "lit-element": "2.5.1",
       "lit-html": "1.4.1"
@@ -138,6 +140,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "7821783dbe9f953d0cb772dbb63c27d2824689bc59bc683dff8c7cee4947fe8c"
+    "hash": "2f044c3a37dc8d9eac0bf31dca82d3c22050ac9fa52f8709011f6ddcad4634e1"
   }
 }

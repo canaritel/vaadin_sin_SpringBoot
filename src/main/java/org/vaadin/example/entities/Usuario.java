@@ -57,7 +57,7 @@ public class Usuario implements Serializable {
     private int edad;
 
     @NotEmpty //
-    @Size(max = 9)
+    @Size(max = 13)
     @Column(name = "telefono")
     private String telefono;
 

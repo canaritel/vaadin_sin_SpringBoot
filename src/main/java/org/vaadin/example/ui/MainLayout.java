@@ -1,5 +1,9 @@
 package org.vaadin.example.ui;
 
+import org.vaadin.example.ui.view.JuegoView;
+import org.vaadin.example.ui.view.DistribuidorView;
+import org.vaadin.example.ui.view.DashboardView;
+import org.vaadin.example.ui.view.UsuarioView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;

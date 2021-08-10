@@ -1,5 +1,6 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.view;
 
+import org.vaadin.example.ui.form.ContactFormDistribuye;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.services.DistribuyeService;
+import org.vaadin.example.ui.MainLayout;
 
 @Route(value = "distribuidores", layout = MainLayout.class)
 @PageTitle("Distribuidores | Vaadin CRM")
@@ -109,7 +111,6 @@ public class DistribuidorView extends VerticalLayout {
         distribuyeService.eliminar(evt.getContact());
         updateList();
         closeEditor();
-
     }
 
     private void editContact(Distribuye distribuye) {

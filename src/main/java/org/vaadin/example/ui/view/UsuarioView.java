@@ -1,5 +1,6 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.view;
 
+import org.vaadin.example.ui.form.ContactFormUser;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.entities.Usuario;
+import org.vaadin.example.ui.MainLayout;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Usuarios | Vaadin CRM")
@@ -22,7 +24,7 @@ public class UsuarioView extends VerticalLayout {
 
     private final Grid<Usuario> grid = new Grid(Usuario.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactForm form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private final ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     public UsuarioView() {
         if (usuarioService == null) {
@@ -36,12 +38,12 @@ public class UsuarioView extends VerticalLayout {
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactForm();
-        form.addListener(ContactForm.SaveEvent.class, this::saveContact);
-        form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
-        form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());
+        form = new ContactFormUser();
+        form.addListener(ContactFormUser.SaveEvent.class, this::saveContact);
+        form.addListener(ContactFormUser.DeleteEvent.class, this::deleteContact);
+        form.addListener(ContactFormUser.CloseEvent.class, e -> closeEditor());
 
-        //Crea un Div que envuelve el gridy el form, le da un nombre de clase CSS y lo convierte en tamaño completo
+        //Crea un Div que envuelve el grid y el form, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
         content.addClassName("content");
         content.setSizeFull();
@@ -66,11 +68,14 @@ public class UsuarioView extends VerticalLayout {
         grid.addColumn("nombre").setHeader("NOMBRE");
         grid.addColumn("apellidos").setHeader("APELLIDOS");
         grid.addColumn("edad").setHeader("EDAD");
-        grid.addColumn(e -> {
-            String datousuario = "(+34) " + e.getTelefono();
-            return datousuario;
-        }).setHeader("TELÉFONO");
+        grid.addColumn("telefono").setHeader("TELÉFONO");
+        //grid.addColumn("activo").setHeader("ACTIVO");
+        //grid.addColumn(e -> {
+        //    String datousuario = "(+34) " + e.getTelefono();
+        //    return datousuario;
+        //}).setHeader("TELÉFONO");
         //añadimos la columna activo modificando datos de la misma
+
         grid.addColumn(e -> {
             Boolean datousuario = e.getActivo();
             String activado;
@@ -105,7 +110,7 @@ public class UsuarioView extends VerticalLayout {
         return toolbar;
     }
 
-    private void saveContact(ContactForm.SaveEvent evt) {
+    private void saveContact(ContactFormUser.SaveEvent evt) {
         if (evt.getContact().getIdUsuario() == null) {
             usuarioService.insertar(evt.getContact());
         } else {
@@ -115,7 +120,7 @@ public class UsuarioView extends VerticalLayout {
         closeEditor();
     }
 
-    private void deleteContact(ContactForm.DeleteEvent evt) {
+    private void deleteContact(ContactFormUser.DeleteEvent evt) {
         usuarioService.eliminar(evt.getContact());
         updateList();
         closeEditor();

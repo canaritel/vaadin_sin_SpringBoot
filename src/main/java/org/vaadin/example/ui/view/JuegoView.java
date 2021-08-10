@@ -1,5 +1,6 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.view;
 
+import org.vaadin.example.ui.form.ContactFormUser;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import java.text.SimpleDateFormat;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
+import org.vaadin.example.ui.MainLayout;
 
 @Route(value = "juegos", layout = MainLayout.class)
 @PageTitle("Juegos | Vaadin CRM")
@@ -23,7 +25,7 @@ public class JuegoView extends VerticalLayout {
 
     private final Grid<Juego> grid = new Grid(Juego.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactForm form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private final ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -39,7 +41,7 @@ public class JuegoView extends VerticalLayout {
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactForm();
+        form = new ContactFormUser();
         //form.addListener(ContactForm.SaveEvent.class, this::saveContact);
         //form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
         //form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());
@@ -98,7 +100,7 @@ public class JuegoView extends VerticalLayout {
         return toolbar;
     }
 
-    private void saveContact(ContactForm.SaveEvent evt) {
+    private void saveContact(ContactFormUser.SaveEvent evt) {
         if (evt.getContact().getIdUsuario() == null) {
             //     juegoService.insertar(evt.getContact());
         } else {
@@ -108,7 +110,7 @@ public class JuegoView extends VerticalLayout {
         closeEditor();
     }
 
-    private void deleteContact(ContactForm.DeleteEvent evt) {
+    private void deleteContact(ContactFormUser.DeleteEvent evt) {
         //juegoService.eliminar(evt.getContact());
         updateList();
         closeEditor();

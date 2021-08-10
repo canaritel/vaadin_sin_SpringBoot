@@ -1,4 +1,4 @@
-package org.vaadin.example.ui;
+package org.vaadin.example.ui.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.charts.Chart;
@@ -12,6 +12,7 @@ import com.vaadin.flow.router.Route;
 import java.util.Map;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.services.UsuarioService;
+import org.vaadin.example.ui.MainLayout;
 
 @Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Vaadin CRM")

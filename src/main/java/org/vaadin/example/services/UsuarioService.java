@@ -23,6 +23,8 @@ public class UsuarioService implements CrudInterface<Usuario> {
     @Override
     public void insertar(Usuario obj) {
         try {
+            obj.setNombre(obj.getNombre().toUpperCase().trim());
+            obj.setApellidos(obj.getApellidos().toUpperCase().trim());
             usuarioRepository.create(obj);
             respuesta = "Usuario creado correctamente";
             Notification.show(respuesta, 3000, Notification.Position.MIDDLE);

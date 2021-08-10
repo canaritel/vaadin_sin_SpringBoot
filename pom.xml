@@ -182,8 +182,12 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-crud-flow</artifactId>
         </dependency>
-      
-        
+        <dependency>
+            <groupId>org.vaadin</groupId>
+            <artifactId>textfieldformatter</artifactId>
+            <version>5.2.0.pre</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
