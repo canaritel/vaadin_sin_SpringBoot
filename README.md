@@ -1,3 +1,7 @@
+# Proyecto Vaadin
+Este proyecto se basa en una aplicación web con acceso a BD MySQL, mediante el ORM JPA y repositorios para ElcipseLink.
+El mismo proyecto está creado en JavaFX dentro de mis repositorios públicos.
+
 # Skeleton Starter for Vaadin
 
 This project can be used as a starting point to create your own Vaadin application.
