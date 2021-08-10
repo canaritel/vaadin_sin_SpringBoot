@@ -3,7 +3,7 @@ Este proyecto se basa en una aplicación web con acceso a BD MySQL hosteada, med
 A medida vaya ampliando este proyecto se irá documentando.
 
 Mi forma de crear este proyecto y restantes es simplificar el código, no abusar de métodos o sentencias complejas, logrando un código fácil de entender por estudiantes de Vaadin.
-Este proyecto no usa Spring Boot, he visto necesario para un primer acercamiento un desarrollo como he explicado antes lo más sencillo posible, por lo que se ha usado unicamente una base del Vaadin con servidor web Jetty. En el fichero pom.xml pueden ver las distintas librerías que están usando.
+Este proyecto no usa Spring Boot, he visto necesario para un primer acercamiento un desarrollo como he explicado antes lo más sencillo posible, por lo que se ha usado unicamente una base del Vaadin con servidor web Jetty. En el fichero pom.xml pueden ver las distintas librerías que se están usando.
 
 El mismo proyecto está creado en JavaFX dentro de mis repositorios públicos. https://github.com/canaritel/proyecto_JPA
 
