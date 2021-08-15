@@ -7,6 +7,12 @@ Este proyecto no usa Spring Boot, he visto necesario para un primer acercamiento
 
 El mismo proyecto está creado en JavaFX dentro de mis repositorios públicos. https://github.com/canaritel/proyecto_JPA
 
+# ¿Porqué Vaadin?
+
+Vaadin es un marco basado en componentes (como Grid, TextField, ButtonField, HorizontalLayout y VerticalLayout). Pero, el verdadero poder de la arquitectura basada en componentes está en la capacidad de crear sus propios componentes.
+
+En lugar de crear una vista completa en una sola clase, su vista puede estar compuesta por componentes más pequeños que manejan diferentes partes de la vista. La ventaja de este enfoque es que los componentes individuales son más fáciles de comprender y probar. La vista de nivel superior se utiliza principalmente para dirigir los componentes.
+
 # Skeleton Starter for Vaadin
 
 This project can be used as a starting point to create your own Vaadin application.
