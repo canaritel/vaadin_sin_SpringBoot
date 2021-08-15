@@ -1,4 +1,4 @@
-package org.vaadin.example.ui.view;
+package org.vaadin.example.ui.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.charts.Chart;

@@ -1,6 +1,6 @@
-package org.vaadin.example.ui.view;
+package org.vaadin.example.ui.views;
 
-import org.vaadin.example.ui.form.ContactFormUser;
+import org.vaadin.example.ui.forms.ContactFormUser;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;

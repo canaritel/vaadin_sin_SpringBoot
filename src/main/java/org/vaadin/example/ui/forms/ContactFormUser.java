@@ -1,4 +1,4 @@
-package org.vaadin.example.ui.form;
+package org.vaadin.example.ui.forms;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;

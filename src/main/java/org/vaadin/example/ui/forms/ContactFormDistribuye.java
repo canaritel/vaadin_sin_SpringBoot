@@ -1,6 +1,6 @@
-package org.vaadin.example.ui.form;
+package org.vaadin.example.ui.forms;
 
-import org.vaadin.example.util.CountryList;
+import org.vaadin.example.utils.CountryList;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;

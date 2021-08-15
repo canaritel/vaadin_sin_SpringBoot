@@ -1,6 +1,5 @@
-package org.vaadin.example.ui.view;
+package org.vaadin.example.ui.views;
 
-import org.vaadin.example.ui.form.ContactFormUser;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,6 +15,8 @@ import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
 
+import org.vaadin.example.ui.forms.ContactFormJuego11;
+
 @Route(value = "juegos", layout = MainLayout.class)
 @PageTitle("Juegos | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
@@ -25,7 +26,7 @@ public class JuegoView extends VerticalLayout {
 
     private final Grid<Juego> grid = new Grid(Juego.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private final ContactFormJuego11 form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -41,10 +42,11 @@ public class JuegoView extends VerticalLayout {
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactFormUser();
-        //form.addListener(ContactForm.SaveEvent.class, this::saveContact);
-        //form.addListener(ContactForm.DeleteEvent.class, this::deleteContact);
-        //form.addListener(ContactForm.CloseEvent.class, e -> closeEditor());
+        form = new ContactFormJuego11();
+        // escuchamos los eventos y actuamos
+        form.addListener(ContactFormJuego11.SaveEvent.class, this::saveContact);
+        form.addListener(ContactFormJuego11.DeleteEvent.class, this::deleteContact);
+        form.addListener(ContactFormJuego11.CloseEvent.class, e -> closeEditor());
 
         //Crea un Div que envuelve el grid el form, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
@@ -86,9 +88,10 @@ public class JuegoView extends VerticalLayout {
     private void configureFilter() {
         filterText.setPlaceholder("Filtro de búsqueda...");  //añadimos un texto dentro del textfield
         filterText.setClearButtonVisible(true);  //permitimos borrar facilmente el texto del textfield
-        //se activa cuando escribimos algo y pasa un  corto espacio de tiempo (al terminar de escribir)
+        //Establece el modo de cambio de valor para LAZY
+        //que el campo de texto le notifique los cambios automáticamente después de un breve tiempo de espera al escribir.
         filterText.setValueChangeMode(ValueChangeMode.LAZY); //método recomendado para los filtros
-        filterText.addValueChangeListener(e -> updateList());
+        filterText.addValueChangeListener(e -> updateList()); //Llama al método updateList siempre que cambia el valor
     }
 
     private HorizontalLayout getToolBar() {
@@ -100,8 +103,8 @@ public class JuegoView extends VerticalLayout {
         return toolbar;
     }
 
-    private void saveContact(ContactFormUser.SaveEvent evt) {
-        if (evt.getContact().getIdUsuario() == null) {
+    private void saveContact(ContactFormJuego11.SaveEvent evt) {
+        if (evt.getContact().getIdJuego() == null) {
             //     juegoService.insertar(evt.getContact());
         } else {
             //     usuarioService.actualizar(evt.getContact());
@@ -110,7 +113,7 @@ public class JuegoView extends VerticalLayout {
         closeEditor();
     }
 
-    private void deleteContact(ContactFormUser.DeleteEvent evt) {
+    private void deleteContact(ContactFormJuego11.DeleteEvent evt) {
         //juegoService.eliminar(evt.getContact());
         updateList();
         closeEditor();
@@ -120,7 +123,7 @@ public class JuegoView extends VerticalLayout {
         if (juego == null) {
             closeEditor();
         } else {
-            //form.setContact(juego);
+            form.setContact(juego);
             form.setVisible(true);
             addClassName("editing");
         }
@@ -133,9 +136,9 @@ public class JuegoView extends VerticalLayout {
 
     private void closeEditor() {
         updateList();
-        form.setVisible(false);
-        removeClassName("editing");
-        form.setContact(null);
+        form.setVisible(false); // Oculta el formulario.
+        removeClassName("editing"); //Elimina la "editing" clase CSS de la vista.
+        form.setContact(null);  // Establece el contacto del formulario en null, borrando los valores antiguos.
     }
 
     private void updateList() {

@@ -25,6 +25,10 @@ a[highlight] {
     display: flex; 
 }
 
+.juego-view .content {
+    display: flex; 
+}
+
 /* Asigna 2/3 del ancho disponible al grid */
 .list-view .contact-grid {
     flex: 2;
@@ -32,6 +36,10 @@ a[highlight] {
 
 /* Asigna 2/3 del ancho disponible al grid */
 .distribuye-view .contact-grid {
+    flex: 2;
+}
+
+.juego-view .contact-grid {
     flex: 2;
 }
 
@@ -49,6 +57,11 @@ a[highlight] {
     /* Utiliza la propiedad de tema personalizado Vaadin Lumo para agregar relleno estándar en la forma */
 }
 
+.juego-view .contact-form {
+    flex: 1;
+    padding: var(--lumo-space-m);  
+    /* Utiliza la propiedad de tema personalizado Vaadin Lumo para agregar relleno estándar en la forma */
+}
 
 /* Dashboard view */
 .dashboard-view .contact-stats {
@@ -65,6 +78,10 @@ a[highlight] {
     }
     .distribuye-view.editing .toolbar,
     .distribuye-view.editing .contact-grid {
+        display: none;
+    }
+    .juego-view.editing .toolbar,
+    .juego-view.editing .contact-grid {
         display: none;
     }
 }
