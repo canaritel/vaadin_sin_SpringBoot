@@ -105,16 +105,16 @@ public class JuegoView extends VerticalLayout {
 
     private void saveContact(ContactFormJuego11.SaveEvent evt) {
         if (evt.getContact().getIdJuego() == null) {
-            //     juegoService.insertar(evt.getContact());
+            juegoService.insertar(evt.getContact());
         } else {
-            //     usuarioService.actualizar(evt.getContact());
+            juegoService.actualizar(evt.getContact());
         }
         updateList();
         closeEditor();
     }
 
     private void deleteContact(ContactFormJuego11.DeleteEvent evt) {
-        //juegoService.eliminar(evt.getContact());
+        juegoService.eliminar(evt.getContact());
         updateList();
         closeEditor();
     }

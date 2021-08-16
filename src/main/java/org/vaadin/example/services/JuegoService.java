@@ -15,7 +15,7 @@ public class JuegoService implements CrudInterface<Juego> {
 
     @Override
     public List<Juego> listar(String texto) {
-        juegoList = juegoRepository.findJuegoEntities();
+     //   juegoList = juegoRepository.;
         return juegoList;
     }
 

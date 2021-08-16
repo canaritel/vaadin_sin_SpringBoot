@@ -64,6 +64,7 @@ public class UsuarioView extends VerticalLayout {
         //grid.removeColumnByKey("idUsuario");
         //grid.removeColumnByKey("telefono"); //eliminamos la columna telefono
         //grid.removeColumnByKey("activo"); //eliminamos la columna telefono
+
         //añadimos la columna telefono modificando datos de la misma
         grid.addColumn("nombre").setHeader("NOMBRE");
         grid.addColumn("apellidos").setHeader("APELLIDOS");

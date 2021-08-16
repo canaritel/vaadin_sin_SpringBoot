@@ -39,7 +39,6 @@ public class DistribuidorView extends VerticalLayout {
 
         //Inicializa el formulario en el constructor
         form = new ContactFormDistribuye();
-
         form.addListener(ContactFormDistribuye.SaveEvent.class, this::saveContact);
         form.addListener(ContactFormDistribuye.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactFormDistribuye.CloseEvent.class, e -> closeEditor());

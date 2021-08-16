@@ -247,4 +247,23 @@ public class DistribuyeJpaRepository implements Serializable {
         return distribuyetmp;
     }
 
+    public List<Distribuye> ListDistribuyeByNombre() {
+        String QUERY = "SELECT d FROM Distribuye d WHERE d.idDistribuidor LIKE :idDistribuidor";
+
+        EntityManager em = getEntityManager();
+        List<Distribuye> distribuyetmp = new ArrayList<>();
+
+        try {
+            TypedQuery<Distribuye> consulta = em.createQuery(QUERY, Distribuye.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("idDistribuidor", "%" + "%");    //indico el campo y la cadena a buscar 
+
+            distribuyetmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+        return distribuyetmp;
+    }
+
 }

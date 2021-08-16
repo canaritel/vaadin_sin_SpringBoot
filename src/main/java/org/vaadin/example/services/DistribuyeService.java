@@ -16,7 +16,7 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
 
     @Override
     public List<Distribuye> listar(String texto) {
-        distribuyeList = distribuyeRepository.findDistribuyeEntities();
+        distribuyeList = distribuyeRepository.ListDistribuyeByFilter(texto);
         return distribuyeList;
     }
 

@@ -27,13 +27,11 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.services.DistribuyeService;
 import org.vaadin.example.services.UsuarioService;
-import org.vaadin.textfieldformatter.DateFieldFormatter;
 
 public class ContactFormJuego11 extends FormLayout {
 
@@ -73,20 +71,24 @@ public class ContactFormJuego11 extends FormLayout {
                 .bind(Juego::getTitulo, Juego::setTitulo);
 
         binder.forField(checkboxSistema)
-                //.withValidator(check -> check.length() >= 3, "El nombre debe tener al menos 3 carácteres")
                 .bind(Juego::getSistemaOperativo, Juego::setSistemaOperativo);
 
         binder.forField(datePicker)
-                .withValidator((new DateRangeValidator("No es una fecha válida", LocalDate.of(1990, Month.JANUARY, 1), LocalDate.now())))
+                .withValidator((new DateRangeValidator("No es una fecha válida", LocalDate.of(1973, Month.OCTOBER, 16), LocalDate.now())))
                 .withConverter(new LocalDateToDateConverter())
                 .bind(Juego::getFechaJuego, Juego::setFechaJuego);
 
-        //binder.bind(bigDecimalField, Juego::getPrecio, Juego::setPrecio);
-        binder.forField(bigDecimalField).bind(Juego::getPrecio, Juego::setPrecio);
+        binder.forField(bigDecimalField)
+                .withValidator(e -> e.doubleValue() > 0, "Debe ser un número superior a 0")
+                .bind(Juego::getPrecio, Juego::setPrecio);
 
-        binder.forField(comboDistribuidor).bind(Juego::getDistribuidor, Juego::setDistribuidor);
+        binder.forField(comboDistribuidor)
+                .asRequired("Seleccione el Distribuidor creador del juego")
+                .bind(Juego::getDistribuidor, Juego::setDistribuidor);
 
-        binder.forField(comboUsuario).bind(Juego::getUsuario, Juego::setUsuario);
+        binder.forField(comboUsuario)
+                .asRequired("Seleccione el Usuario propietario")
+                .bind(Juego::getUsuario, Juego::setUsuario);
 
         //añado los componentes a la vista
         add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario);
@@ -154,13 +156,14 @@ public class ContactFormJuego11 extends FormLayout {
     private void crearCampoFecha() {
         datePicker.setLabel("Fecha de compra");
 
+        /*
         new DateFieldFormatter.Builder()
                 .datePattern("ddMMyyyy")
                 .delimiter("/")
                 .dateMin(LocalDate.of(1980, 01, 01))
                 .dateMax(LocalDate.now());
-        // .build().extend(datePicker);
-
+         .build().extend(textField);
+         */
     }
 
     private void crearCampoPrecio() {
@@ -171,7 +174,6 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void crearComboDistribuidor() {
         listDistribuye = distribuyeService.listar("");
-
         // establecemos valores para el comboBox
         comboDistribuidor.setItemLabelGenerator(Distribuye::getIdDistribuidor);
         comboDistribuidor.setItems(listDistribuye);
@@ -181,7 +183,6 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void crearComboUsuario() {
         listUsuario = usuarioService.listar("");
-
         // establecemos valores para el comboBox
         comboUsuario.setItemLabelGenerator(Usuario::getNombre);
         comboUsuario.setItems(listUsuario);
