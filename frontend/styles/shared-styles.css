@@ -27,6 +27,7 @@ a[highlight] {
 
 .juego-view .content {
     display: flex; 
+    
 }
 
 /* Asigna 2/3 del ancho disponible al grid */
@@ -41,6 +42,7 @@ a[highlight] {
 
 .juego-view .contact-grid {
     flex: 2;
+    
 }
 
 /* Asigna 1/3 del ancho disponible al formulario */

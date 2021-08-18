@@ -56,10 +56,12 @@ public class ContactFormUser extends FormLayout {
         //binder.bind(textNombre, Usuario::getNombre, Usuario::setNombre);
         binder.forField(textNombre)
                 .withValidator(name -> name.length() >= 3, "El nombre debe tener al menos 3 carácteres")
+                .withValidator(name -> name.length() <= 60, "El nombre debe tener menos de 60 carácteres")
                 .bind(Usuario::getNombre, Usuario::setNombre);
         //binder.bind(textApellidos, Usuario::getApellidos, Usuario::setApellidos);
         binder.forField(textApellidos)
                 .withValidator(surname -> surname.length() >= 5, "Los apellidos deben tener al menos 5 carácteres")
+                .withValidator(surname -> surname.length() <= 60, "Los apellidos deben tener menos de 60 carácteres")
                 .bind(Usuario::getApellidos, Usuario::setApellidos);
         //binder.forField(textEdad).withConverter(Integer::valueOf, String::valueOf).bind(Usuario::getEdad, Usuario::setEdad);
         binder.forField(numberEdad).withConverter(Integer::valueOf, Integer::valueOf)

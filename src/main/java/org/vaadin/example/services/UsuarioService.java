@@ -29,7 +29,7 @@ public class UsuarioService implements CrudInterface<Usuario> {
             respuesta = "Usuario creado correctamente";
             Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
         } catch (Exception e) {
-            respuesta = "(Error crear)" + e.getMessage();
+            respuesta = "(Error al crear)" + e.getMessage();
             Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
         }
     }
@@ -43,7 +43,7 @@ public class UsuarioService implements CrudInterface<Usuario> {
             respuesta = "Usuario editado correctamente";
             Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
         } catch (Exception e) {
-            respuesta = "(Error editar) " + e.getMessage();
+            respuesta = "(Error al editar) " + e.getMessage();
             Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
         }
     }

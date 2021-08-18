@@ -1,12 +1,14 @@
 package org.vaadin.example.repositories;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.vaadin.example.entities.Distribuye;
@@ -207,6 +209,31 @@ public class JuegoJpaRepository implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public List<Juego> ListJuegoByFilter(String filtra) {
+        filtra = filtra.toUpperCase();
+
+        String QUERY = "SELECT j FROM Juego j WHERE j.titulo LIKE :titulo OR j.sistemaOperativo LIKE :sistemaOperativo"
+                + " OR j.fechaJuego LIKE :fechaJuego OR j.precio LIKE :precio";
+
+        EntityManager em = getEntityManager();
+        List<Juego> juegotmp = new ArrayList<>();
+
+        try {
+
+            TypedQuery<Juego> consulta = em.createQuery(QUERY, Juego.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("titulo", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
+            consulta.setParameter("sistemaOperativo", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            consulta.setParameter("fechaJuego", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
+            consulta.setParameter("precio", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            juegotmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+        return juegotmp;
     }
 
 }

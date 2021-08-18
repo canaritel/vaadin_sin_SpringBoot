@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
+import com.vaadin.flow.data.validator.BigDecimalRangeValidator;
 import com.vaadin.flow.data.validator.DateRangeValidator;
 import com.vaadin.flow.shared.Registration;
 import java.math.BigDecimal;
@@ -68,18 +69,22 @@ public class ContactFormJuego11 extends FormLayout {
 
         binder.forField(textTitulo)
                 .withValidator(name -> name.length() >= 3, "El título debe tener al menos 3 carácteres")
+                .withValidator(name -> name.length() < 50, "El título debe tener menos de 50 carácteres")
                 .bind(Juego::getTitulo, Juego::setTitulo);
 
         binder.forField(checkboxSistema)
                 .bind(Juego::getSistemaOperativo, Juego::setSistemaOperativo);
 
         binder.forField(datePicker)
+                .withValidator(date -> date != null, "No es una fecha válida")
                 .withValidator((new DateRangeValidator("No es una fecha válida", LocalDate.of(1973, Month.OCTOBER, 16), LocalDate.now())))
                 .withConverter(new LocalDateToDateConverter())
                 .bind(Juego::getFechaJuego, Juego::setFechaJuego);
 
         binder.forField(bigDecimalField)
-                .withValidator(e -> e.doubleValue() > 0, "Debe ser un número superior a 0")
+                .withValidator(new BigDecimalRangeValidator("Precio válido desde 0 hasta 9999", BigDecimal.ZERO, BigDecimal.valueOf(9999)))
+                //.withValidator(e -> (e.doubleValue() > 0), "Debe ser un número superior a 0")
+                //.withValidator(e -> (e.doubleValue() <= 9999), "Debe ser un número inferior o igual a 9999")
                 .bind(Juego::getPrecio, Juego::setPrecio);
 
         binder.forField(comboDistribuidor)
@@ -155,7 +160,6 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void crearCampoFecha() {
         datePicker.setLabel("Fecha de compra");
-
         /*
         new DateFieldFormatter.Builder()
                 .datePattern("ddMMyyyy")
