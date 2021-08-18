@@ -1,21 +1,28 @@
 package org.vaadin.example.ui.views;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.stream.IntStream;
+import javax.swing.ImageIcon;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
 
 import org.vaadin.example.ui.forms.ContactFormJuego11;
+import org.vaadin.example.utils.ConvertToImage;
 
 @Route(value = "juegos", layout = MainLayout.class)
 @PageTitle("Juegos | Vaadin CRM")
@@ -69,15 +76,37 @@ public class JuegoView extends VerticalLayout {
         //añadimos las columna y ponemos nombre a cada columna
         grid.addColumn("titulo").setHeader("TÍTULO");
         grid.addColumn("sistemaOperativo").setHeader("S.O.");
-        //grid.addColumn("fechaJuego").setHeader("Fecha");
         grid.addColumn(bean -> formatter.format(bean.getFechaJuego()))
                 .setHeader("FECHA").setSortable(true);
-        grid.addColumn("precio").setHeader("PRECIO");
+        grid.addColumn(e -> {
+            float rounded = e.getPrecio().setScale(2, RoundingMode.HALF_UP).floatValue();
+            String datoprecio = rounded + "€";
+            return datoprecio;
+        }).setHeader("PRECIO");
         grid.addColumn(e -> e.getDistribuidor().getIdDistribuidor())
                 .setHeader("DISTRIBUIDOR").setSortable(true);
         grid.addColumn(e -> e.getUsuario().getNombre()).
                 setHeader("USUARIO").setSortable(true);
 
+        //   grid.addComponentColumn(i -> new Image(ConvertToImage.convertToStreamImage(i.getImagen()), ""))
+        //           .setHeader("Imagen");
+        grid.addComponentColumn(i -> {
+            Image image = new Image(ConvertToImage.convertToStreamImage(i.getImagen()), "");
+            //image.setWidth(40, Unit.PIXELS);
+            image.setHeight(30, Unit.PIXELS);
+            return image;
+        }).setHeader("IMAGEN");
+
+        /*
+        grid.addComponentColumn(item -> {
+            Icon icon;
+            icon = ConvertToImage.convertToImage3(item.getImagen());
+            icon.setColor("green");
+            return icon;
+        }).setHeader("ICONO");
+        //
+        
+         */
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro

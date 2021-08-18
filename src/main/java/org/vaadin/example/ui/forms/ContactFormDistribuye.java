@@ -50,18 +50,22 @@ public class ContactFormDistribuye extends FormLayout {
         //binder.bind(comboBox, Distribuye::getPais, Distribuye::setPais);
         binder.forField(textNombre)
                 .withValidator(name -> name.length() >= 5, "El nombre debe tener al menos 5 carácteres")
+                .withValidator(name -> name.length() < 50, "El nombre debe tener menos de 50 carácteres")
                 .bind(Distribuye::getIdDistribuidor, Distribuye::setIdDistribuidor);
 
         binder.forField(textDireccion)
                 .withValidator(name -> name.length() >= 5, "La dirección debe tener al menos 5 carácteres")
+                .withValidator(name -> name.length() < 90, "La dirección debe tener menos  de 90 carácteres")
                 .bind(Distribuye::getDireccion, Distribuye::setDireccion);
 
         binder.forField(textCiudad)
                 .withValidator(name -> name.length() >= 3, "La ciudad debe tener al menos 3 carácteres")
+                .withValidator(name -> name.length() < 50, "La ciudad debe tener menos de 50 carácteres")
                 .bind(Distribuye::getCiudad, Distribuye::setCiudad);
 
         binder.forField(comboBox)
                 .withValidator(name -> name.length() >= 3, "El país debe tener al menos 3 carácteres")
+                .withValidator(name -> name.length() < 30, "El país debe tener menos de 30 carácteres")
                 .bind(Distribuye::getPais, Distribuye::setPais);
         //binder.forField(comboBox)
         //        .withConverter(String::valueOf, String::valueOf).bind(Distribuye::getPais, Distribuye::setPais);

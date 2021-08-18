@@ -69,12 +69,16 @@ public class UsuarioView extends VerticalLayout {
         grid.addColumn("nombre").setHeader("NOMBRE");
         grid.addColumn("apellidos").setHeader("APELLIDOS");
         grid.addColumn("edad").setHeader("EDAD");
-        grid.addColumn("telefono").setHeader("TELÉFONO");
-        //grid.addColumn("activo").setHeader("ACTIVO");
-        //grid.addColumn(e -> {
-        //    String datousuario = "(+34) " + e.getTelefono();
-        //    return datousuario;
-        //}).setHeader("TELÉFONO");
+        //grid.addColumn("telefono").setHeader("TELÉFONO");
+        grid.addColumn(e -> {
+            if (e.getTelefono().startsWith("9") || e.getTelefono().startsWith("8")
+                    || e.getTelefono().startsWith("6") || e.getTelefono().startsWith("7")) {
+                String datousuario = "(+34) " + e.getTelefono();
+                return datousuario;
+            } else {
+                return e.getTelefono();
+            }
+        }).setHeader("TELÉFONO");
         //añadimos la columna activo modificando datos de la misma
 
         grid.addColumn(e -> {
