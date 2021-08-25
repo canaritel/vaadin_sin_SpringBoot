@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -108,7 +109,7 @@ public class ContactFormUser extends FormLayout {
         if (binder.isValid()) {
             fireEvent(new SaveEvent(this, binder.getBean()));
         } else {
-            Notification.show("Error en la validación Bean");
+            Notification.show("Error en la validación Bean").addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 

@@ -1,6 +1,7 @@
 package org.vaadin.example.services;
 
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import java.util.List;
 import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.interfaces.CrudInterface;
@@ -29,10 +30,10 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
             obj.setPais(obj.getPais().toUpperCase().trim());
             distribuyeRepository.create(obj);
             respuesta = "Distribuidor creado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "(Error crear)" + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -45,10 +46,10 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
             obj.setPais(obj.getPais().toUpperCase().trim());
             distribuyeRepository.edit(obj);
             respuesta = "Distribuidor editado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "ERROR: Ya existe el ID " + obj.getIdDistribuidor();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -57,10 +58,10 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
         try {
             distribuyeRepository.destroy(obj.getIdDistribuidor());
             respuesta = "Distribuidor eliminado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (IllegalOrphanException | NonexistentEntityException e) {
             respuesta = "(Error eliminar) " + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 

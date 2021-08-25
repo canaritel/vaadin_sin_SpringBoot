@@ -1,6 +1,7 @@
 package org.vaadin.example.services;
 
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import java.util.List;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.repositories.UsuarioJpaRepository;
@@ -27,10 +28,10 @@ public class UsuarioService implements CrudInterface<Usuario> {
             obj.setApellidos(obj.getApellidos().toUpperCase().trim());
             usuarioRepository.create(obj);
             respuesta = "Usuario creado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "(Error al crear)" + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -41,10 +42,10 @@ public class UsuarioService implements CrudInterface<Usuario> {
             obj.setApellidos(obj.getApellidos().toUpperCase().trim());
             usuarioRepository.edit(obj);
             respuesta = "Usuario editado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "(Error al editar) " + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -53,10 +54,10 @@ public class UsuarioService implements CrudInterface<Usuario> {
         try {
             usuarioRepository.destroy(obj.getIdUsuario());
             respuesta = "Usuario eliminado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (IllegalOrphanException | NonexistentEntityException e) {
             respuesta = "(Error eliminar) " + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 

@@ -1,6 +1,7 @@
 package org.vaadin.example.services;
 
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +30,10 @@ public class JuegoService implements CrudInterface<Juego> {
             obj.setPrecio(obj.getPrecio().setScale(2, RoundingMode.HALF_UP));
             juegoRepository.create(obj);
             respuesta = "Juego creado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "(Error al crear)" + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -43,10 +44,10 @@ public class JuegoService implements CrudInterface<Juego> {
             obj.setPrecio(obj.getPrecio().setScale(2, RoundingMode.HALF_UP));
             juegoRepository.edit(obj);
             respuesta = "Juego editado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (Exception e) {
             respuesta = "(Error al editar)" + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -55,10 +56,10 @@ public class JuegoService implements CrudInterface<Juego> {
         try {
             juegoRepository.destroy(obj.getIdJuego());
             respuesta = "Juego eliminado correctamente";
-            Notification.show(respuesta, 3000, Notification.Position.MIDDLE);
+            Notification.show(respuesta, 3000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         } catch (NonexistentEntityException e) {
             respuesta = "(Error al eliminar)" + e.getMessage();
-            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH);
+            Notification.show(respuesta, 7000, Notification.Position.TOP_STRETCH).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 

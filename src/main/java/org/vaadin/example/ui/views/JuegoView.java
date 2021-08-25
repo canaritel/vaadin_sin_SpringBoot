@@ -18,7 +18,7 @@ import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
 
-import org.vaadin.example.ui.forms.ContactFormJuego11;
+import org.vaadin.example.ui.forms.ContactFormJuego;
 import org.vaadin.example.utils.ConvertToImage;
 
 @Route(value = "juegos", layout = MainLayout.class)
@@ -30,7 +30,7 @@ public class JuegoView extends VerticalLayout {
 
     private final Grid<Juego> grid = new Grid(Juego.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactFormJuego11 form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private final ContactFormJuego form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     private Image image;
     
@@ -48,11 +48,11 @@ public class JuegoView extends VerticalLayout {
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactFormJuego11();
+        form = new ContactFormJuego();
         // escuchamos los eventos y actuamos
-        form.addListener(ContactFormJuego11.SaveEvent.class, this::saveContact);
-        form.addListener(ContactFormJuego11.DeleteEvent.class, this::deleteContact);
-        form.addListener(ContactFormJuego11.CloseEvent.class, e -> closeEditor());
+        form.addListener(ContactFormJuego.SaveEvent.class, this::saveContact);
+        form.addListener(ContactFormJuego.DeleteEvent.class, this::deleteContact);
+        form.addListener(ContactFormJuego.CloseEvent.class, e -> closeEditor());
 
         //Crea un Div que envuelve el grid el form, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
@@ -136,7 +136,7 @@ public class JuegoView extends VerticalLayout {
         return toolbar;
     }
 
-    private void saveContact(ContactFormJuego11.SaveEvent evt) {
+    private void saveContact(ContactFormJuego.SaveEvent evt) {
         if (evt.getContact().getIdJuego() == null) {
             juegoService.insertar(evt.getContact());
         } else {
@@ -146,7 +146,7 @@ public class JuegoView extends VerticalLayout {
         closeEditor();
     }
 
-    private void deleteContact(ContactFormJuego11.DeleteEvent evt) {
+    private void deleteContact(ContactFormJuego.DeleteEvent evt) {
         juegoService.eliminar(evt.getContact());
         updateList();
         closeEditor();

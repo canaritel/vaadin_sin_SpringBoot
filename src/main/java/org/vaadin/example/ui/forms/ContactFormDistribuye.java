@@ -10,6 +10,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -104,7 +105,7 @@ public class ContactFormDistribuye extends FormLayout {
         if (binder.isValid()) {
             fireEvent(new SaveEvent(this, binder.getBean()));
         } else {
-            Notification.show("Error en la validación");
+            Notification.show("Error en la validación").addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 

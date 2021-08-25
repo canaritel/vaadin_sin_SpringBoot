@@ -7,19 +7,24 @@ import org.vaadin.example.ui.views.UsuarioView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.LoadingIndicatorConfiguration;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.InitialPageSettings;
+import com.vaadin.flow.server.PageConfigurator;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class MainLayout extends AppLayout {
+public class MainLayout extends AppLayout implements PageConfigurator, RouterLayout {
 
     public MainLayout() {
         createHeader();
@@ -167,6 +172,26 @@ public class MainLayout extends AppLayout {
         layout.add(logoLayout, menu);
         return layout;
     }
-    
      */
+    //Para informar al usuario de que la carga está en curso y que la interfaz de usuario no responde actualmente, se muestra un indicador de carga 
+    //más información en la página: https://vaadin.com/docs/v10/flow/advanced/tutorial-loading-indicator
+    @Override
+    public void configurePage(InitialPageSettings settings) {
+        Div div = new Div();
+        div.setClassName("v-loading-indicator first");
+        //style = "display: none;"
+
+        LoadingIndicatorConfiguration conf = settings.getLoadingIndicatorConfiguration();
+
+        /*
+         * Delay for showing the indicator and setting the 'first' class name.
+         */
+        conf.setFirstDelay(300); // 300ms is the default
+
+        /* Delay for setting the 'second' class name */
+        conf.setSecondDelay(1000); // 1000ms is the default
+
+        /* Delay for setting the 'third' class name */
+        conf.setThirdDelay(3000); // 3000ms is the default
+    }
 }
