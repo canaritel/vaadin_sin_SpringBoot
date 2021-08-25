@@ -12,10 +12,10 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -36,8 +36,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.entities.Juego;
@@ -54,7 +52,7 @@ public class ContactFormJuego11 extends FormLayout {
     private final BigDecimalField bigDecimalField = new BigDecimalField("Precio de compra");
     private final ComboBox<Distribuye> comboDistribuidor = new ComboBox<>();
     private final ComboBox<Usuario> comboUsuario = new ComboBox<>();
-    private final Label imageLabel = new Label();
+    private final Label labelImage = new Label();
     private byte[] imageByte = new byte[65535];
 
     private Image imagePreview = new Image();
@@ -71,8 +69,6 @@ public class ContactFormJuego11 extends FormLayout {
     private List<Usuario> listUsuario = new ArrayList<>();
 
     private Component component, component2;
-
-    private final MemoryBuffer uploadBuffer = new MemoryBuffer();
 
     private final Binder<Juego> binder = new Binder<>(Juego.class);
 
@@ -121,7 +117,7 @@ public class ContactFormJuego11 extends FormLayout {
         //binder.bindInstanceFields(comboDistribuidor);
 
         //añado los componentes a la vista
-        add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, imageLabel);
+        add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, labelImage);
         add(layout); //añado la línea vertical así poner los botones debajo
         add(createButtonsLayout());
     }
@@ -162,9 +158,8 @@ public class ContactFormJuego11 extends FormLayout {
             binder.getBean().setImagen(imageByte);
             crearFileImagen();
             fireEvent(new SaveEvent(this, binder.getBean()));
-
         } else {
-            Notification.show("Error en la validación");
+            Notification.show("Error en la validación Binder").addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
@@ -221,12 +216,11 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void crearFileImagen() {
         imagePreview.setWidth("100%");
-        imageLabel.setText("Imagen");
+        labelImage.setText("Imagen");
         uploadImage = new Upload();
         uploadImage.getStyle().set("box-sizing", "border-box");
-
-        //Notification.show("1. estoy dentro del crearFileImagen");
-        attachImageUpload(uploadImage, imagePreview);
+        //llamamos al método attach
+        attachImageUpload(uploadImage);
     }
 
     private void convertirImagen() {
@@ -258,32 +252,25 @@ public class ContactFormJuego11 extends FormLayout {
         addComponentAtIndex(8, component2);
     }
 
-    private void attachImageUpload(Upload upload, Image preview) {
+    private void attachImageUpload(Upload upload) {
+        MemoryBuffer uploadBuffer = new MemoryBuffer();
         upload.setAcceptedFileTypes("image/*");
         //upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
-
         upload.setReceiver((Receiver) uploadBuffer);
-
+        //acción al subir fichero
         upload.addSucceededListener(e -> {
-            //Notification.show("3. estoy dentro del attach");
-            String dataUrl = e.getFileName();
-            upload.getElement().appendChild(preview.getElement());
             try {
-                preview.setSrc(dataUrl);
-                imageByte = uploadBuffer.getInputStream().readAllBytes();
+                imageByte = uploadBuffer.getInputStream().readAllBytes(); //guardamos la imagen en memoria a tipo byte[], de esta forma podremos pasarla a la entidad y grabarla en la BD
             } catch (IOException ex) {
-                Logger.getLogger(ContactFormJuego11.class.getName()).log(Level.SEVERE, null, ex);
+                Notification.show(ex.getMessage(), 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
-
+        //máximo tamaño que aceptams en bytes
         upload.setMaxFileSize(199000); //199000 Bytes = 194.34 Kilobytes
-
+        //acción sino puede cargar el fichero
         upload.addFileRejectedListener(event -> {
-            Notification.show(event.getErrorMessage(), 5000, Notification.Position.TOP_CENTER);
+            Notification.show(event.getErrorMessage(), 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
         });
-
-        preview.setVisible(false);
-        //Notification.show("2. estoy finalizando del attach");
     }
 
     /**
