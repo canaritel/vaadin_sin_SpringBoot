@@ -6,7 +6,6 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -15,8 +14,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.stream.IntStream;
-import javax.swing.ImageIcon;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
@@ -35,6 +32,8 @@ public class JuegoView extends VerticalLayout {
     private final TextField filterText = new TextField();
     private final ContactFormJuego11 form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
+    private Image image;
+    
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public JuegoView() {
@@ -91,7 +90,7 @@ public class JuegoView extends VerticalLayout {
         //   grid.addComponentColumn(i -> new Image(ConvertToImage.convertToStreamImage(i.getImagen()), ""))
         //           .setHeader("Imagen");
         grid.addComponentColumn(i -> {
-            Image image;
+            //Image image;
             if (i.getImagen() == null) {
                 image = new Image("images/Imagen-no-disponible.png", "null");
             } else {
@@ -170,9 +169,10 @@ public class JuegoView extends VerticalLayout {
 
     private void closeEditor() {
         updateList();
+        form.setContact(null);  // Establece el contacto del formulario en null, borrando los valores antiguos.
         form.setVisible(false); // Oculta el formulario.
         removeClassName("editing"); //Elimina la "editing" clase CSS de la vista.
-        form.setContact(null);  // Establece el contacto del formulario en null, borrando los valores antiguos.
+        
     }
 
     private void updateList() {

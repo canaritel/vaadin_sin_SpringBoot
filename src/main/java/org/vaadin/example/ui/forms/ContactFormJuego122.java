@@ -3,15 +3,18 @@ package org.vaadin.example.ui.forms;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.HtmlComponent;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,22 +25,31 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.data.validator.BigDecimalRangeValidator;
 import com.vaadin.flow.data.validator.DateRangeValidator;
+import com.vaadin.flow.internal.MessageDigestUtil;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.shared.Registration;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import org.apache.commons.io.IOUtils;
 
 import org.vaadin.example.entities.Distribuye;
 import org.vaadin.example.entities.Juego;
@@ -45,20 +57,23 @@ import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.services.DistribuyeService;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.utils.ConvertToImage;
+import org.vaadin.example.utils.FileUpload;
 
-public class ContactFormJuego11 extends FormLayout {
+public class ContactFormJuego122 extends FormLayout {
 
     private final TextField textTitulo = new TextField("Título");
     private final RadioButtonGroup<String> checkboxSistema = new RadioButtonGroup<>();
     private final DatePicker datePicker = new DatePicker();
     private final BigDecimalField bigDecimalField = new BigDecimalField("Precio de compra");
+    //private final TextField textImagen = new TextField("Imagen");
     private final ComboBox<Distribuye> comboDistribuidor = new ComboBox<>();
     private final ComboBox<Usuario> comboUsuario = new ComboBox<>();
-    private final Label imageLabel = new Label();
-    private byte[] imageByte = new byte[65535];
+    public byte[] imageByte = new byte[65535];
+    public Image image = new Image();
 
-    private Image imagePreview = new Image();
-    private Upload uploadImage; //recomendado no inicializarlo aquí
+    public MemoryBuffer buffer = new MemoryBuffer();
+    public Upload upload = new Upload(buffer);
+    public Div output = new Div();
 
     private final Button save = new Button("Grabar");
     private final Button delete = new Button("Eliminar");
@@ -70,13 +85,11 @@ public class ContactFormJuego11 extends FormLayout {
     private List<Distribuye> listDistribuye = new ArrayList<>();
     private List<Usuario> listUsuario = new ArrayList<>();
 
-    private Component component, component2;
-
-    private final MemoryBuffer uploadBuffer = new MemoryBuffer();
-
     private final Binder<Juego> binder = new Binder<>(Juego.class);
 
-    public ContactFormJuego11() {
+    private Component component;
+
+    public ContactFormJuego122() {
         addClassName("contact-form");
 
         VerticalLayout layout = new VerticalLayout(); //creo componente de línea vertical
@@ -119,20 +132,18 @@ public class ContactFormJuego11 extends FormLayout {
         binder.bindInstanceFields(imageByte);
         //binder.bindInstanceFields(comboUsuario);
         //binder.bindInstanceFields(comboDistribuidor);
-
         //añado los componentes a la vista
-        add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, imageLabel);
-        add(layout); //añado la línea vertical así poner los botones debajo
+        add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, upload, output);
+        add(layout); //añado la línea verticaly así poner los botones debajo
         add(createButtonsLayout());
+
     }
 
     public void setContact(Juego juego) {
         binder.setBean(juego);
-
         if (juego != null) {
             imageByte = juego.getImagen();
-            convertirImagen();
-            mostrarImagenUpload();
+            mostrarImagen();
         }
     }
 
@@ -159,10 +170,7 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void validateAndSave() {
         if (binder.isValid()) {
-            binder.getBean().setImagen(imageByte);
-            crearFileImagen();
             fireEvent(new SaveEvent(this, binder.getBean()));
-
         } else {
             Notification.show("Error en la validación");
         }
@@ -171,14 +179,13 @@ public class ContactFormJuego11 extends FormLayout {
     private void validateAndClose() {
         //no es necesario validar los campos para Cerrar
         //if (binder.isValid()) {
-        crearFileImagen();
         fireEvent(new CloseEvent(this));
+        // }
     }
 
     private void validateAndDelete() {
         //no es necesario validar los campos para Eliminar
         //if (binder.isValid()) {
-        crearFileImagen();
         fireEvent(new DeleteEvent(this, binder.getBean()));
         // } 
     }
@@ -192,6 +199,14 @@ public class ContactFormJuego11 extends FormLayout {
 
     private void crearCampoFecha() {
         datePicker.setLabel("Fecha de compra");
+        /*
+        new DateFieldFormatter.Builder()
+                .datePattern("ddMMyyyy")
+                .delimiter("/")
+                .dateMin(LocalDate.of(1980, 01, 01))
+                .dateMax(LocalDate.now());
+         .build().extend(textField);
+         */
     }
 
     private void crearCampoPrecio() {
@@ -216,74 +231,127 @@ public class ContactFormJuego11 extends FormLayout {
         comboUsuario.setItems(listUsuario);
         comboUsuario.setLabel("Usuario");
         comboUsuario.setPlaceholder("Elija Usuario o busque introduciendo el nombre");
-        comboUsuario.setHeight("90px"); //espacio alto del componente
     }
 
     private void crearFileImagen() {
-        imagePreview.setWidth("100%");
-        imageLabel.setText("Imagen");
-        uploadImage = new Upload();
-        uploadImage.getStyle().set("box-sizing", "border-box");
 
-        //Notification.show("1. estoy dentro del crearFileImagen");
-        attachImageUpload(uploadImage, imagePreview);
+        //FileUpload.createSimpleUploadImage(buffer, upload, imageByte, image);
+        //Covertimos la imagen en un objeto de tipo byte[]
+        // imageByte = getImageAsByteArray(); ///////////
+        //Enviamos imagen al objeto binder
+        //if (binder.getBean() != null) {
+        //    binder.getBean().setImagen(imageByte);
+        //}
+        upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
+
+        upload.addSucceededListener(event -> {
+            Component component = createComponent(event.getMIMEType(),
+                                                  event.getFileName(),
+                                                  buffer.getInputStream());
+            output.removeAll();
+            showOutput(event.getFileName(), component, output);
+        });
+
+        upload.addFileRejectedListener(event -> {
+            Paragraph component = new Paragraph();
+            output.removeAll();
+            showOutput(event.getErrorMessage(), component, output);
+        });
+
+        upload.getElement().addEventListener("file-remove", event -> {
+                                         output.removeAll();
+                                     });
+
     }
 
-    private void convertirImagen() {
-        if (imageByte != null) {
-            imagePreview = new Image(ConvertToImage.convertToStreamImage(imageByte), "");
+    private Component createComponent(String mimeType, String fileName, InputStream stream) {
+        if (mimeType.startsWith("text")) {
+            return createTextComponent(stream);
+        } else if (mimeType.startsWith("image")) {
+
+            try {
+
+                byte[] bytes = IOUtils.toByteArray(stream);
+                image.getElement().setAttribute("src", new StreamResource(
+                                                fileName, () -> new ByteArrayInputStream(bytes)));
+                try (ImageInputStream in = ImageIO.createImageInputStream(
+                        new ByteArrayInputStream(bytes))) {
+                    final Iterator<ImageReader> readers = ImageIO
+                            .getImageReaders(in);
+                    if (readers.hasNext()) {
+                        ImageReader reader = readers.next();
+                        try {
+                            reader.setInput(in);
+                            //image.setWidth(reader.getWidth(0) + "px");
+                            //image.setHeight(reader.getHeight(0) + "px");
+                            image.setHeight("70px");
+                        } finally {
+                            reader.dispose();
+                        }
+                    }
+                }
+                //Pasamos la imagen a tipo byte
+                imageByte = bytes;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //Enviamos imagen al objeto binder
+            if (binder.getBean() != null) {
+                binder.getBean().setImagen(imageByte);
+            }
+
+            return image;
         }
+        Div content = new Div();
+        String text = String.format("Mime type: '%s'\nSHA-256 hash: '%s'",
+                                    mimeType, MessageDigestUtil.sha256(stream.toString()));
+        content.setText(text);
+        return content;
+    }
+
+    private Component createTextComponent(InputStream stream) {
+        String text;
+        try {
+            text = IOUtils.toString(stream, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            text = "exception reading stream";
+        }
+        return new Text(text);
+    }
+
+    private byte[] getImageAsByteArray() {
+        try {
+            imageByte = IOUtils.toByteArray(buffer.getInputStream());
+            return imageByte;
+        } catch (IOException ex) {
+            Logger.getLogger(ContactFormJuego122.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private void showOutput(String text, Component content,
+                            HasComponents outputContainer) {
+        HtmlComponent p = new HtmlComponent(Tag.P);
+        p.getElement().setText(text);
+        outputContainer.add(p);
+        outputContainer.add(content);
     }
 
     private Component createImagen() {
         if (imageByte != null) {
-            return (new HorizontalLayout(imagePreview));
+            image = new Image(ConvertToImage.convertToStreamImage(imageByte), "");
+            return (new HorizontalLayout(image));
         }
-        return new Text("");
+        return new Text("hola");
     }
 
-    private Component createUpload() {
-        return uploadImage;
-    }
-
-    private void mostrarImagenUpload() {
+    private void mostrarImagen() {
         if (component != null) {
             remove(component);
-            remove(component2);
         }
         component = createImagen();
-        component2 = createUpload();
-
         addComponentAtIndex(7, component);
-        addComponentAtIndex(8, component2);
-    }
-
-    private void attachImageUpload(Upload upload, Image preview) {
-        upload.setAcceptedFileTypes("image/*");
-        //upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
-
-        upload.setReceiver((Receiver) uploadBuffer);
-
-        upload.addSucceededListener(e -> {
-            //Notification.show("3. estoy dentro del attach");
-            String dataUrl = e.getFileName();
-            upload.getElement().appendChild(preview.getElement());
-            try {
-                preview.setSrc(dataUrl);
-                imageByte = uploadBuffer.getInputStream().readAllBytes();
-            } catch (IOException ex) {
-                Logger.getLogger(ContactFormJuego11.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        upload.setMaxFileSize(199000); //199000 Bytes = 194.34 Kilobytes
-
-        upload.addFileRejectedListener(event -> {
-            Notification.show(event.getErrorMessage(), 5000, Notification.Position.TOP_CENTER);
-        });
-
-        preview.setVisible(false);
-        //Notification.show("2. estoy finalizando del attach");
     }
 
     /**
@@ -292,12 +360,12 @@ public class ContactFormJuego11 extends FormLayout {
      * principal. Podremos de esta forma llamar a los métodos desde el método superior DistribuidorView
      * *****************************************************************************
      */
-//ContactFormEventes una superclase común para todos los eventos. Contiene el contact que fue editado o eliminado.
-    public static abstract class ContactFormEvent extends ComponentEvent<ContactFormJuego11> {
+    //ContactFormEventes una superclase común para todos los eventos. Contiene el contact que fue editado o eliminado.
+    public static abstract class ContactFormEvent extends ComponentEvent<ContactFormJuego122> {
 
         private final Juego juego;
 
-        public ContactFormEvent(ContactFormJuego11 source, Juego juego) {
+        public ContactFormEvent(ContactFormJuego122 source, Juego juego) {
             super(source, false);
             this.juego = juego;
         }
@@ -309,26 +377,26 @@ public class ContactFormJuego11 extends FormLayout {
 
     public static class SaveEvent extends ContactFormEvent {
 
-        SaveEvent(ContactFormJuego11 source, Juego juego) {
+        SaveEvent(ContactFormJuego122 source, Juego juego) {
             super(source, juego);
         }
     }
 
     public static class DeleteEvent extends ContactFormEvent {
 
-        DeleteEvent(ContactFormJuego11 source, Juego juego) {
+        DeleteEvent(ContactFormJuego122 source, Juego juego) {
             super(source, juego);
         }
     }
 
     public static class CloseEvent extends ContactFormEvent {
 
-        CloseEvent(ContactFormJuego11 source) {
+        CloseEvent(ContactFormJuego122 source) {
             super(source, null);
         }
     }
 
-// El addListenermétodo utiliza el bus de eventos de Vaadin para registrar los tipos de eventos personalizados.
+    // El addListenermétodo utiliza el bus de eventos de Vaadin para registrar los tipos de eventos personalizados.
     public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType, ComponentEventListener<T> listener) {
         return getEventBus().addListener(eventType, listener);
     }
