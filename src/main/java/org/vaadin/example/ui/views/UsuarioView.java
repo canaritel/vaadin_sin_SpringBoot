@@ -1,10 +1,13 @@
 package org.vaadin.example.ui.views;
 
+import com.vaadin.flow.component.Component;
 import org.vaadin.example.ui.forms.ContactFormUser;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -14,6 +17,7 @@ import com.vaadin.flow.router.Route;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
+import org.vaadin.example.utils.UIUtils;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Usuarios | Vaadin CRM")
@@ -80,7 +84,29 @@ public class UsuarioView extends VerticalLayout {
             }
         }).setHeader("TELÉFONO");
         //añadimos la columna activo modificando datos de la misma
-
+        //para añadir componentes gráficos tipo image/icon se deberá usar addComponentColumn
+        grid.addComponentColumn(e -> {
+            Boolean datousuario = e.getActivo();
+            Icon icon;
+            Component component;
+            if (datousuario) {
+                icon = UIUtils.createPrimaryIcon(VaadinIcon.CHECK);
+            } else {
+                icon = UIUtils.createDisabledIcon(VaadinIcon.CLOSE);
+            }
+            return icon;
+            /*
+            String activado;
+            if (datousuario) {
+                activado = "SI";
+            } else {
+                activado = "NO";
+            }
+            return activado;
+             */
+        }).setHeader("ACTIVO").setSortable(true);
+        //cuando añadimos un elemento no gráfico se usa el método de abajo
+        /*
         grid.addColumn(e -> {
             Boolean datousuario = e.getActivo();
             String activado;
@@ -90,8 +116,10 @@ public class UsuarioView extends VerticalLayout {
                 activado = "NO";
             }
             return activado;
-        }).setHeader("ACTIVO").setSortable(true);
 
+        }).setHeader("ACTIVO").setSortable(true);
+        *
+         */
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro

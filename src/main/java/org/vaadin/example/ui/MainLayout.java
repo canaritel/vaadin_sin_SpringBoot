@@ -24,7 +24,7 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class MainLayout extends AppLayout implements PageConfigurator, RouterLayout {
+public class MainLayout extends AppLayout implements PageConfigurator, RouterLayout {  //PageConfigurator y RouterLayout unido al método sobreescrito al final valen para personalizar tiempos excesivos de cargas (mirar css)
 
     public MainLayout() {
         createHeader();
@@ -64,7 +64,7 @@ public class MainLayout extends AppLayout implements PageConfigurator, RouterLay
         header2.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
 
         H4 userName = new H4("Antonio González");
-        userName.setMaxWidth("80px"); //separación
+        userName.setMaxWidth("80px"); //ancho separación
 
         addToNavbar(header, userName, header2);
     }
