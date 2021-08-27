@@ -29,12 +29,6 @@ public class MainLayout extends AppLayout implements PageConfigurator, RouterLay
     public MainLayout() {
         createHeader();
         createDrawer(createTabs());
-
-        // Ejemplo para aplicar en lectura de imágenes desde mi base datos ********************
-        // byte[] imageBytes = getImageFromDB();
-        // StreamResource resource = new StreamResource("fakeImageName.jpg", () -> new ByteArrayInputStream(imageBytes));
-        // Image image = new Image(resource, "alternative image text");
-        // layout.add(image);
     }
 
     private void createHeader() {
