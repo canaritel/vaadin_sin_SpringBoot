@@ -11,13 +11,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
-import org.vaadin.example.utils.UIUtils;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Usuarios | Vaadin CRM")
@@ -61,19 +61,20 @@ public class UsuarioView extends VerticalLayout {
     private void configureGrid() {
         grid.addClassName("contact-grid"); //añadimos la clase al grid
         grid.setSizeFull(); //ocupamos todo el espacio
+
         //mostramos las columnas
         grid.setItems(usuarioService.listar("")); //sin orden al colocarse
-        grid.removeAllColumns();
+        grid.removeAllColumns(); //borramos todas las columnas
         //grid.setColumns("idUsuario", "nombre", "apellidos", "edad", "telefono", "activo");
         //grid.removeColumnByKey("idUsuario");
         //grid.removeColumnByKey("telefono"); //eliminamos la columna telefono
         //grid.removeColumnByKey("activo"); //eliminamos la columna telefono
 
-        //añadimos la columna telefono modificando datos de la misma
         grid.addColumn("nombre").setHeader("NOMBRE");
         grid.addColumn("apellidos").setHeader("APELLIDOS");
         grid.addColumn("edad").setHeader("EDAD");
-        //grid.addColumn("telefono").setHeader("TELÉFONO");
+
+        //añadimos la columna telefono modificando datos de la misma
         grid.addColumn(e -> {
             if (e.getTelefono().startsWith("9") || e.getTelefono().startsWith("8")
                     || e.getTelefono().startsWith("6") || e.getTelefono().startsWith("7")) {
@@ -83,28 +84,13 @@ public class UsuarioView extends VerticalLayout {
                 return e.getTelefono();
             }
         }).setHeader("TELÉFONO");
-        //añadimos la columna activo modificando datos de la misma
-        //para añadir componentes gráficos tipo image/icon se deberá usar addComponentColumn
-        grid.addComponentColumn(e -> {
-            Boolean datousuario = e.getActivo();
-            Icon icon;
-            Component component;
-            if (datousuario) {
-                icon = UIUtils.createPrimaryIcon(VaadinIcon.CHECK);
-            } else {
-                icon = UIUtils.createDisabledIcon(VaadinIcon.CLOSE);
-            }
-            return icon;
-            /*
-            String activado;
-            if (datousuario) {
-                activado = "SI";
-            } else {
-                activado = "NO";
-            }
-            return activado;
-             */
-        }).setHeader("ACTIVO").setSortable(true);
+
+        //añadimos la columna ACTIVO modificando datos de la misma
+        //para añadir componentes gráficos tipo image/icon se deberá usar addComponentColumn o ComponentRenderer
+        grid.addColumn(new ComponentRenderer<>(this::createIcono))
+                .setHeader("ACTIVO")
+                .setSortable(true)
+                .setWidth("150px");
         //cuando añadimos un elemento no gráfico se usa el método de abajo
         /*
         grid.addColumn(e -> {
@@ -118,8 +104,8 @@ public class UsuarioView extends VerticalLayout {
             return activado;
 
         }).setHeader("ACTIVO").setSortable(true);
-        *
          */
+
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro
@@ -183,6 +169,19 @@ public class UsuarioView extends VerticalLayout {
 
     private void updateList() {
         grid.setItems(usuarioService.listar(filterText.getValue()));
+    }
+
+    private Component createIcono(Usuario usuario) {
+        Boolean datousuario = usuario.getActivo();
+        Icon icon;
+        if (datousuario) {
+            icon = new Icon(VaadinIcon.CHECK);
+            icon.setColor("green");
+        } else {
+            icon = new Icon(VaadinIcon.CLOSE);
+            icon.setColor("grey");
+        }
+        return icon;
     }
 
 }

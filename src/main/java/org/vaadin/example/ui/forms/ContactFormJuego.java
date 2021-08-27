@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -21,10 +22,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.data.validator.BigDecimalRangeValidator;
@@ -70,7 +71,7 @@ public class ContactFormJuego extends FormLayout {
 
     private Component component, component2;
 
-    private final Binder<Juego> binder = new Binder<>(Juego.class);
+    private final Binder<Juego> binder = new BeanValidationBinder<>(Juego.class);
 
     public ContactFormJuego() {
         addClassName("contact-form");
@@ -112,13 +113,17 @@ public class ContactFormJuego extends FormLayout {
                 .asRequired("Seleccione el Usuario propietario")
                 .bind(Juego::getUsuario, Juego::setUsuario);
 
-        binder.bindInstanceFields(imageByte);
+        //binder.bindInstanceFields(this);
         //binder.bindInstanceFields(comboUsuario);
         //binder.bindInstanceFields(comboDistribuidor);
-
         //añado los componentes a la vista
-        add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, labelImage);
-        add(layout); //añado la línea vertical así poner los botones debajo
+        //add(textTitulo, checkboxSistema, datePicker, bigDecimalField, comboDistribuidor, comboUsuario, labelImage);
+        add(textTitulo, checkboxSistema);
+        final HorizontalLayout horizontalLayout = new HorizontalLayout(datePicker, bigDecimalField);
+        final HorizontalLayout horizontalLayout2 = new HorizontalLayout(comboDistribuidor, comboUsuario);
+        add(horizontalLayout, horizontalLayout2, labelImage);
+
+        add(layout); //añado el componente vertical para poner los botones debajo
         add(createButtonsLayout());
     }
 
@@ -138,7 +143,7 @@ public class ContactFormJuego extends FormLayout {
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         // relaciono a los botones algunas teclas
-        save.addClickShortcut(Key.ENTER);
+        save.addClickShortcut(Key.ENTER, KeyModifier.CONTROL);
         close.addClickShortcut(Key.ESCAPE);
 
         // El botón guardar llama al validateAndSavemétodo
@@ -149,7 +154,12 @@ public class ContactFormJuego extends FormLayout {
         close.addClickListener(event -> validateAndClose());
 
         // Valida el formulario cada vez que cambia. Si no es válido, desactiva el botón Guardar para evitar envíos no válidos.
-        binder.addStatusChangeListener(evt -> save.setEnabled(binder.isValid()));
+        binder.addStatusChangeListener(evt -> {
+            boolean hasChanges = evt.getBinder().hasChanges();
+            save.setEnabled(hasChanges && binder.isValid());
+            Notification.show(String.valueOf(hasChanges));
+        });
+
         return new HorizontalLayout(save, delete, close);
     }
 
@@ -187,12 +197,14 @@ public class ContactFormJuego extends FormLayout {
 
     private void crearCampoFecha() {
         datePicker.setLabel("Fecha de compra");
+        datePicker.setWidth("100%");
     }
 
     private void crearCampoPrecio() {
-        bigDecimalField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        //bigDecimalField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         bigDecimalField.setPrefixComponent(new Icon(VaadinIcon.EURO));
         bigDecimalField.setValue(new BigDecimal(0).setScale(2));
+        bigDecimalField.setWidth("100%");
     }
 
     private void crearComboDistribuidor() {
@@ -202,6 +214,7 @@ public class ContactFormJuego extends FormLayout {
         comboDistribuidor.setItems(listDistribuye);
         comboDistribuidor.setLabel("Distribuidor");
         comboDistribuidor.setPlaceholder("Elija Distribuidor o busque introduciendo el nombre");
+        comboDistribuidor.setWidth("100%");
     }
 
     private void crearComboUsuario() {
@@ -212,6 +225,7 @@ public class ContactFormJuego extends FormLayout {
         comboUsuario.setLabel("Usuario");
         comboUsuario.setPlaceholder("Elija Usuario o busque introduciendo el nombre");
         comboUsuario.setHeight("90px"); //espacio alto del componente
+        comboUsuario.setWidth("100%");
     }
 
     private void crearFileImagen() {
@@ -248,8 +262,8 @@ public class ContactFormJuego extends FormLayout {
         component = createImagen();
         component2 = createUpload();
 
-        addComponentAtIndex(7, component);
-        addComponentAtIndex(8, component2);
+        addComponentAtIndex(6, component);
+        addComponentAtIndex(7, component2);
     }
 
     private void attachImageUpload(Upload upload) {

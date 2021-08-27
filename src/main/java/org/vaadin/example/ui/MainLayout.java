@@ -95,13 +95,18 @@ public class MainLayout extends AppLayout implements PageConfigurator, RouterLay
                 VaadinIcon.GAMEPAD.create(),
                 new RouterLink("Juegos", JuegoView.class)
         );
+        
+        Tab listas = new Tab(
+                VaadinIcon.BULLETS.create(),
+                new RouterLink("Juegos", JuegoView.class)
+        );
 
         Tab estadisticas = new Tab(
                 VaadinIcon.BAR_CHART.create(),
                 new RouterLink("Estadísticas", DashboardView.class)
         );
 
-        tabs.add(usuarios, distribuidores, juegos, estadisticas);
+        tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
 
         return tabs;
     }

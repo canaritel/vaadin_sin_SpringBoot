@@ -1,30 +1,9 @@
 package org.vaadin.example.utils;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HtmlComponent;
-import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.internal.MessageDigestUtil;
-import com.vaadin.flow.server.StreamResource;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import org.apache.commons.io.IOUtils;
-
 public class FileUpload {
 
     /*
+    
     public static void createSimpleUpload() {
         Div output = new Div();
 
@@ -48,7 +27,7 @@ public class FileUpload {
 
         //    addCard("Simple in memory receiver for single file upload", upload, output);
     }
-     */
+     
     public static void createSimpleUploadImage(MemoryBuffer buffer, Upload upload, byte[] imageByte, Image image) {
         Div output = new Div();
 
@@ -86,7 +65,7 @@ public class FileUpload {
         //    addCard("Simple in memory receiver for single file upload", upload, output);
     }
 
-    /*
+    
     public static void createUploadWithFileConstraints() {
         Div output = new Div();
 
@@ -111,8 +90,8 @@ public class FileUpload {
 
         //    addCard("Simple single file upload showing messages when file rejected", upload, output);
     }
-     */
- /*
+     
+ 
     public static void createSimpleMultiFileUpload() {
         Div output = new Div();
 
@@ -134,8 +113,8 @@ public class FileUpload {
 
         //  addCard("Simple in memory receiver for multi file upload", upload, output);
     }
-     */
- /*
+     
+ 
     public static void createFilteredMultiFileUpload() {
         Div output = new Div();
 
@@ -156,8 +135,8 @@ public class FileUpload {
 
         //   addCard("Filtered multi file upload for images", upload, output);
     }
-     */
- /*
+     
+ 
     public static void createNonImmediateUpload() {
         Div output = new Div();
 
@@ -178,8 +157,8 @@ public class FileUpload {
 
         //   addCard("Non immediate upload", upload, output);
     }
-     */
- /*
+     
+ 
     public static void changeDefaultComponents() {
         Div output = new Div();
 
@@ -208,8 +187,8 @@ public class FileUpload {
 
         //  addCard("Custom components upload demo", upload, output);
     }
-     */
- /*
+     
+ 
     public static void i18nSampleUpload() {
         Div output = new Div();
 
@@ -262,7 +241,7 @@ public class FileUpload {
 
         //   addCard("i18n translations example", upload, output);
     }
-     */
+     
     public static Component createComponent(String mimeType, String fileName, InputStream stream, byte[] imageByte, Image image) {
         if (mimeType.startsWith("text")) {
             return createTextComponent(stream);
@@ -321,5 +300,5 @@ public class FileUpload {
         outputContainer.add(p);
         outputContainer.add(content);
     }
-
+     */
 }

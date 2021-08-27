@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
-        <vaadin.version>14.6.7</vaadin.version>
+        <vaadin.version>14.6.8</vaadin.version>
         <jetty.version>9.4.43.v20210629</jetty.version>
     </properties>
 
@@ -111,7 +111,19 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>
+        <!-- Bean validation implementation -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.0.Final</version>
+        </dependency>
+        
+        <!-- Vaadin Testbench -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
@@ -182,13 +194,20 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-crud-flow</artifactId>
         </dependency>
-        
+        <!--
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>5.3.9</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>5.3.9</version>
+        </dependency>
+        -->
+        
         <dependency>
             <groupId>org.vaadin</groupId>
             <artifactId>textfieldformatter</artifactId>

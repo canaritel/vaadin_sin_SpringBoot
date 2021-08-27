@@ -1,19 +1,24 @@
 package org.vaadin.example.ui.views;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Currency;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
@@ -33,7 +38,7 @@ public class JuegoView extends VerticalLayout {
     private final ContactFormJuego form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     private Image image;
-    
+
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     public JuegoView() {
@@ -65,6 +70,7 @@ public class JuegoView extends VerticalLayout {
         closeEditor();
     }
 
+    //Parte de la información para crear el Grid la he sacado de la aplicación Vaadin "Demo Business App"
     private void configureGrid() {
         grid.addClassName("contact-grid"); //añadimos la clase al grid
         grid.setSizeFull(); //ocupamos todo el espacio
@@ -73,33 +79,41 @@ public class JuegoView extends VerticalLayout {
         grid.removeAllColumns();
 
         //añadimos las columna y ponemos nombre a cada columna
-        grid.addColumn("titulo").setHeader("TÍTULO");
-        grid.addColumn("sistemaOperativo").setHeader("S.O.");
+        grid.addColumn(Juego::getTitulo)
+                .setAutoWidth(true)
+                .setFrozen(true)
+                .setHeader("TÍTULO")
+                .setSortable(true);
+
+        grid.addColumn(Juego::getSistemaOperativo)
+                .setHeader("S.O.")
+                .setSortable(true);
+
         grid.addColumn(bean -> formatter.format(bean.getFechaJuego()))
-                .setHeader("FECHA").setSortable(true);
+                .setHeader("FECHA")
+                .setSortable(true);
+
+        // Formateamos y añadimos " €" al campo Precio
         grid.addColumn(e -> {
-            float rounded = e.getPrecio().setScale(2, RoundingMode.HALF_UP).floatValue();
-            String datoprecio = rounded + "€";
-            return datoprecio;
-        }).setHeader("PRECIO");
+            DecimalFormat decimalFormat = new DecimalFormat();
+            decimalFormat.setMaximumFractionDigits(2);
+            decimalFormat.setMinimumFractionDigits(2);
+            return decimalFormat.format(e.getPrecio()) + " €";
+        })
+                .setHeader("PRECIO")
+                .setTextAlign(ColumnTextAlign.START)
+                .setComparator(Comparator.comparing(Juego::getPrecio));
+
         grid.addColumn(e -> e.getDistribuidor().getIdDistribuidor())
                 .setHeader("DISTRIBUIDOR").setSortable(true);
+
         grid.addColumn(e -> e.getUsuario().getNombre()).
                 setHeader("USUARIO").setSortable(true);
 
-        //   grid.addComponentColumn(i -> new Image(ConvertToImage.convertToStreamImage(i.getImagen()), ""))
-        //           .setHeader("Imagen");
-        grid.addComponentColumn(i -> {
-            //Image image;
-            if (i.getImagen() == null) {
-                image = new Image("images/Imagen-no-disponible.png", "null");
-            } else {
-                image = new Image(ConvertToImage.convertToStreamImage(i.getImagen()), "");
-            }
-            //image.setWidth(40, Unit.PIXELS);
-            image.setHeight(30, Unit.PIXELS);
-            return image;
-        }).setHeader("IMAGEN");
+        grid.addColumn(new ComponentRenderer<>(this::createImage))
+                .setHeader("IMAGEN")
+                .setSortable(false)
+                .setWidth("150px");
 
         /*
         grid.addComponentColumn(item -> {
@@ -172,11 +186,21 @@ public class JuegoView extends VerticalLayout {
         form.setContact(null);  // Establece el contacto del formulario en null, borrando los valores antiguos.
         form.setVisible(false); // Oculta el formulario.
         removeClassName("editing"); //Elimina la "editing" clase CSS de la vista.
-        
+
     }
 
     private void updateList() {
         grid.setItems(juegoService.listar(filterText.getValue()));
+    }
+
+    private Component createImage(Juego juego) {
+        if (juego.getImagen() == null) {
+            image = new Image("images/Imagen-no-disponible.png", "null");
+        } else {
+            image = new Image(ConvertToImage.convertToStreamImage(juego.getImagen()), "");
+        }
+        image.setHeight(30, Unit.PIXELS);
+        return image;
     }
 
 }
