@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -26,6 +27,7 @@ public class UsuarioView extends VerticalLayout {
 
     private UsuarioService usuarioService;
 
+    //PaginatedGrid<Usuario> grid = new PaginatedGrid<>(Usuario.class);
     private final Grid<Usuario> grid = new Grid(Usuario.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
     private final ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
@@ -64,15 +66,26 @@ public class UsuarioView extends VerticalLayout {
 
         //mostramos las columnas
         grid.setItems(usuarioService.listar("")); //sin orden al colocarse
+
         grid.removeAllColumns(); //borramos todas las columnas
         //grid.setColumns("idUsuario", "nombre", "apellidos", "edad", "telefono", "activo");
         //grid.removeColumnByKey("idUsuario");
         //grid.removeColumnByKey("telefono"); //eliminamos la columna telefono
         //grid.removeColumnByKey("activo"); //eliminamos la columna telefono
 
-        grid.addColumn("nombre").setHeader("NOMBRE");
-        grid.addColumn("apellidos").setHeader("APELLIDOS");
-        grid.addColumn("edad").setHeader("EDAD");
+        //grid.addColumn(Usuario::getNombre).setHeader("NOMBRE");
+        grid.addColumn(new ComponentRenderer<>(this::createUser))
+                .setHeader("NOMBRE")
+                .setSortable(true)
+                .setComparator(Usuario::getNombre);
+                
+        grid.addColumn(Usuario::getApellidos)
+                .setSortable(true)
+                .setHeader("APELLIDOS");
+
+        grid.addColumn(Usuario::getEdad)
+                .setSortable(true)
+                .setHeader("EDAD");
 
         //añadimos la columna telefono modificando datos de la misma
         grid.addColumn(e -> {
@@ -83,7 +96,9 @@ public class UsuarioView extends VerticalLayout {
             } else {
                 return e.getTelefono();
             }
-        }).setHeader("TELÉFONO");
+        })
+                .setSortable(true)
+                .setHeader("TELÉFONO");
 
         //añadimos la columna ACTIVO modificando datos de la misma
         //para añadir componentes gráficos tipo image/icon se deberá usar addComponentColumn o ComponentRenderer
@@ -182,6 +197,14 @@ public class UsuarioView extends VerticalLayout {
             icon.setColor("grey");
         }
         return icon;
+    }
+
+    private Component createUser(Usuario usuario) {
+        HorizontalLayout horizontal = new HorizontalLayout();
+        Icon icon = new Icon(VaadinIcon.USER);
+        Label label = new Label(usuario.getNombre());
+        horizontal.add(icon, label);
+        return horizontal;
     }
 
 }

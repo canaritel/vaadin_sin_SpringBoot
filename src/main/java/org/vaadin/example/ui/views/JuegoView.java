@@ -18,7 +18,6 @@ import com.vaadin.flow.router.Route;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
-import java.util.Currency;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
@@ -115,16 +114,6 @@ public class JuegoView extends VerticalLayout {
                 .setSortable(false)
                 .setWidth("150px");
 
-        /*
-        grid.addComponentColumn(item -> {
-            Icon icon;
-            icon = ConvertToImage.convertToImage3(item.getImagen());
-            icon.setColor("green");
-            return icon;
-        }).setHeader("ICONO");
-        //
-        
-         */
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro

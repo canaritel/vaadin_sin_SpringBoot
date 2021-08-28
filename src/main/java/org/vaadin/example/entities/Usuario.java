@@ -52,7 +52,7 @@ public class Usuario implements Serializable {
 
     @Basic(optional = false)
     @NotNull
-    @NotEmpty //
+    //@NotEmpty //solo poner en campos que sean tipo Text
     @Column(name = "edad")
     private int edad;
 

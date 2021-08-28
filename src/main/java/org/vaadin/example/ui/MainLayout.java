@@ -22,6 +22,7 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
+import org.vaadin.example.ui.views.ListadoView;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class MainLayout extends AppLayout implements PageConfigurator, RouterLayout {  //PageConfigurator y RouterLayout unido al método sobreescrito al final valen para personalizar tiempos excesivos de cargas (mirar css)
@@ -98,7 +99,7 @@ public class MainLayout extends AppLayout implements PageConfigurator, RouterLay
         
         Tab listas = new Tab(
                 VaadinIcon.BULLETS.create(),
-                new RouterLink("Juegos", JuegoView.class)
+                new RouterLink("Listado", ListadoView.class)
         );
 
         Tab estadisticas = new Tab(

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 import org.vaadin.example.entities.Usuario;
@@ -33,7 +34,7 @@ public class ContactFormUser extends FormLayout {
     private final Button delete = new Button("Eliminar");
     private final Button close = new Button("Cancelar");
 
-    private final Binder<Usuario> binder = new Binder<>(Usuario.class);
+    private final Binder<Usuario> binder = new BeanValidationBinder<>(Usuario.class);
 
     public ContactFormUser() {
         addClassName("contact-form");
@@ -41,10 +42,9 @@ public class ContactFormUser extends FormLayout {
         VerticalLayout layout = new VerticalLayout(); //creo componente de línea vertical
 
         // establecemos reglas para el campo numberEdad
-        numberEdad.setValue(20);
         numberEdad.setHasControls(true);
-        numberEdad.setMin(5);
-        numberEdad.setMax(99);
+        //numberEdad.setMin(5);
+        //numberEdad.setMax(99);
 
         // establecemos reglas y formato para el campo textTelefono.  Más info: https://vaadin.com/directory/component/textfield-formatter/overview
         new PhoneI18nFieldFormatter(PhoneI18nFieldFormatter.REGION_ES).extend(textTelefono);
@@ -54,26 +54,27 @@ public class ContactFormUser extends FormLayout {
         estadoCombo.setHelperText("Seleccione true para Activo");
         estadoCombo.setLabel("Activo");
 
-        //binder.bind(textNombre, Usuario::getNombre, Usuario::setNombre);
-        binder.forField(textNombre)
+        //IMPORTANTE activar asRequired para evitar errores o warning en la ejecución
+        binder.forField(textNombre).asRequired()
                 .withValidator(name -> name.length() >= 3, "El nombre debe tener al menos 3 carácteres")
                 .withValidator(name -> name.length() <= 60, "El nombre debe tener menos de 60 carácteres")
                 .bind(Usuario::getNombre, Usuario::setNombre);
         //binder.bind(textApellidos, Usuario::getApellidos, Usuario::setApellidos);
-        binder.forField(textApellidos)
+        binder.forField(textApellidos).asRequired()
                 .withValidator(surname -> surname.length() >= 5, "Los apellidos deben tener al menos 5 carácteres")
                 .withValidator(surname -> surname.length() <= 60, "Los apellidos deben tener menos de 60 carácteres")
                 .bind(Usuario::getApellidos, Usuario::setApellidos);
         //binder.forField(textEdad).withConverter(Integer::valueOf, String::valueOf).bind(Usuario::getEdad, Usuario::setEdad);
-        binder.forField(numberEdad).withConverter(Integer::valueOf, Integer::valueOf)
+        binder.forField(numberEdad).asRequired()
+                .withConverter(Integer::valueOf, Integer::valueOf)
                 .withValidator(number -> number >= 5, "Debe tener al menos 5 años")
                 .withValidator(number -> number <= 99, "Debe tener una edad menor a 100 años")
                 .bind(Usuario::getEdad, Usuario::setEdad);
         //binder.bind(textTelefono, Usuario::getTelefono, Usuario::setTelefono);
-        binder.forField(textTelefono)
+        binder.forField(textTelefono).asRequired()
                 .withValidator(phone -> (phone.length() >= 9 && phone.length() <= 13), "El teléfono debe contener al menos 9 dígitos y un máximo de 11")
                 .bind(Usuario::getTelefono, Usuario::setTelefono);
-        binder.forField(estadoCombo)
+        binder.forField(estadoCombo).asRequired()
                 .withConverter(Boolean::valueOf, String::valueOf).bind(Usuario::getActivo, Usuario::setActivo);
 
         //añado los componentes a la vista

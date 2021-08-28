@@ -49,22 +49,24 @@ public class ContactFormDistribuye extends FormLayout {
         //binder.bind(textDireccion, Distribuye::getDireccion, Distribuye::setDireccion);
         //binder.bind(textCiudad, Distribuye::getCiudad, Distribuye::setCiudad);
         //binder.bind(comboBox, Distribuye::getPais, Distribuye::setPais);
-        binder.forField(textNombre)
+        
+        //IMPORTANTE activar asRequired para evitar errores o warning en la ejecución
+        binder.forField(textNombre).asRequired()
                 .withValidator(name -> name.length() >= 5, "El nombre debe tener al menos 5 carácteres")
                 .withValidator(name -> name.length() < 50, "El nombre debe tener menos de 50 carácteres")
                 .bind(Distribuye::getIdDistribuidor, Distribuye::setIdDistribuidor);
 
-        binder.forField(textDireccion)
+        binder.forField(textDireccion).asRequired()
                 .withValidator(name -> name.length() >= 5, "La dirección debe tener al menos 5 carácteres")
                 .withValidator(name -> name.length() < 90, "La dirección debe tener menos  de 90 carácteres")
                 .bind(Distribuye::getDireccion, Distribuye::setDireccion);
 
-        binder.forField(textCiudad)
+        binder.forField(textCiudad).asRequired()
                 .withValidator(name -> name.length() >= 3, "La ciudad debe tener al menos 3 carácteres")
                 .withValidator(name -> name.length() < 50, "La ciudad debe tener menos de 50 carácteres")
                 .bind(Distribuye::getCiudad, Distribuye::setCiudad);
 
-        binder.forField(comboBox)
+        binder.forField(comboBox).asRequired()
                 .withValidator(name -> name.length() >= 3, "El país debe tener al menos 3 carácteres")
                 .withValidator(name -> name.length() < 30, "El país debe tener menos de 30 carácteres")
                 .bind(Distribuye::getPais, Distribuye::setPais);

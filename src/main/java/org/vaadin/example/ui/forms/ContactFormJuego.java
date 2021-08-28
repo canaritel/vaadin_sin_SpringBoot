@@ -25,7 +25,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.data.validator.BigDecimalRangeValidator;
@@ -71,7 +70,7 @@ public class ContactFormJuego extends FormLayout {
 
     private Component component, component2;
 
-    private final Binder<Juego> binder = new BeanValidationBinder<>(Juego.class);
+    private final Binder<Juego> binder = new Binder<>(Juego.class);
 
     public ContactFormJuego() {
         addClassName("contact-form");
@@ -91,6 +90,7 @@ public class ContactFormJuego extends FormLayout {
                 .bind(Juego::getTitulo, Juego::setTitulo);
 
         binder.forField(checkboxSistema)
+                .withValidator(check -> check != null, "Debe elegir un sistema operativo")
                 .bind(Juego::getSistemaOperativo, Juego::setSistemaOperativo);
 
         binder.forField(datePicker)
@@ -113,7 +113,7 @@ public class ContactFormJuego extends FormLayout {
                 .asRequired("Seleccione el Usuario propietario")
                 .bind(Juego::getUsuario, Juego::setUsuario);
 
-        //binder.bindInstanceFields(this);
+        binder.bindInstanceFields(imageByte);
         //binder.bindInstanceFields(comboUsuario);
         //binder.bindInstanceFields(comboDistribuidor);
         //añado los componentes a la vista
@@ -155,9 +155,7 @@ public class ContactFormJuego extends FormLayout {
 
         // Valida el formulario cada vez que cambia. Si no es válido, desactiva el botón Guardar para evitar envíos no válidos.
         binder.addStatusChangeListener(evt -> {
-            boolean hasChanges = evt.getBinder().hasChanges();
-            save.setEnabled(hasChanges && binder.isValid());
-            Notification.show(String.valueOf(hasChanges));
+            save.setEnabled(binder.isValid());
         });
 
         return new HorizontalLayout(save, delete, close);
