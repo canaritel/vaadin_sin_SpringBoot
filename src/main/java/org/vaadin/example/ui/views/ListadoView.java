@@ -1,8 +1,12 @@
 package org.vaadin.example.ui.views;
 
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -28,10 +32,10 @@ public class ListadoView extends FlexLayout {
         }
 
         //Damos al componente un nombre de clase CSS
-        addClassName("horizontal-listado");  //nombre del componente CSS
-
+        addClassName("listado-horizontal");  //nombre del componente CSS
+        //cargamos los objetos en nuestro ArrayList
         updateList();
-
+        //mostramos los componentes que forman el listado
         for (int i = 0; i < listado.size(); i++) {
             add(createListado(i));
         }
@@ -43,17 +47,27 @@ public class ListadoView extends FlexLayout {
 
     private VerticalLayout createListado(int index) {
         VerticalLayout vertical = new VerticalLayout();
-        vertical.addClassName("horizontal-hijo");
+        vertical.addClassName("listado-hijo");
         vertical.setWidth("auto");
+        vertical.setAlignItems(Alignment.CENTER);
 
         Juego juego = (Juego) listado.get(index);
-        Label label = new Label(juego.getTitulo());
-        Label label2 = new Label(juego.getSistemaOperativo());
-        Label label3 = new Label(juego.getUsuario().getNombre());
-        Label label4 = new Label(juego.getDistribuidor().getIdDistribuidor());
-        Label label5 = new Label(juego.getPrecio().toPlainString());
-        Image image = new Image(ConvertToImage.convertToStreamImage(juego.getImagen()), "");
 
+        H3 label = new H3(juego.getTitulo());
+        Label label2 = new Label(" " + juego.getSistemaOperativo());
+        Label label3 = new Label(" " + juego.getUsuario().getNombre());
+        Label label4 = new Label(" " + juego.getDistribuidor().getIdDistribuidor());
+        Label label5 = new Label(" " + juego.getPrecio().toPlainString());
+        Image image = new Image(ConvertToImage.convertToStreamImage(juego.getImagen()), "");
+        //image.setWidth(200, Unit.PIXELS);
+        image.setHeight(300, Unit.PIXELS);
+
+        label2.addComponentAsFirst(new Icon(VaadinIcon.DESKTOP));
+        label3.addComponentAsFirst(new Icon(VaadinIcon.USER));
+        label4.addComponentAsFirst(new Icon(VaadinIcon.STAR));
+        label5.addComponentAsFirst(new Icon(VaadinIcon.EURO));
+
+        vertical.setHorizontalComponentAlignment(Alignment.START, label2, label3, label4, label5);
         vertical.add(label, image, label2, label3, label4, label5);
 
         return vertical;
