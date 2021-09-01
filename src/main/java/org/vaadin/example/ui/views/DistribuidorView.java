@@ -32,13 +32,14 @@ public class DistribuidorView extends VerticalLayout {
     private final TextField filterText = new TextField();
     private ContactFormDistribuye form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
-    private final Button button1 = new Button();
-    private final Button button2 = new Button();
-    private final Button button3 = new Button();
-    private final Button button4 = new Button();
-    private final Button button5 = new Button();
+    //Inicializamos botones para la Paginación
+    private final Button buttonInicio = new Button();
+    private final Button buttonAnterior = new Button();
+    private final Button buttonPagina = new Button();
+    private final Button buttonSiguiente = new Button();
+    private final Button buttonFin = new Button();
     private final ComboBox<String> valueComboBox = new ComboBox<>();
-
+    //Inicializamos variables para la Paginación
     private double totalPagina = 0;
     private int totalPaginas = 0;
     private int totalRegistros = 0;
@@ -60,17 +61,21 @@ public class DistribuidorView extends VerticalLayout {
         if (form == null) {
             form = new ContactFormDistribuye();
         }
+        //Creamos las acciones principales
         form.addListener(ContactFormDistribuye.SaveEvent.class, this::saveContact);
         form.addListener(ContactFormDistribuye.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactFormDistribuye.CloseEvent.class, e -> closeEditor());
 
         //Crea un Div que envuelve el grid el formDis, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
-        content.addClassName("content");  ////
+        content.addClassName("content");  //////////////////////////////////////
         content.setSizeFull();
 
         //agrego todos los componentes al diseño principal
         add(getToolBar(), content, configurePagination()); //añado no solo componentes sino métodos como getToolBar y configurePagination
+
+        //creamos las acciones para los botones y comboBox de la paginación
+        createListener();
 
         updateList();
         closeEditor();
@@ -105,10 +110,9 @@ public class DistribuidorView extends VerticalLayout {
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         // Sets the max number of items to be rendered on the grid for each page
-        //grid.setPageSize(15);  //todavía no se como implementarlo, no funciona 
+        //grid.setPageSize(15);  //todavía no lo implemento, no funciona 
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro
         grid.asSingleSelect().addValueChangeListener(evt -> editContact(evt.getValue()));
-
     }
 
     private void datosPaginacion() {
@@ -134,39 +138,34 @@ public class DistribuidorView extends VerticalLayout {
     }
 
     private HorizontalLayout configurePagination() {
+        //creamos los iconos para los botones
+        buttonInicio.setIcon(VaadinIcon.BACKWARDS.create());
+        buttonAnterior.setIcon(VaadinIcon.ANGLE_LEFT.create());
+        buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+        buttonSiguiente.setIcon(VaadinIcon.ANGLE_RIGHT.create());
+        buttonFin.setIcon(VaadinIcon.FORWARD.create());
+
+        //creamos los componentes HorizontalLayout
         HorizontalLayout toolpagination = new HorizontalLayout();
-
-        button1.setIcon(VaadinIcon.BACKWARDS.create());
-        button2.setIcon(VaadinIcon.ANGLE_LEFT.create());
-        button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
-        button4.setIcon(VaadinIcon.ANGLE_RIGHT.create());
-        button5.setIcon(VaadinIcon.FORWARD.create());
-
         HorizontalLayout horizontalItems = new HorizontalLayout(configureItems());
+        HorizontalLayout horizontalCount = new HorizontalLayout(configureCount());
+        HorizontalLayout horizontalPagination = new HorizontalLayout(buttonInicio, buttonAnterior, buttonPagina,
+                                                                     buttonSiguiente, buttonFin);
 
-        HorizontalLayout horizontalCount = new HorizontalLayout();
-        Label label = new Label();
-        label.setText(totalRegistros + " registros");
-        label.setWidth("100px");
-        label.setHeight("35px");
-        horizontalCount.add(label);
-
-        HorizontalLayout horizontalPagination = new HorizontalLayout();
-        horizontalPagination.add(button1, button2, button3, button4, button5);
-
+        //asignamos el ancho total a los componentes creados. Importante para luego poder alinearlos
         toolpagination.setWidthFull();
         horizontalItems.setWidthFull();
         horizontalPagination.setWidthFull();
         horizontalCount.setWidthFull();
 
+        //alineamos los componentes
         horizontalCount.setJustifyContentMode(JustifyContentMode.END);
         toolpagination.setAlignSelf(Alignment.END, horizontalCount);
         toolpagination.setAlignSelf(Alignment.CENTER, horizontalPagination);
         toolpagination.setAlignSelf(Alignment.START, horizontalItems);
 
+        //añadimos todos los componentes para la Paginación
         toolpagination.add(horizontalItems, horizontalPagination, horizontalCount);
-
-        createListener();
 
         return toolpagination;
     }
@@ -175,55 +174,62 @@ public class DistribuidorView extends VerticalLayout {
         valueComboBox.setItems("5", "15", "30", "50");
         valueComboBox.setValue("15");
 
-        HorizontalLayout headerItems = new HorizontalLayout();
-        headerItems.add(valueComboBox);
+        return new HorizontalLayout(valueComboBox);
+    }
 
-        return headerItems;
+    private HorizontalLayout configureCount() {
+        Label label = new Label();
+        label.setText(totalRegistros + " registros");
+        label.setWidth("100px");
+        label.setHeight("35px");
+
+        return new HorizontalLayout(label);
     }
 
     private void createListener() {
         valueComboBox.addValueChangeListener(e -> {
-            itemsPagina = Integer.valueOf(e.getSource().getValue());
+            numeroPagina = 0;
+            itemsPagina = Integer.valueOf(e.getValue());
             datosPaginacion();
-            button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+            buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
             updateList();
         });
 
-        button1.addClickListener(e -> {
+        buttonInicio.addClickListener(e -> {
             if ((numeroPagina + 1) <= 1) {
                 return;
             } else {
                 numeroPagina = 0;
                 grid.setItems(distribuyeService.listarPagination(filterText.getValue(), false, itemsPagina, numeroPagina));
-                button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+                buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
             }
         });
 
-        button2.addClickListener(e -> {
+        buttonAnterior.addClickListener(e -> {
             if ((numeroPagina + 1) <= 1) {
                 return;
             } else {
                 grid.setItems(distribuyeService.listarPagination(filterText.getValue(), false, itemsPagina, --numeroPagina));
-                button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+                buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
             }
         });
 
-        button4.addClickListener(e -> {
+        buttonSiguiente.addClickListener(e -> {
             if ((numeroPagina + 1) >= totalPaginas) {
                 return;
             } else {
                 grid.setItems(distribuyeService.listarPagination(filterText.getValue(), false, itemsPagina, ++numeroPagina));
-                button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+                buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
             }
         });
 
-        button5.addClickListener(e -> {
+        buttonFin.addClickListener(e -> {
             if ((numeroPagina + 1) >= totalPaginas) {
                 return;
             } else {
                 numeroPagina = totalPaginas - 1;
                 grid.setItems(distribuyeService.listarPagination(filterText.getValue(), false, itemsPagina, numeroPagina));
-                button3.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
+                buttonPagina.setText("Página " + (numeroPagina + 1) + " de " + totalPaginas);
             }
         });
     }
