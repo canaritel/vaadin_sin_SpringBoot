@@ -6,6 +6,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -228,6 +229,7 @@ public class ContactFormJuego extends FormLayout {
 
     private void crearFileImagen() {
         imagePreview.setWidth("100%");
+        imagePreview.setHeight(300, Unit.PIXELS);
         labelImage.setText("Imagen");
         uploadImage = new Upload();
         uploadImage.getStyle().set("box-sizing", "border-box");
@@ -238,6 +240,7 @@ public class ContactFormJuego extends FormLayout {
     private void convertirImagen() {
         if (imageByte != null) {
             imagePreview = new Image(ConvertToImage.convertToStreamImage(imageByte), "");
+            imagePreview.setHeight(300, Unit.PIXELS);
         }
     }
 

@@ -247,4 +247,40 @@ public class UsuarioJpaRepository implements Serializable {
         return usertmp;
     }
 
+    public List<Usuario> ListUsuarioByFilterPagination(String filtra, boolean all, int maxResults, int pagina) {
+        int numPagina;
+        filtra = filtra.toUpperCase();
+
+        String QUERY = "SELECT u FROM Usuario u WHERE u.nombre LIKE :nombre OR u.apellidos LIKE :apellidos"
+                + " OR u.telefono LIKE :telefono OR u.edad LIKE :edad";
+
+        EntityManager em = getEntityManager();
+        List<Usuario> usertmp = new ArrayList<>();
+
+        try {
+            //TypedQuery<Usuario> consultaAlumnos = em.createNamedQuery("Usuario.findByNombre", Usuario.class); //Cuando uso las QUERY creadas en la entidad
+            TypedQuery<Usuario> consulta = em.createQuery(QUERY, Usuario.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("nombre", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
+            consulta.setParameter("apellidos", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            consulta.setParameter("edad", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
+            consulta.setParameter("telefono", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+
+            //calculamos el número de la página, comenzando desde la 0
+            numPagina = pagina * maxResults;
+
+            if (!all) {
+                consulta.setMaxResults(maxResults);
+                consulta.setFirstResult(numPagina);
+            }
+
+            usertmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+
+        return usertmp;
+    }
+
 }

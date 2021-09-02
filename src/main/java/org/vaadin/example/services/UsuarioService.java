@@ -16,12 +16,6 @@ public class UsuarioService implements CrudInterface<Usuario> {
     String respuesta = "";
 
     @Override
-    public List<Usuario> listar(String texto) {
-        usuarioList = usuarioRepository.ListUsuarioByFilter(texto);
-        return usuarioList;
-    }
-
-    @Override
     public void insertar(Usuario obj) {
         try {
             obj.setNombre(obj.getNombre().toUpperCase().trim());
@@ -64,6 +58,18 @@ public class UsuarioService implements CrudInterface<Usuario> {
     @Override
     public int total() {
         return usuarioRepository.getUsuarioCount();
+    }
+
+    @Override
+    public List<Usuario> listar(String texto) {
+        usuarioList = usuarioRepository.ListUsuarioByFilter(texto);
+        return usuarioList;
+    }
+
+    @Override
+    public List<Usuario> listarPagination(String texto, boolean all, int maxResults, int firstResult) {
+        usuarioList = usuarioRepository.ListUsuarioByFilterPagination(texto, all, maxResults, firstResult);
+        return usuarioList;
     }
 
 }

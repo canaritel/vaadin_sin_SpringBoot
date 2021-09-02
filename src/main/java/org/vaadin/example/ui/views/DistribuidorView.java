@@ -41,10 +41,8 @@ public class DistribuidorView extends VerticalLayout {
         //Damos al componente un nombre de clase CSS
         addClassName("distribuye-view");  //nombre del componente CSS
         setSizeFull(); //le asignamos el máximo tamaño de la ventana
-
         //Configuramos el grid tabla
         configureGrid();
-
         //Configuramos el filtro de búsqueda
         configureFilter();
 
@@ -58,9 +56,6 @@ public class DistribuidorView extends VerticalLayout {
             pagination = new DistribuyePagination(distribuyeService, grid, filterText);
         }
 
-        //Escuchamos los eventos del filterText
-        filterText.addValueChangeListener(e -> pagination.updateList()); //si detecta un cambio en el campo filerText se activa
-
         //Creamos las acciones principales
         form.addListener(ContactFormDistribuye.SaveEvent.class, this::saveContact);
         form.addListener(ContactFormDistribuye.DeleteEvent.class, this::deleteContact);
@@ -68,25 +63,23 @@ public class DistribuidorView extends VerticalLayout {
 
         //Crea un Div que envuelve el grid el formDis, le da un nombre de clase CSS y lo convierte en tamaño completo
         Div content = new Div(grid, form);
-        content.addClassName("content");  //////////////////////////////////////
+        content.addClassName("content");
         content.setSizeFull();
 
         //agrego todos los componentes al VerticalLayout principal
         add(getToolBar(), content, pagination.configurePagination());  //añado componentes y métodos como getToolBar y configurePagination
 
-        //cerramos formularios y otras méetodos finales
+        //cerramos formularios y otros acciones finales
         closeEditor();
     }
 
+    //Parte de la información para crear el Grid la he sacado de la aplicación Vaadin "Demo Business App"
     private void configureGrid() {
         //dataProvider = DataProvider.ofCollection(distribuyeService.listar(""));
-        grid.setWidthFull();
         grid.addClassName("contact-grid"); //añadimos la clase al grid
         grid.setSizeFull(); //ocupamos todo el espacio
         //mostramos las columnas con una función de mostrar listar
         grid.setItems(distribuyeService.listar("")); //sin orden al colocarse
-
-        //datosPaginacion();
         //grid.setItems(dataProvider.getItems());
         //Borramos todas las columnas para añadirlas manualmente
         grid.removeAllColumns();
@@ -105,18 +98,8 @@ public class DistribuidorView extends VerticalLayout {
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
-        // Sets the max number of items to be rendered on the grid for each page
-        //grid.setPageSize(15);  //todavía no lo implemento, no funciona 
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro
         grid.asSingleSelect().addValueChangeListener(evt -> editContact(evt.getValue()));
-    }
-
-    private Component createDistribuidor(Distribuye distribuye) {
-        HorizontalLayout horizontal = new HorizontalLayout();
-        Icon icon = new Icon(VaadinIcon.STAR);
-        Label label = new Label(distribuye.getIdDistribuidor());
-        horizontal.add(icon, label);
-        return horizontal;
     }
 
     private void configureFilter() {
@@ -124,6 +107,8 @@ public class DistribuidorView extends VerticalLayout {
         filterText.setClearButtonVisible(true);  //permitimos borrar facilmente el texto del textfield
         //se activa cuando escribimos algo y pasa un  corto espacio de tiempo (al terminar de escribir)
         filterText.setValueChangeMode(ValueChangeMode.LAZY); //método recomendado para los filtros
+        //si detecta un cambio en el campo filerText se activa
+        filterText.addValueChangeListener(e -> pagination.updateList()); 
     }
 
     private HorizontalLayout getToolBar() {
@@ -175,6 +160,14 @@ public class DistribuidorView extends VerticalLayout {
         form.setVisible(false);
         removeClassName("editing");
         form.setContact(null);
+    }
+
+    private Component createDistribuidor(Distribuye distribuye) {
+        HorizontalLayout horizontal = new HorizontalLayout();
+        Icon icon = new Icon(VaadinIcon.STAR);
+        Label label = new Label(distribuye.getIdDistribuidor());
+        horizontal.add(icon, label);
+        return horizontal;
     }
 
 }

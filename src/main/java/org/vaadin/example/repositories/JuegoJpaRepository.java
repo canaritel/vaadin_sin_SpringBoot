@@ -236,4 +236,40 @@ public class JuegoJpaRepository implements Serializable {
         return juegotmp;
     }
 
+    public List<Juego> ListJuegoByFilterPagination(String filtra, boolean all, int maxResults, int pagina) {
+        int numPagina;
+        filtra = filtra.toUpperCase();
+
+        String QUERY = "SELECT j FROM Juego j WHERE j.titulo LIKE :titulo OR j.sistemaOperativo LIKE :sistemaOperativo"
+                + " OR j.fechaJuego LIKE :fechaJuego OR j.precio LIKE :precio";
+
+        EntityManager em = getEntityManager();
+        List<Juego> juegotmp = new ArrayList<>();
+
+        try {
+
+            TypedQuery<Juego> consulta = em.createQuery(QUERY, Juego.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("titulo", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
+            consulta.setParameter("sistemaOperativo", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            consulta.setParameter("fechaJuego", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
+            consulta.setParameter("precio", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+
+            //calculamos el número de la página, comenzando desde la 0
+            numPagina = pagina * maxResults;
+
+            if (!all) {
+                consulta.setMaxResults(maxResults);
+                consulta.setFirstResult(numPagina);
+            }
+
+            juegotmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+
+        return juegotmp;
+    }
+
 }

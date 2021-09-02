@@ -38,17 +38,25 @@ a[highlight] {
 ****************************************************************/
 /* Utiliza CSS Flexbox para administrar el diseño */
 .distribuye-view .content {
-    display: flex; 
+    display: flex;
+
 }
 /* Asigna 2/3 del ancho disponible al grid */
 .distribuye-view .contact-grid {
     flex: 2;
+    /*flex-direction: column;*/
 }
+
 /* Asigna 1/3 del ancho disponible al formulario */
 .distribuye-view .contact-form {
     flex: 1;
     padding: var(--lumo-space-m);  
     /* Utiliza la propiedad de tema personalizado Vaadin Lumo para agregar relleno estándar en la forma */
+}
+/* Centramos el componente en la ventana*/
+.distribuye-view .tool-pagination {
+    margin: 0 auto;
+    display: block;
 }
 
 
@@ -62,6 +70,7 @@ a[highlight] {
 /* Asigna 2/3 del ancho disponible al grid */
 .juego-view .contact-grid {
     flex: 2;
+
 }
 /* Asigna 1/3 del ancho disponible al formulario */
 .juego-view .contact-form {
@@ -86,6 +95,7 @@ a[highlight] {
     font-weight: bold;
     background-color: hsla(89, 43%, 51%, 0.3);
     border-radius: 15px;
+    box-shadow: 10px 10px 8px #888888;
 }
 
 

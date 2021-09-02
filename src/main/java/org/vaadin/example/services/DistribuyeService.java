@@ -16,12 +16,6 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
     String respuesta = "";
 
     @Override
-    public List<Distribuye> listar(String texto) {
-        distribuyeList = distribuyeRepository.ListDistribuyeByFilter(texto);
-        return distribuyeList;
-    }
-
-    @Override
     public void insertar(Distribuye obj) {
         try {
             obj.setIdDistribuidor(obj.getIdDistribuidor().toUpperCase().trim());
@@ -70,7 +64,7 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
         return distribuyeRepository.getDistribuyeCount();
     }
 
-    //método aañadido no declarado en el interface
+    //métodos añadidos no declarados en el interface
     public boolean existe(String id) {
         Distribuye distribuye = new Distribuye();
         distribuye.setIdDistribuidor(id);
@@ -79,6 +73,18 @@ public class DistribuyeService implements CrudInterface<Distribuye> {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public List<Distribuye> listar(String texto) {
+        distribuyeList = distribuyeRepository.ListDistribuyeByFilter(texto);
+        return distribuyeList;
+    }
+
+    @Override
+    public List<Distribuye> listarPagination(String texto, boolean all, int maxResults, int firstResult) {
+        distribuyeList = distribuyeRepository.ListDistribuyeByFilterPagination(texto, all, maxResults, firstResult);
+        return distribuyeList;
     }
 
 }

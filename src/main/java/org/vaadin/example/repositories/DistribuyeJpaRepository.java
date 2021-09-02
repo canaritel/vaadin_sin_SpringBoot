@@ -223,6 +223,41 @@ public class DistribuyeJpaRepository implements Serializable {
         }
     }
 
+    public List<Distribuye> ListDistribuyeByFilterPagination(String filtra, boolean all, int maxResults, int pagina) {
+        int numPagina;
+        filtra = filtra.toUpperCase();
+
+        String QUERY = "SELECT d FROM Distribuye d WHERE d.idDistribuidor LIKE :idDistribuidor OR d.direccion LIKE :direccion"
+                + " OR d.ciudad LIKE :ciudad OR d.pais LIKE :pais";
+
+        EntityManager em = getEntityManager();
+        List<Distribuye> distribuyetmp = new ArrayList<>();
+
+        try {
+            TypedQuery<Distribuye> consulta = em.createQuery(QUERY, Distribuye.class); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("idDistribuidor", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
+            consulta.setParameter("direccion", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+            consulta.setParameter("ciudad", "%" + filtra + "%");     //indico el campo y la cadena a buscar 
+            consulta.setParameter("pais", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
+
+            //calculamos el número de la página, comenzando desde la 0
+            numPagina = pagina * maxResults;
+
+            if (!all) {
+                consulta.setMaxResults(maxResults);
+                consulta.setFirstResult(numPagina);
+            }
+
+            distribuyetmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+
+        return distribuyetmp;
+    }
+
     public List<Distribuye> ListDistribuyeByFilter(String filtra) {
         filtra = filtra.toUpperCase();
 

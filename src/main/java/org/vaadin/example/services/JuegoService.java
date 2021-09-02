@@ -18,12 +18,6 @@ public class JuegoService implements CrudInterface<Juego> {
     String respuesta = "";
 
     @Override
-    public List<Juego> listar(String texto) {
-        juegoList = juegoRepository.ListJuegoByFilter(texto);
-        return juegoList;
-    }
-
-    @Override
     public void insertar(Juego obj) {
         try {
             obj.setTitulo(obj.getTitulo().toUpperCase().trim());
@@ -73,6 +67,18 @@ public class JuegoService implements CrudInterface<Juego> {
         this.listar("").forEach(juego
                 -> stats.put(juego.getTitulo(), juego.getPrecio().intValue()));
         return stats;
+    }
+
+    @Override
+    public List<Juego> listar(String texto) {
+        juegoList = juegoRepository.ListJuegoByFilter(texto);
+        return juegoList;
+    }
+
+    @Override
+    public List<Juego> listarPagination(String texto, boolean all, int maxResults, int firstResult) {
+        juegoList = juegoRepository.ListJuegoByFilterPagination(texto, all, maxResults, firstResult);
+        return juegoList;
     }
 
 }

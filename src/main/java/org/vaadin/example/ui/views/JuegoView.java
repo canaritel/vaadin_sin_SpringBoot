@@ -21,6 +21,7 @@ import java.util.Comparator;
 import org.vaadin.example.entities.Juego;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
+import org.vaadin.example.ui.Pagination.JuegoPagination;
 
 import org.vaadin.example.ui.forms.ContactFormJuego;
 import org.vaadin.example.utils.ConvertToImage;
@@ -31,10 +32,11 @@ import org.vaadin.example.utils.ConvertToImage;
 public class JuegoView extends VerticalLayout {
 
     private JuegoService juegoService;
-
+    private JuegoPagination pagination;
     private final Grid<Juego> grid = new Grid(Juego.class);  //creamos grid de tipo usuario, similar a una tabla
+    //private ListDataProvider<Juego> dataProvider;
     private final TextField filterText = new TextField();
-    private final ContactFormJuego form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private ContactFormJuego form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     private Image image;
 
@@ -45,14 +47,24 @@ public class JuegoView extends VerticalLayout {
             juegoService = new JuegoService();
         }
 
-        //Le da al componente un nombre de clase CSS
+        //Damos al componente un nombre de clase CSS
         addClassName("juego-view");  //nombre del componente CSS
-        setSizeFull();
+        setSizeFull(); //le asignamos el máximo tamaño de la ventana
+        //Configuramos el grid tabla
         configureGrid();
+        //Configuramos el filtro de búsqueda
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactFormJuego();
+        if (form == null) {
+            form = new ContactFormJuego();
+        }
+
+        //Inicializa el constructor Pagination
+        if (pagination == null) {
+            pagination = new JuegoPagination(juegoService, grid, filterText);
+        }
+
         // escuchamos los eventos y actuamos
         form.addListener(ContactFormJuego.SaveEvent.class, this::saveContact);
         form.addListener(ContactFormJuego.DeleteEvent.class, this::deleteContact);
@@ -64,17 +76,20 @@ public class JuegoView extends VerticalLayout {
         content.setSizeFull();
 
         //agrego todos los componentes al diseño principal
-        add(getToolBar(), content); //añado no solo componentes sino métodos como getToolBar
-        updateList();
+        add(getToolBar(), content, pagination.configurePagination());  //añado componentes y métodos como getToolBar y configurePagination
+
+        //cerramos formularios y otros acciones finales
         closeEditor();
     }
 
     //Parte de la información para crear el Grid la he sacado de la aplicación Vaadin "Demo Business App"
     private void configureGrid() {
+        //dataProvider = DataProvider.ofCollection(juegoService.listar(""));
         grid.addClassName("contact-grid"); //añadimos la clase al grid
         grid.setSizeFull(); //ocupamos todo el espacio
         //mostramos las columnas con una función de mostrar listar
         grid.setItems(juegoService.listar("")); //sin orden al colocarse
+        //grid.setItems(dataProvider.getItems());
         grid.removeAllColumns();
 
         //añadimos las columna y ponemos nombre a cada columna
@@ -127,7 +142,8 @@ public class JuegoView extends VerticalLayout {
         //Establece el modo de cambio de valor para LAZY
         //que el campo de texto le notifique los cambios automáticamente después de un breve tiempo de espera al escribir.
         filterText.setValueChangeMode(ValueChangeMode.LAZY); //método recomendado para los filtros
-        filterText.addValueChangeListener(e -> updateList()); //Llama al método updateList siempre que cambia el valor
+        //Llama al método updateList siempre que cambia el valor
+        filterText.addValueChangeListener(e -> pagination.updateList());
     }
 
     private HorizontalLayout getToolBar() {
@@ -145,13 +161,13 @@ public class JuegoView extends VerticalLayout {
         } else {
             juegoService.actualizar(evt.getContact());
         }
-        updateList();
+        pagination.updateList();
         closeEditor();
     }
 
     private void deleteContact(ContactFormJuego.DeleteEvent evt) {
         juegoService.eliminar(evt.getContact());
-        updateList();
+        pagination.updateList();
         closeEditor();
     }
 
@@ -171,15 +187,11 @@ public class JuegoView extends VerticalLayout {
     }
 
     private void closeEditor() {
-        updateList();
+        pagination.updateList();
         form.setContact(null);  // Establece el contacto del formulario en null, borrando los valores antiguos.
         form.setVisible(false); // Oculta el formulario.
         removeClassName("editing"); //Elimina la "editing" clase CSS de la vista.
 
-    }
-
-    private void updateList() {
-        grid.setItems(juegoService.listar(filterText.getValue()));
     }
 
     private Component createImage(Juego juego) {
