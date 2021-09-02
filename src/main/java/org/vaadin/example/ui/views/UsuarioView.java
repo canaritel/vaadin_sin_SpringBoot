@@ -19,6 +19,7 @@ import com.vaadin.flow.router.Route;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
+import org.vaadin.example.ui.Pagination.UsuarioPagination;
 
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Usuarios | Vaadin CRM")
@@ -26,11 +27,11 @@ import org.vaadin.example.ui.MainLayout;
 public class UsuarioView extends VerticalLayout {
 
     private UsuarioService usuarioService;
-
+    private UsuarioPagination pagination;
     //PaginatedGrid<Usuario> grid = new PaginatedGrid<>(Usuario.class);
     private final Grid<Usuario> grid = new Grid(Usuario.class);  //creamos grid de tipo usuario, similar a una tabla
     private final TextField filterText = new TextField();
-    private final ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
+    private ContactFormUser form; //Crea un campo para el formulario para que pueda acceder a él desde otros métodos más adelante
 
     public UsuarioView() {
         if (usuarioService == null) {
@@ -39,12 +40,25 @@ public class UsuarioView extends VerticalLayout {
 
         //Le da al componente un nombre de clase CSS
         addClassName("list-view");  //nombre del componente CSS
-        setSizeFull();
+        setSizeFull(); //le asignamos el máximo tamaño de la ventana
+
+        //Configuramos el grid tabla
         configureGrid();
+
+        //Configuramos el filtro de búsqueda
         configureFilter();
 
         //Inicializa el formulario en el constructor
-        form = new ContactFormUser();
+        if (form == null) {
+            form = new ContactFormUser();
+        }
+
+        //Inicializa el constructor Pagination
+        if (pagination == null) {
+            pagination = new UsuarioPagination(usuarioService, grid, filterText);
+        }
+
+        //Creamos las acciones principales
         form.addListener(ContactFormUser.SaveEvent.class, this::saveContact);
         form.addListener(ContactFormUser.DeleteEvent.class, this::deleteContact);
         form.addListener(ContactFormUser.CloseEvent.class, e -> closeEditor());
@@ -55,8 +69,9 @@ public class UsuarioView extends VerticalLayout {
         content.setSizeFull();
 
         //agrego todos los componentes al diseño principal
-        add(getToolBar(), content); //añado no solo componentes sino métodos como getToolBar
-        updateList();
+        add(getToolBar(), content, pagination.configurePagination());  //añado componentes y métodos como getToolBar y configurePagination
+
+        //cerramos formularios y otros acciones finales
         closeEditor();
     }
 
@@ -78,7 +93,7 @@ public class UsuarioView extends VerticalLayout {
                 .setHeader("NOMBRE")
                 .setSortable(true)
                 .setComparator(Usuario::getNombre);
-                
+
         grid.addColumn(Usuario::getApellidos)
                 .setSortable(true)
                 .setHeader("APELLIDOS");
@@ -123,6 +138,7 @@ public class UsuarioView extends VerticalLayout {
 
         //ajusta la vista del grid para que los campos puedan leerse más apropiadamente (método general)
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
+
         //activamos en grid tabla un evento que llama a editContact cuando se pulsa en algún registro
         grid.asSingleSelect().addValueChangeListener(evt -> editContact(evt.getValue()));
     }
@@ -132,7 +148,8 @@ public class UsuarioView extends VerticalLayout {
         filterText.setClearButtonVisible(true);  //permitimos borrar facilmente el texto del textfield
         //se activa cuando escribimos algo y pasa un  corto espacio de tiempo (al terminar de escribir)
         filterText.setValueChangeMode(ValueChangeMode.LAZY); //método recomendado para los filtros
-        filterText.addValueChangeListener(e -> updateList());
+        //si detecta un cambio en el campo filerText se activa
+        filterText.addValueChangeListener(e -> pagination.updateList());
     }
 
     private HorizontalLayout getToolBar() {
@@ -150,13 +167,13 @@ public class UsuarioView extends VerticalLayout {
         } else {
             usuarioService.actualizar(evt.getContact());
         }
-        updateList();
+        pagination.updateList();
         closeEditor();
     }
 
     private void deleteContact(ContactFormUser.DeleteEvent evt) {
         usuarioService.eliminar(evt.getContact());
-        updateList();
+        pagination.updateList();
         closeEditor();
     }
 
@@ -176,14 +193,10 @@ public class UsuarioView extends VerticalLayout {
     }
 
     private void closeEditor() {
-        updateList();
+        pagination.updateList();
         form.setVisible(false);
         removeClassName("editing");
         form.setContact(null);
-    }
-
-    private void updateList() {
-        grid.setItems(usuarioService.listar(filterText.getValue()));
     }
 
     private Component createIcono(Usuario usuario) {
