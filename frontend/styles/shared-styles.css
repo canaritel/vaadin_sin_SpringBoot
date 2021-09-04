@@ -107,6 +107,13 @@ a[highlight] {
     margin: 1em 0;
 }
 
+.charts-view {
+    background-color: #fafafa;
+    border-radius: 2px;
+    box-shadow: 10px 10px 8px #e0e0e0;
+    margin: 2em;
+}
+
 
 
 /******************************************************************************
