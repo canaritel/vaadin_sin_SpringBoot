@@ -1,3 +1,18 @@
+# Proyecto Vaadin
+Este proyecto se basa en una aplicación web con acceso a BD MySQL hosteada, mediante el ORM JPA y EclipseLink.
+A medida vaya ampliando este proyecto se irá documentando.
+
+Mi forma de crear este proyecto y restantes es simplificar el código, no abusar de métodos o sentencias complejas, logrando un código fácil de entender por estudiantes de Vaadin.
+Este proyecto no usa Spring Boot, he visto necesario para un primer acercamiento un desarrollo como he explicado antes lo más sencillo posible, por lo que se ha usado unicamente una base del Vaadin con servidor web Jetty. En el fichero pom.xml pueden ver las distintas librerías que se están usando.
+
+El mismo proyecto está creado en JavaFX dentro de mis repositorios públicos. https://github.com/canaritel/proyecto_JPA
+
+# ¿Porqué Vaadin?
+
+Vaadin es un marco basado en componentes (como Grid, TextField, ButtonField, FormLayout, HorizontalLayout y VerticalLayout). Pero, el verdadero poder de la arquitectura basada en componentes está en la capacidad de crear sus propios componentes.
+
+En lugar de crear una vista completa en una sola clase, su vista puede estar compuesta por componentes más pequeños que manejan diferentes partes de la vista. La ventaja de este enfoque es que los componentes individuales son más fáciles de comprender y probar. La vista de nivel superior se utiliza principalmente para dirigir los componentes.
+
 # Skeleton Starter for Vaadin
 
 This project can be used as a starting point to create your own Vaadin application.
@@ -27,4 +42,5 @@ Profile `it` adds the following parameters to run integration tests:
 ```
 
 For a full Vaadin application example, there are more choices available also from [vaadin.com/start](https://vaadin.com/start) page.
+
 
