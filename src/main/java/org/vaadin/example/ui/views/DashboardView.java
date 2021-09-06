@@ -12,7 +12,6 @@ import com.storedobject.chart.Position;
 import com.storedobject.chart.RectangularCoordinate;
 import com.storedobject.chart.SOChart;
 import com.storedobject.chart.Size;
-
 import com.storedobject.chart.Title;
 import com.storedobject.chart.XAxis;
 import com.storedobject.chart.YAxis;
@@ -26,9 +25,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
 import org.vaadin.example.services.JuegoService;
+import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.ui.MainLayout;
 
 @Route(value = "dashboard", layout = MainLayout.class)
@@ -36,10 +35,15 @@ import org.vaadin.example.ui.MainLayout;
 public class DashboardView extends VerticalLayout {
 
     private JuegoService juegoService;
+    private UsuarioService usuarioService;
 
     public DashboardView() {
         if (juegoService == null) {
             juegoService = new JuegoService();
+        }
+
+        if (usuarioService == null) {
+            usuarioService = new UsuarioService();
         }
 
         addClassName("dashboard-view");
@@ -55,7 +59,7 @@ public class DashboardView extends VerticalLayout {
     private void chart() {
         VerticalLayout vertical = new VerticalLayout();
         vertical.setWidth("1010px");
-        vertical.setHeight("6100px");
+        vertical.setHeight("610px");
         vertical.addClassName("charts-view");
         vertical.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         // Creating a chart display area
@@ -120,36 +124,50 @@ public class DashboardView extends VerticalLayout {
         vertical.setWidth("1010px");
         vertical.setHeight("550px");
         vertical.addClassName("charts-view");
+        vertical.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         // Creating a chart display area
         SOChart soChart = new SOChart();
-        soChart.setSize("1000px", "500px");
+        soChart.setWidth("1000px");
+        soChart.setHeight("500px");
+        // Creando un chart display area para título de la estadística
+        SOChart soChart2 = new SOChart();
+        soChart2.setWidth("1000px");
+        soChart2.setHeight("50px");
+        Title title = new Title(usuarioService.total() + " Usuarios");
+        title.setSubtext("Listado de Usuarios y Edad");
+        soChart2.add(title);
 
-        // Generating some random values for a LineChart
-        Random random = new Random();
-        Data xValues = new Data(), yValues = new Data();
-        for (int x = 0; x < 40; x++) {
-            xValues.add(x);
-            yValues.add(random.nextDouble());
-        }
-        xValues.setName("X Values");
-        yValues.setName("Random Values");
+        // Generating values for a LineChart
+        CategoryData labels = new CategoryData();
+        //Data xValues = new Data();  No lo vamos a usar, lo cambiamos por Label tipo texto
+        Data yValues = new Data();
+
+        TreeMap<String, Integer> stats = new TreeMap<>(Collections.synchronizedMap(usuarioService.getStats())); //cargamos datos
+        //añadimos los datos string
+        stats.forEach((name, number) -> {
+            labels.add(name);
+        });
+        //añadimos los datos numéricos
+        stats.forEach((name, number) -> {
+            yValues.add(number);
+        });
 
         // Line chart is initialized with the generated XY values
-        LineChart lineChart = new LineChart(xValues, yValues);
-        lineChart.setName("40 Random Values");
+        LineChart lineChart = new LineChart(labels, yValues);
+        lineChart.setName("Rango de edad Usuarios");
 
         // Line chart needs a coordinate system to plot on
         // We need Number-type for both X and Y axes in this case
-        XAxis xAxis = new XAxis(DataType.NUMBER);
+        XAxis xAxis = new XAxis(DataType.CATEGORY);
         YAxis yAxis = new YAxis(DataType.NUMBER);
         RectangularCoordinate rc = new RectangularCoordinate(xAxis, yAxis);
         lineChart.plotOn(rc);
 
         // Add to the chart display area with a simple title
-        soChart.add(lineChart, new Title("Sample Line Chart"));
+        soChart.add(lineChart);
 
         // Add to my layout
-        vertical.add(soChart);
+        vertical.add(soChart2, soChart);
         add(vertical);
     }
 
