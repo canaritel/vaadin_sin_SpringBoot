@@ -55,12 +55,20 @@ public class DashboardView extends VerticalLayout {
     private void chart() {
         VerticalLayout vertical = new VerticalLayout();
         vertical.setWidth("1010px");
-        vertical.setHeight("550px");
+        vertical.setHeight("6100px");
         vertical.addClassName("charts-view");
-        //flex.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        // Creating a chart display area.
+        vertical.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        // Creating a chart display area
         SOChart soChart = new SOChart();
-        soChart.setSize("1000px", "500px");
+        soChart.setWidth("1000px");
+        soChart.setHeight("550px");
+        // Creando un chart display area para título de la estadística
+        SOChart soChart2 = new SOChart();
+        soChart2.setWidth("1000px");
+        soChart2.setHeight("50px");
+        Title title = new Title(juegoService.listarSO().size() + " Sistemas Operativos");
+        title.setSubtext("Número de Juegos por Sistema Operativo");
+        soChart2.add(title);
         // Let us define some inline data.
         //Map<String, Integer> stats = juegoService.getStatsSO();  <<VERSIÓN 1>>
         //Hacemos que HashMap sea synchronized: evitando problemas de orden en procesos multi-hilo (multithread)
@@ -97,16 +105,13 @@ public class DashboardView extends VerticalLayout {
         bc.plotOn(rc); // Bar chart needs to be plotted on a coordinate system
 
         // Let's add some titles.
-        Title title = new Title("Sistemas Operativos");
-        title.setSubtext("Número de Juegos por Sistema Operativo");
         bc.setName("S.O.");
         nc.setName("Sistema Operativo");
-
         // Add the chart components to the chart display area.
-        soChart.add(nc, bc, title);
+        soChart.add(nc, bc);
 
         // Now, add the chart display (which is a Vaadin Component) to your layout.
-        vertical.add(soChart);
+        vertical.add(soChart2, soChart);
         add(vertical);
     }
 
@@ -154,20 +159,17 @@ public class DashboardView extends VerticalLayout {
         flex.setHeight("610px");
         flex.addClassName("charts-view");
         flex.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        //
+        //creamos objetos List
         List<Chart> chartJuego = new ArrayList<>();
         List<BigDecimal> listaprecios = new ArrayList<>();
         // Creating a chart display area
         SOChart soChart = new SOChart();
-        //soChart.setSize("1000px", "550px");
         soChart.setWidth("1000px");
         soChart.setHeight("550px");
-        //soChart.setSizeFull();
+        // Creando un chart display area para título de la estadística
         SOChart soChart2 = new SOChart();
-        //soChart.setSize("1000px", "50px");
         soChart2.setWidth("1000px");
         soChart2.setHeight("50px");
-        //text.setText("como estas ");
         Title title = new Title(juegoService.total() + " Juegos");
         title.setSubtext("Estadística de precios y juegos");
         soChart2.add(title);
@@ -243,7 +245,7 @@ public class DashboardView extends VerticalLayout {
     /*
     private Map<String, Integer> getCountSO() {
         HashMap<String, Integer> stats = new HashMap<>();
-        juegoService.countSO().forEach(juego
+        juegoService.countJuegoxSO().forEach(juego
                 -> stats.put(juego.getNombre(), Integer.valueOf(juego.getCantidad())));
 
         return stats;
