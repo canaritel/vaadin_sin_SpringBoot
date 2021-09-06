@@ -20,6 +20,7 @@ import com.storedobject.chart.YAxis;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -65,17 +66,16 @@ public class DashboardView extends VerticalLayout {
         //Hacemos que HashMap sea synchronized: evitando problemas de orden en procesos multi-hilo (multithread)
         //stats = Collections.synchronizedMap(juegoService.getStatsSO()); //  
         //Map<String, Integer> stats = Collections.synchronizedMap(juegoService.getStatsSO()); <<VERSIÓN 2>>
-        /* <<< ORDENAMOS EL OBJETO MAP MEDIENTE UN TREEMAP, Y LO SINCRONIZAMOS >>>
+        /* <<< ORDENAMOS EL OBJETO MAP MEDIANTE UN TREEMAP, Y LO SINCRONIZAMOS >>>
         TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hashMapObjeto); */
         TreeMap<String, Integer> stats = new TreeMap<>(Collections.synchronizedMap(juegoService.getStatsSO())); //<<VERSIÓN 3>>
 
         CategoryData labels = new CategoryData();
-        //CategoryData labels = new CategoryData(creaCadenaSO().split(","));
-        //almacenamos los datos string
+        //añadimos los datos string
         stats.forEach((name, number) -> {
             labels.add(name);
         });
-        //almacenamos los datos numéricos
+        //añadimos los datos numéricos
         Data data = new Data();
         stats.forEach((name, number) -> {
             data.add(number);
@@ -89,7 +89,6 @@ public class DashboardView extends VerticalLayout {
 
         // Second chart to add.
         BarChart bc = new BarChart(labels, data);
-        bc.setName("TODO");
         RectangularCoordinate rc;
         rc = new RectangularCoordinate(new XAxis(DataType.CATEGORY), new YAxis(DataType.NUMBER));
         p = new Position();
@@ -100,6 +99,8 @@ public class DashboardView extends VerticalLayout {
         // Let's add some titles.
         Title title = new Title("Sistemas Operativos");
         title.setSubtext("Número de Juegos por Sistema Operativo");
+        bc.setName("S.O.");
+        nc.setName("Sistema Operativo");
 
         // Add the chart components to the chart display area.
         soChart.add(nc, bc, title);
@@ -155,6 +156,7 @@ public class DashboardView extends VerticalLayout {
         flex.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         //
         List<Chart> chartJuego = new ArrayList<>();
+        List<BigDecimal> listaprecios = new ArrayList<>();
         // Creating a chart display area
         SOChart soChart = new SOChart();
         //soChart.setSize("1000px", "550px");
@@ -172,17 +174,21 @@ public class DashboardView extends VerticalLayout {
         // Define a data matrix to hold production data.
         DataMatrix dataMatrix = new DataMatrix("Listado Juegos");
         //Almacenamos en un objeto Map los datos de los juegos
-        Map<String, Integer> stats = juegoService.getStats(); //llamamos al método getStats
+        Map<String, BigDecimal> stats; //activamos sincronización (ver principio de la clase)
+        stats = Collections.synchronizedMap(juegoService.getStats()); //llamamos al método getStats
         //almacenamos los datos de columnas y filas en el objeto dataMatrix (nombre del Juego)
-        dataMatrix.setColumnNames("Listado Juegos");
-        dataMatrix.setRowNames(creaCadena().split(","));
+        dataMatrix.setColumnNames("Precio Juego en €");
+        //Insertamos en setRowNames los datos de los nombres separados por ",". 
+        dataMatrix.setRowNames(creaCadenaAndPrecio(listaprecios).split(",")); //envíamos como parámetro el objeto List para almacenar los precios
+        //los datos listaprecios se usarán en el método más abajo, simplemente lo que hacemos es ahorramos llamadas al método
+        //Para el uso que hago de esta estadística no puedo rellenar setRowNames mediante el foreach
         //stats.forEach((name, number) -> {
         //    dataMatrix.setRowNames(name);
         //});
         dataMatrix.setRowDataName("Precio €");
         dataMatrix.setColumnDataName("Juegos");
         //almacenamos los datos numéricos del precio del Juego
-        stats.forEach((name, number) -> {
+        listaprecios.forEach((number) -> {  //hacemos uso del objeto List listaprecios llamado arriba (nos ahorramos llamadas al método)
             dataMatrix.addRow(number);
         });
         // Bar chart variable
@@ -213,11 +219,15 @@ public class DashboardView extends VerticalLayout {
         add(flex);
     }
 
-    private String creaCadena() {
+    private String creaCadenaAndPrecio(List listaprecios) {
         StringBuilder cadena = new StringBuilder();
+        //List<BigDecimal> precios = new ArrayList<>();
         //Para poder usar los datos vamos a convertirlo con StringBuilder en un nuevo objeto, almacenando todo en una solo objeto separado por ","
         juegoService.listar("").forEach(juego
-                -> cadena.append(juego.getTitulo() + ","));
+                -> {
+            cadena.append(juego.getTitulo()).append(","); //creamos un nuevo objeto separado por ","
+            listaprecios.add(juego.getPrecio());// guardamos los precios en un nuevo objeto List
+        });
 
         //convertimos la cadena en un vector de String
         String[] cadenaArray = new String[]{cadena.toString()};
