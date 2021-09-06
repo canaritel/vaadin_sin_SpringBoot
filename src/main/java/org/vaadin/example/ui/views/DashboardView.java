@@ -14,21 +14,19 @@ import com.storedobject.chart.SOChart;
 import com.storedobject.chart.Size;
 
 import com.storedobject.chart.Title;
-import com.storedobject.chart.TreeChart;
-import com.storedobject.chart.TreeData;
 import com.storedobject.chart.XAxis;
 import com.storedobject.chart.YAxis;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.ui.MainLayout;
 
@@ -51,25 +49,38 @@ public class DashboardView extends VerticalLayout {
         createCharts();
         chart();
         simpleLineChart();
-        multiLinesChart();
-        treeChart();
     }
 
     private void chart() {
-        VerticalLayout flex = new VerticalLayout();
-        flex.setWidth("1010px");
-        flex.setHeight("610px");
-        flex.addClassName("charts-view");
+        VerticalLayout vertical = new VerticalLayout();
+        vertical.setWidth("1010px");
+        vertical.setHeight("550px");
+        vertical.addClassName("charts-view");
         //flex.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         // Creating a chart display area.
         SOChart soChart = new SOChart();
         soChart.setSize("1000px", "500px");
         // Let us define some inline data.
-        CategoryData labels = new CategoryData("Banana", "Apple", "Orange", "Grapes");
-        Data data = new Data(25, 40, 20, 30);
+        //Map<String, Integer> stats = juegoService.getStatsSO();  <<VERSIÓN 1>>
+        //Hacemos que HashMap sea synchronized: evitando problemas de orden en procesos multi-hilo (multithread)
+        //stats = Collections.synchronizedMap(juegoService.getStatsSO()); //  
+        //Map<String, Integer> stats = Collections.synchronizedMap(juegoService.getStatsSO()); <<VERSIÓN 2>>
+        /* <<< ORDENAMOS EL OBJETO MAP MEDIENTE UN TREEMAP, Y LO SINCRONIZAMOS >>>
+        TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(hashMapObjeto); */
+        TreeMap<String, Integer> stats = new TreeMap<>(Collections.synchronizedMap(juegoService.getStatsSO())); //<<VERSIÓN 3>>
 
-        // We are going to create a couple of charts. So, each chart should be positioned
-        // appropriately.
+        CategoryData labels = new CategoryData();
+        //CategoryData labels = new CategoryData(creaCadenaSO().split(","));
+        //almacenamos los datos string
+        stats.forEach((name, number) -> {
+            labels.add(name);
+        });
+        //almacenamos los datos numéricos
+        Data data = new Data();
+        stats.forEach((name, number) -> {
+            data.add(number);
+        });
+        // We are going to create a couple of charts. So, each chart should be positioned appropriately.
         // Create a self-positioning chart.
         NightingaleRoseChart nc = new NightingaleRoseChart(labels, data);
         Position p = new Position();
@@ -78,6 +89,7 @@ public class DashboardView extends VerticalLayout {
 
         // Second chart to add.
         BarChart bc = new BarChart(labels, data);
+        bc.setName("TODO");
         RectangularCoordinate rc;
         rc = new RectangularCoordinate(new XAxis(DataType.CATEGORY), new YAxis(DataType.NUMBER));
         p = new Position();
@@ -85,22 +97,23 @@ public class DashboardView extends VerticalLayout {
         rc.setPosition(p); // Position it leaving 55% space at the bottom
         bc.plotOn(rc); // Bar chart needs to be plotted on a coordinate system
 
-        // Just to demonstrate it, we are creating a "Download" and a "Zoom" toolbox button.
-        // Toolbox toolbox = new Toolbox();
-        // toolbox.addButton(new Toolbox.Download(), new Toolbox.Zoom());
         // Let's add some titles.
-        Title title = new Title("My First Chart");
-        title.setSubtext("2nd Line of the Title");
+        Title title = new Title("Sistemas Operativos");
+        title.setSubtext("Número de Juegos por Sistema Operativo");
 
         // Add the chart components to the chart display area.
         soChart.add(nc, bc, title);
 
         // Now, add the chart display (which is a Vaadin Component) to your layout.
-        flex.add(soChart);
-        add(flex);
+        vertical.add(soChart);
+        add(vertical);
     }
 
     private void simpleLineChart() {
+        VerticalLayout vertical = new VerticalLayout();
+        vertical.setWidth("1010px");
+        vertical.setHeight("550px");
+        vertical.addClassName("charts-view");
         // Creating a chart display area
         SOChart soChart = new SOChart();
         soChart.setSize("1000px", "500px");
@@ -130,91 +143,8 @@ public class DashboardView extends VerticalLayout {
         soChart.add(lineChart, new Title("Sample Line Chart"));
 
         // Add to my layout
-        add(soChart);
-    }
-
-    private void multiLinesChart() {
-        // Creating a chart display area
-        SOChart soChart = new SOChart();
-        soChart.setSize("800px", "500px");
-
-        // Generating 10 set of values for 10 LineCharts for the equation:
-        // y = a + a * x / (a - 11) where a = 1 to 10, x and y are positive
-        LineChart[] lineCharts = new LineChart[10];
-        Data[] xValues = new Data[lineCharts.length];
-        Data[] yValues = new Data[lineCharts.length];
-        int i;
-        for (i = 0; i < lineCharts.length; i++) {
-            xValues[i] = new Data();
-            xValues[i].setName("X (a = " + (i + 1) + ")");
-            yValues[i] = new Data();
-            yValues[i].setName("Y (a = " + (i + 1) + ")");
-        }
-        // For each line chart, we need only 2 end-points (because they are straight lines).
-        int a;
-        for (i = 0; i < lineCharts.length; i++) {
-            a = i + 1;
-            xValues[i].add(0);
-            yValues[i].add(a);
-            xValues[i].add(11 - a);
-            yValues[i].add(0);
-        }
-
-        // Line charts are initialized here
-        for (i = 0; i < lineCharts.length; i++) {
-            lineCharts[i] = new LineChart(xValues[i], yValues[i]);
-            lineCharts[i].setName("a = " + (i + 1));
-        }
-
-        // Line charts need a coordinate system to plot on
-        // We need Number-type for both X and Y axes in this case
-        XAxis xAxis = new XAxis(DataType.NUMBER);
-        YAxis yAxis = new YAxis(DataType.NUMBER);
-        RectangularCoordinate rc = new RectangularCoordinate(xAxis, yAxis);
-        for (i = 0; i < lineCharts.length; i++) {
-            lineCharts[i].plotOn(rc);
-            soChart.add(lineCharts[i]); // Add the chart to the display area
-        }
-
-        // Add a simple title too
-        soChart.add(new Title("Equation: y = a + a * x / (a - 11) where a = 1 to 10, x and y are positive"));
-
-        // We don't want any legends
-        soChart.disableDefaultLegend();
-
-        // Add it to my layout
-        add(soChart);
-    }
-
-    private void treeChart() {
-        // Creating a chart display area
-        SOChart soChart = new SOChart();
-        soChart.setSize("800px", "500px");
-
-        // Tree chart
-        // (By default it assumes circular shape. Otherwise, we can set orientation)
-        // All values are randomly generated
-        TreeChart tc = new TreeChart();
-        TreeData td = new TreeData("Root", 1000);
-        tc.setTreeData(td);
-        Random r = new Random();
-        for (int i = 1; i < 21; i++) {
-            td.add(new TreeData("Node " + i, r.nextInt(500)));
-        }
-        TreeData td1 = td.get(13);
-        td = td.get(9);
-        for (int i = 50; i < 56; i++) {
-            td.add(new TreeData("Node " + i, r.nextInt(500)));
-        }
-        for (int i = 30; i < 34; i++) {
-            td1.add(new TreeData("Node " + i, r.nextInt(500)));
-        }
-
-        // Add to the chart display area with a simple title
-        soChart.add(tc, new Title("A Circular Tree Chart"));
-
-        // Finally, add it to my layout
-        add(soChart);
+        vertical.add(soChart);
+        add(vertical);
     }
 
     private void createCharts() {
@@ -242,12 +172,13 @@ public class DashboardView extends VerticalLayout {
         // Define a data matrix to hold production data.
         DataMatrix dataMatrix = new DataMatrix("Listado Juegos");
         //Almacenamos en un objeto Map los datos de los juegos
-        Map<String, Integer> stats = getStats(); //llamamos al método getStats
+        Map<String, Integer> stats = juegoService.getStats(); //llamamos al método getStats
         //almacenamos los datos de columnas y filas en el objeto dataMatrix (nombre del Juego)
-        dataMatrix.setColumnNames(Arrays.toString(creaCadena()).split(",")); //obtenemos los datos convirtiendo el vector String separando por "," los campos
         dataMatrix.setColumnNames("Listado Juegos");
-        //dataMatrix.setColumnNames(Arrays.toString(creaCadenaSO()).split(","));
-        dataMatrix.setRowNames(Arrays.toString(creaCadena()).split(","));    //obtenemos los datos convirtiendo el vector String separando por "," los campos
+        dataMatrix.setRowNames(creaCadena().split(","));
+        //stats.forEach((name, number) -> {
+        //    dataMatrix.setRowNames(name);
+        //});
         dataMatrix.setRowDataName("Precio €");
         dataMatrix.setColumnDataName("Juegos");
         //almacenamos los datos numéricos del precio del Juego
@@ -266,7 +197,6 @@ public class DashboardView extends VerticalLayout {
         // Create a bar chart for each row
         for (int i = 0; i < dataMatrix.getRowCount(); i++) {
             // Bar chart for the row
-            //bc = new BarChart(dataMatrix.getColumnNames(), dataMatrix.getRow(i));
             bc = new BarChart(dataMatrix.getColumnNames(), dataMatrix.getRow(i));
             bc.setName(dataMatrix.getRowName(i));
             // Plot that to the coordinate system defined
@@ -283,36 +213,32 @@ public class DashboardView extends VerticalLayout {
         add(flex);
     }
 
-    private Map<String, Integer> getStats() {
-        HashMap<String, Integer> stats = new HashMap<>();
-        juegoService.listar("").forEach(juego
-                -> stats.put(juego.getTitulo(), juego.getPrecio().intValue()));
-
-        return stats;
-    }
-
-    private String[] creaCadena() {
+    private String creaCadena() {
         StringBuilder cadena = new StringBuilder();
-        //Para poder usar los datos vamos a convertirlo con StringBuilder en un nuevo objeto almacenando todo en una solo objeto sperado por ","
+        //Para poder usar los datos vamos a convertirlo con StringBuilder en un nuevo objeto, almacenando todo en una solo objeto separado por ","
         juegoService.listar("").forEach(juego
                 -> cadena.append(juego.getTitulo() + ","));
 
         //convertimos la cadena en un vector de String
         String[] cadenaArray = new String[]{cadena.toString()};
-        return cadenaArray;
+
+        String mycadena = Arrays.toString(cadenaArray);
+        //quitamos los carácteres seleccionados
+        mycadena = mycadena.replace("[", "");
+        mycadena = mycadena.replace("]", "");
+
+        return mycadena;
     }
 
-    private String[] creaCadenaSO() {
-        StringBuilder cadena = new StringBuilder();
-        //Para poder usar los datos vamos a convertirlo con StringBuilder en un nuevo objeto almacenando todo en una solo objeto sperado por ","
-        juegoService.listar("").forEach(juego
-                -> cadena.append(juego.getSistemaOperativo() + ","));
+    /*
+    private Map<String, Integer> getCountSO() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        juegoService.countSO().forEach(juego
+                -> stats.put(juego.getNombre(), Integer.valueOf(juego.getCantidad())));
 
-        //convertimos la cadena en un vector de String
-        String[] cadenaArray = new String[]{cadena.toString()};
-        return cadenaArray;
+        return stats;
     }
-
+     */
     //este método usa funciones de pago y se debe tener muy en cuenta
     /*
     private Component getCompaniesChart() {
@@ -326,5 +252,14 @@ public class DashboardView extends VerticalLayout {
         chart.getConfiguration().setSeries(dataSeries);
         return chart;
     }
+    
+    private Map<String, Integer> getStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        juegoService.listar("").forEach(juego
+                -> stats.put(juego.getTitulo(), juego.getPrecio().intValue()));
+
+        return stats;
+    }
+    
      */
 }
