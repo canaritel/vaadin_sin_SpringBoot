@@ -19,7 +19,6 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -42,6 +41,7 @@ public class EstadisticaView extends VerticalLayout {
 
     private JuegoService juegoService;
     private UsuarioService usuarioService;
+    private VerticalLayout verticalLayout1, verticalLayout2, verticalLayout3;
 
     public EstadisticaView() {
         if (juegoService == null) {
@@ -56,15 +56,13 @@ public class EstadisticaView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setSizeFull();
 
+        //Mostramos las estadísticas
+        showCharts();
+        //creamos el checkbox
         createSeleccion();
-
-        /*    Mostramos las estadísticas   */
-        createCharts();
-        chart();
-        simpleLineChart();
     }
 
-    private void chart() {
+    private VerticalLayout chart() {
         VerticalLayout vertical = new VerticalLayout();
         vertical.setWidth("1010px");
         vertical.setHeight("610px");
@@ -131,10 +129,10 @@ public class EstadisticaView extends VerticalLayout {
 
         // Now, add the chart display (which is a Vaadin Component) to your layout.
         vertical.add(soChart2, soChart);
-        add(vertical);
+        return vertical;
     }
 
-    private void simpleLineChart() {
+    private VerticalLayout simpleLineChart() {
         VerticalLayout vertical = new VerticalLayout();
         vertical.setWidth("1010px");
         vertical.setHeight("550px");
@@ -185,15 +183,15 @@ public class EstadisticaView extends VerticalLayout {
 
         // Add to my layout
         vertical.add(soChart2, soChart);
-        add(vertical);
+        return vertical;
     }
 
-    private void createCharts() {
-        VerticalLayout flex = new VerticalLayout();
-        flex.setWidth("1010px");
-        flex.setHeight("610px");
-        flex.addClassName("charts-view");
-        flex.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+    private VerticalLayout createCharts() {
+        VerticalLayout vertical = new VerticalLayout();
+        vertical.setWidth("1010px");
+        vertical.setHeight("610px");
+        vertical.addClassName("charts-view");
+        vertical.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         //creamos objetos List
         List<Chart> chartJuego = new ArrayList<>();
         List<BigDecimal> listaprecios = new ArrayList<>();
@@ -253,8 +251,8 @@ public class EstadisticaView extends VerticalLayout {
         // Add the chart component(s) to the chart display area
         chartJuego.forEach(soChart::add);
         // Set the component for the view
-        flex.add(soChart2, soChart);
-        add(flex);
+        vertical.add(soChart2, soChart);
+        return vertical;
     }
 
     private String creaCadenaAndPrecio(List listaprecios) {
@@ -310,6 +308,22 @@ public class EstadisticaView extends VerticalLayout {
     }
     
      */
+    private void showCharts() {
+        if (verticalLayout1 == null) {
+            verticalLayout1 = new VerticalLayout();
+        }
+        if (verticalLayout2 == null) {
+            verticalLayout2 = new VerticalLayout();
+        }
+        if (verticalLayout3 == null) {
+            verticalLayout3 = new VerticalLayout();
+        }
+
+        verticalLayout1 = createCharts();
+        verticalLayout2 = chart();
+        verticalLayout3 = simpleLineChart();
+    }
+
     private void createSeleccion() {
         Checkbox checkbox = new Checkbox("Seleccionar todo");
         CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
@@ -318,14 +332,14 @@ public class EstadisticaView extends VerticalLayout {
         checkboxGroup.setItems(items);
         checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_HELPER_ABOVE_FIELD);
 
-        Div value = new Div();
-        //value.setText("Select a value");
+        Div div = new Div();
+        div.addClassName("charts-view");
 
         checkboxGroup.addValueChangeListener(event -> {
             if (event.getValue().size() == items.size()) {
                 checkbox.setValue(true);
                 checkbox.setIndeterminate(false);
-            } else if (event.getValue().size() == 0) {
+            } else if (event.getValue().isEmpty()) {
                 checkbox.setValue(false);
                 checkbox.setIndeterminate(false);
             } else {
@@ -342,27 +356,32 @@ public class EstadisticaView extends VerticalLayout {
         });
 
         checkboxGroup.addValueChangeListener(event -> {
-            String datos = "";
-            if (event.getValue() == null) {
-                value.setText("No option selected");
+            String datos;
+            //Notification.show("Number of selected items: " + event.getValue().size());
+            datos = checkboxGroup.getSelectedItems().toString();
+
+            if (datos.contains("Juegos")) {
+                verticalLayout1.setVisible(true);
             } else {
-                value.setText("Selected: " + event.getValue());
-                //if (event.getValue().contains("Juegos")) {
-                //    Notification.show("Seleccionado: 1");
-                //}
-                if (event.getValue().contains("Estadísticas Juegos")) {
-                    Notification.show("Seleccionado: 1");
-                }
-                if (event.getValue().contains("Estadística S.O.")) {
-                    Notification.show("Seleccionado: 2");
-                }
-                if (event.getValue().contains("Estadística Edades")) {
-                    Notification.show("Seleccionado: 3");
-                }
+                verticalLayout1.setVisible(false);
+            }
+            if (datos.contains("S.O.")) {
+                verticalLayout2.setVisible(true);
+            } else {
+                verticalLayout2.setVisible(false);
+            }
+            if (datos.contains("Edades")) {
+                verticalLayout3.setVisible(true);
+            } else {
+                verticalLayout3.setVisible(false);
             }
         });
 
-        add(checkbox, checkboxGroup, value);
+        checkboxGroup.setValue(items);  //activamos todos los check
+        // checkboxGroup.setValue(Collections.singleton("Estadística S.O.")); //para activar solo un valor checkbox
+        div.add(checkbox, checkboxGroup);
+        add(div);
+        add(verticalLayout1, verticalLayout2, verticalLayout3);
     }
 
 }
