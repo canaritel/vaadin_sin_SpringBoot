@@ -2,7 +2,7 @@ package org.vaadin.example.ui;
 
 import org.vaadin.example.ui.views.JuegoView;
 import org.vaadin.example.ui.views.DistribuidorView;
-import org.vaadin.example.ui.views.DashboardView;
+import org.vaadin.example.ui.views.EstadisticaView;
 import org.vaadin.example.ui.views.UsuarioView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -99,7 +99,7 @@ public class MainLayout extends AppLayout {
 
         Tab estadisticas = new Tab(
                 VaadinIcon.BAR_CHART.create(),
-                new RouterLink("Estadísticas", DashboardView.class)
+                new RouterLink("Estadísticas", EstadisticaView.class)
         );
 
         tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
@@ -112,7 +112,7 @@ public class MainLayout extends AppLayout {
         RouterLink link1 = new RouterLink("Usuarios", UsuarioView.class);
         RouterLink link2 = new RouterLink("Distribuidores", DistribuidorView.class);
         RouterLink link3 = new RouterLink("Juegos", JuegoView.class);
-        RouterLink link4 = new RouterLink("Estadísticas", DashboardView.class);
+        RouterLink link4 = new RouterLink("Estadísticas", EstadisticaView.class);
 
         //link1.setHighlightCondition(HighlightConditions.sameLocation()); //hago que se inicie en este enlace
         addToDrawer(new VerticalLayout(link1, link2, link3, link4));

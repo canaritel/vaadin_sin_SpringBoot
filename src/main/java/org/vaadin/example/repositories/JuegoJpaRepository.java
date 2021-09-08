@@ -221,7 +221,6 @@ public class JuegoJpaRepository implements Serializable {
         List<Juego> juegotmp = new ArrayList<>();
 
         try {
-
             TypedQuery<Juego> consulta = em.createQuery(QUERY, Juego.class); //preparamos la consulta QUERY a realizar
             consulta.setParameter("titulo", "%" + filtra + "%");    //indico el campo y la cadena a buscar 
             consulta.setParameter("sistemaOperativo", "%" + filtra + "%"); //indico el campo y la cadena a buscar 
@@ -234,6 +233,46 @@ public class JuegoJpaRepository implements Serializable {
             em.close();
         }
         return juegotmp;
+    }
+
+    public List<Juego> ListJuegoBySO() {
+        //String QUERY = "SELECT  DISTINCT j.sistemaOperativo FROM Juego j WHERE j.sistemaOperativo LIKE :sistemaOperativo";
+        String QUERY = "SELECT  DISTINCT j.sistemaOperativo FROM Juego j";
+
+        EntityManager em = getEntityManager();
+        List<Juego> juegotmp = new ArrayList<>();
+
+        try {
+            TypedQuery<Juego> consulta = em.createQuery(QUERY, Juego.class); //preparamos la consulta QUERY a realizar
+            juegotmp = consulta.getResultList();  //guardo la consulta realiza en un objeto de tipo Usuario
+
+        } catch (Exception e) {
+        } finally {
+            em.close();
+        }
+
+        return juegotmp;
+    }
+
+    public int CountJuegoBySO(String filtra) {
+        int total = 0;
+        //String QUERY = "SELECT j.sistemaOperativo, COUNT(j.sistemaOperativo) FROM Juego j GROUP BY j.sistemaOperativo";
+        String QUERY = "SELECT COUNT(j.sistemaOperativo) FROM Juego j WHERE j.sistemaOperativo LIKE :sistemaOperativo";
+
+        EntityManager em = getEntityManager();
+
+        try {
+            Query consulta = em.createQuery(QUERY); //preparamos la consulta QUERY a realizar
+            consulta.setParameter("sistemaOperativo", filtra + "%"); //indico el campo y la cadena a buscar 
+            total = ((Long) consulta.getSingleResult()).intValue();   //guardo la consulta realiza en un objeto de tipo int
+
+        } catch (Exception e) {
+            // Notification.show(e.getMessage());
+        } finally {
+            em.close();
+        }
+
+        return total;
     }
 
     public List<Juego> ListJuegoByFilterPagination(String filtra, boolean all, int maxResults, int pagina) {

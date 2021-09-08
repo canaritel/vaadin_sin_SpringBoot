@@ -37,39 +37,39 @@ public class Juego implements Serializable {
     @Basic(optional = false)
     @Column(name = "idJuego")
     private Integer idJuego;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "titulo")
     private String titulo;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
     @Column(name = "sistema_operativo")
     private String sistemaOperativo;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha_juego")
     @Temporal(TemporalType.DATE)
     private Date fechaJuego;
-    
+
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "precio")
     private BigDecimal precio;
-    
+
     @Lob
     @Column(name = "imagen")
     private byte[] imagen;
-    
+
     @JoinColumn(name = "distribuidor", referencedColumnName = "idDistribuidor")
     @ManyToOne(optional = false)
     private Distribuye distribuidor;
-    
+
     @JoinColumn(name = "usuario", referencedColumnName = "idUsuario")
     @ManyToOne(optional = false)
     private Usuario usuario;

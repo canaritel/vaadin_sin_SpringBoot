@@ -1,7 +1,11 @@
 {
   "dependencies": {
+    "@google-web-components/google-youtube": "3.0.1",
     "@polymer/iron-icon": "3.0.1",
+    "@polymer/iron-icons": "^3.0.1",
     "@polymer/iron-list": "3.1.0",
+    "@polymer/paper-icon-button": "3.0.2",
+    "@polymer/paper-toggle-button": "3.0.1",
     "@polymer/polymer": "3.2.0",
     "@vaadin/vaadin-accordion": "1.2.0",
     "@vaadin/vaadin-app-layout": "2.2.0",
@@ -46,8 +50,11 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "cleave.js": "1.6.0",
     "construct-style-sheets-polyfill": "2.4.16",
+    "echarts": "5.1.2",
     "lit-element": "2.5.1",
-    "lit-html": "1.4.1"
+    "lit-html": "1.4.1",
+    "multiselect-combo-box": "2.4.2",
+    "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
     "chokidar": "^3.5.0",
@@ -72,11 +79,14 @@
   "name": "no-name",
   "vaadin": {
     "dependencies": {
+      "@google-web-components/google-youtube": "3.0.1",
       "@polymer/iron-icon": "3.0.1",
+      "@polymer/iron-icons": "^3.0.1",
       "@polymer/iron-iconset-svg": "^3.0.1",
       "@polymer/iron-list": "3.1.0",
       "@polymer/paper-button": "^3.0.1",
-      "@polymer/paper-icon-button": "^3.0.2",
+      "@polymer/paper-icon-button": "3.0.2",
+      "@polymer/paper-toggle-button": "3.0.1",
       "@polymer/polymer": "3.2.0",
       "@vaadin/vaadin-accordion": "1.2.0",
       "@vaadin/vaadin-app-layout": "2.2.0",
@@ -121,8 +131,11 @@
       "@webcomponents/webcomponentsjs": "^2.2.10",
       "cleave.js": "1.6.0",
       "construct-style-sheets-polyfill": "2.4.16",
+      "echarts": "5.1.2",
       "lit-element": "2.5.1",
-      "lit-html": "1.4.1"
+      "lit-html": "1.4.1",
+      "multiselect-combo-box": "2.4.2",
+      "resize-observer-polyfill": "1.5.1"
     },
     "devDependencies": {
       "chokidar": "^3.5.0",
@@ -143,6 +156,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "e733f83b358880d19c5cddedafe2d834d53488d0f0e31cd9194b696d1d94b636"
+    "hash": "9c7887a151d7c82341fe22ac27adf19620de68aa536c33aaa0d99bac5d62d94b"
   }
 }

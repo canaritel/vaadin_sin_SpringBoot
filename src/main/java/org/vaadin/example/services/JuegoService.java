@@ -2,6 +2,7 @@ package org.vaadin.example.services;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
@@ -62,13 +63,6 @@ public class JuegoService implements CrudInterface<Juego> {
         return juegoRepository.getJuegoCount();
     }
 
-    public Map<String, Integer> getStats() {
-        HashMap<String, Integer> stats = new HashMap<>();
-        this.listar("").forEach(juego
-                -> stats.put(juego.getTitulo(), juego.getPrecio().intValue()));
-        return stats;
-    }
-
     @Override
     public List<Juego> listar(String texto) {
         juegoList = juegoRepository.ListJuegoByFilter(texto);
@@ -79,6 +73,35 @@ public class JuegoService implements CrudInterface<Juego> {
     public List<Juego> listarPagination(String texto, boolean all, int maxResults, int firstResult) {
         juegoList = juegoRepository.ListJuegoByFilterPagination(texto, all, maxResults, firstResult);
         return juegoList;
+    }
+
+    //Listado de los sistemas operativos en Juegos
+    public List<Juego> listarSO() {
+        juegoList = juegoRepository.ListJuegoBySO();
+        return juegoList;
+    }
+
+    //Número de juegos usando [sistemaoperativo]
+    public int countJuegoxSO(String sistemaoperativo) {
+        int listado;
+        listado = juegoRepository.CountJuegoBySO(sistemaoperativo);
+        return listado;
+    }
+
+    //Listado Map de juegos y precio
+    public Map<String, BigDecimal> getStats() {
+        HashMap<String, BigDecimal> stats = new HashMap<>();
+        this.listar("").forEach(juego
+                -> stats.put(juego.getTitulo(), juego.getPrecio()));
+        return stats;
+    }
+
+    //Listado Map de sistema operativo y número de juegos usándolo
+    public Map<String, Integer> getStatsSO() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        this.listar("").forEach(juego
+                -> stats.put(juego.getSistemaOperativo(), countJuegoxSO(juego.getSistemaOperativo())));
+        return stats;
     }
 
 }

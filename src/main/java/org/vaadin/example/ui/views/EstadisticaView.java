@@ -15,6 +15,11 @@ import com.storedobject.chart.Size;
 import com.storedobject.chart.Title;
 import com.storedobject.chart.XAxis;
 import com.storedobject.chart.YAxis;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -22,8 +27,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.services.UsuarioService;
@@ -49,7 +56,9 @@ public class EstadisticaView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setSizeFull();
 
-        //    Mostramos las estadísticas   //
+        createSeleccion();
+
+        /*    Mostramos las estadísticas   */
         createCharts();
         chart();
         simpleLineChart();
@@ -301,4 +310,59 @@ public class EstadisticaView extends VerticalLayout {
     }
     
      */
+    private void createSeleccion() {
+        Checkbox checkbox = new Checkbox("Seleccionar todo");
+        CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+        Set<String> items = new LinkedHashSet<>(
+                Arrays.asList("Estadísticas Juegos", "Estadística S.O.", "Estadística Edades"));
+        checkboxGroup.setItems(items);
+        checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_HELPER_ABOVE_FIELD);
+
+        Div value = new Div();
+        //value.setText("Select a value");
+
+        checkboxGroup.addValueChangeListener(event -> {
+            if (event.getValue().size() == items.size()) {
+                checkbox.setValue(true);
+                checkbox.setIndeterminate(false);
+            } else if (event.getValue().size() == 0) {
+                checkbox.setValue(false);
+                checkbox.setIndeterminate(false);
+            } else {
+                checkbox.setIndeterminate(true);
+            }
+        });
+
+        checkbox.addValueChangeListener(event -> {
+            if (checkbox.getValue()) {
+                checkboxGroup.setValue(items);
+            } else {
+                checkboxGroup.deselectAll();
+            }
+        });
+
+        checkboxGroup.addValueChangeListener(event -> {
+            String datos = "";
+            if (event.getValue() == null) {
+                value.setText("No option selected");
+            } else {
+                value.setText("Selected: " + event.getValue());
+                //if (event.getValue().contains("Juegos")) {
+                //    Notification.show("Seleccionado: 1");
+                //}
+                if (event.getValue().contains("Estadísticas Juegos")) {
+                    Notification.show("Seleccionado: 1");
+                }
+                if (event.getValue().contains("Estadística S.O.")) {
+                    Notification.show("Seleccionado: 2");
+                }
+                if (event.getValue().contains("Estadística Edades")) {
+                    Notification.show("Seleccionado: 3");
+                }
+            }
+        });
+
+        add(checkbox, checkboxGroup, value);
+    }
+
 }

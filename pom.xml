@@ -207,6 +207,18 @@
             <version>5.2.0.pre</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.storedobject.vaadin</groupId>
+            <artifactId>so-components</artifactId>
+            <version>9.9.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.storedobject.chart</groupId>
+            <artifactId>so-charts</artifactId>
+            <version>2.3.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

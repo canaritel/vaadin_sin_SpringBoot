@@ -2,7 +2,9 @@ package org.vaadin.example.services;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.repositories.UsuarioJpaRepository;
 import org.vaadin.example.repositories.exceptions.IllegalOrphanException;
@@ -70,6 +72,14 @@ public class UsuarioService implements CrudInterface<Usuario> {
     public List<Usuario> listarPagination(String texto, boolean all, int maxResults, int firstResult) {
         usuarioList = usuarioRepository.ListUsuarioByFilterPagination(texto, all, maxResults, firstResult);
         return usuarioList;
+    }
+
+    //Listado Map de nombre usuario y edad
+    public Map<String, Integer> getStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        this.listar("").forEach(user
+                -> stats.put(user.getNombre(), user.getEdad()));
+        return stats;
     }
 
 }
