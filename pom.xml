@@ -19,6 +19,7 @@
         <vaadin.version>14.6.8</vaadin.version>
         <jetty.version>9.4.43.v20210629</jetty.version>
         <!--
+        https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin
         <jetty.version>9.4.43.v20210629</jetty.version>
         -->
     </properties>
@@ -238,7 +239,7 @@
                     <!-- If using IntelliJ IDEA with autocompilation, this
                     might cause lots of unnecessary compilations in the
                     background.-->
-                    <scanIntervalSeconds>2</scanIntervalSeconds>
+                    <scanIntervalSeconds>1</scanIntervalSeconds>
                     <!-- Use war output directory to get the webpack files -->
                     <webAppConfig>
                         <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>

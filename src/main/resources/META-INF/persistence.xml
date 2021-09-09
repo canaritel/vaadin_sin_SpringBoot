@@ -11,7 +11,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://PMYSQL114.dns-servicio.com:3306/6980251_hibernate?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC&amp;useSSL=false"/>
       <property name="javax.persistence.jdbc.user" value="root_jpa"/>
       <property name="javax.persistence.jdbc.driver" value="org.gjt.mm.mysql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="1q2w3e4r5t.."/>
+      <property name="javax.persistence.jdbc.password" value="1q2w3e4r5T@@"/>
       <!-- añadimos las línea de abajo para evitar el error de provider en ejecución -->
       <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
       <!-- Mostramos el SQL en la consola -->
