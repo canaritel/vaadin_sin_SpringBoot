@@ -111,8 +111,25 @@ a[highlight] {
     background-color: #fafafa;
     border-radius: 2px;
     box-shadow: 10px 10px 8px #e0e0e0;
-    margin: 2em;
+    margin: 1em;
+}
 
+.charts-view2 {
+    justify-content: center;
+    background-color: #BAEAC3;
+    border-radius: 12px;
+    box-shadow: 10px 10px 8px #e0e0e0;
+    margin: 1em;
+    font-size: 40px ;
+   }
+
+.charts-view3 {
+    justify-content: center;
+    background-color: #BAEAD3;
+    border-radius: 12px;
+    box-shadow: 10px 10px 8px #e0e0e0;
+    margin: 1em;
+    font-size: 40px ;
 }
 
 
