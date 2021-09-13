@@ -21,7 +21,7 @@ import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
 import org.vaadin.example.ui.Pagination.UsuarioPagination;
 
-@Route(value = "", layout = MainLayout.class)
+@Route(value = "usuarios", layout = MainLayout.class)  //ruta por defecto
 @PageTitle("Usuarios | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class UsuarioView extends VerticalLayout {
@@ -41,10 +41,8 @@ public class UsuarioView extends VerticalLayout {
         //Le da al componente un nombre de clase CSS
         addClassName("list-view");  //nombre del componente CSS
         setSizeFull(); //le asignamos el máximo tamaño de la ventana
-
         //Configuramos el grid tabla
         configureGrid();
-
         //Configuramos el filtro de búsqueda
         configureFilter();
 
