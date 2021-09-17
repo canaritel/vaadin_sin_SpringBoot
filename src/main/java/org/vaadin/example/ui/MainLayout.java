@@ -16,11 +16,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import org.vaadin.example.ui.views.ListadoView;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class MainLayout extends AppLayout {
+public class MainLayout extends AppLayout implements RouterLayout  {
 
     public MainLayout() {
         createHeader();
@@ -79,28 +80,23 @@ public class MainLayout extends AppLayout {
         // Listado de iconos https://vaadin.com/components/vaadin-icons/java-examples
         Tab usuarios = new Tab(
                 VaadinIcon.USER.create(),
-                new RouterLink("Usuarios", UsuarioView.class)
-        );
+                new RouterLink("Usuarios", UsuarioView.class));
 
         Tab distribuidores = new Tab(
                 VaadinIcon.ROCKET.create(),
-                new RouterLink("Distribuidores", DistribuidorView.class)
-        );
+                new RouterLink("Distribuidores", DistribuidorView.class));
 
         Tab juegos = new Tab(
                 VaadinIcon.GAMEPAD.create(),
-                new RouterLink("Juegos", JuegoView.class)
-        );
+                new RouterLink("Juegos", JuegoView.class));
 
         Tab listas = new Tab(
                 VaadinIcon.BULLETS.create(),
-                new RouterLink("Listado", ListadoView.class)
-        );
+                new RouterLink("Listado", ListadoView.class));
 
         Tab estadisticas = new Tab(
                 VaadinIcon.BAR_CHART.create(),
-                new RouterLink("Estadísticas", EstadisticaView.class)
-        );
+                new RouterLink("Estadísticas", EstadisticaView.class));
 
         tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
 
