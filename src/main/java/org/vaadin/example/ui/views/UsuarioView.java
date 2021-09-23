@@ -21,7 +21,10 @@ import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
 import org.vaadin.example.ui.Pagination.UsuarioPagination;
 
-@Route(value = "usuarios", layout = MainLayout.class)  //ruta por defecto
+@Route(value = "usuarios", layout = MainLayout.class)
+//@Route(value = "usuarios")  ////si ocultamos no mostrará esta vista en las rutas públicas
+//@RouteAlias(value = "", layout = MainLayout.class)
+//@Route(value = "usuarios")  //ruta por defecto
 @PageTitle("Usuarios | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class UsuarioView extends VerticalLayout {

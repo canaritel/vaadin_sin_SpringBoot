@@ -26,7 +26,7 @@ import org.vaadin.example.ui.Pagination.JuegoPagination;
 import org.vaadin.example.ui.forms.ContactFormJuego;
 import org.vaadin.example.utils.ConvertToImage;
 
-@Route(value = "juegos", layout = MainLayout.class)
+@Route(value = "juegos", layout = MainLayout.class) //si ocultamos no mostrará esta vista en las rutas públicas
 @PageTitle("Juegos | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class JuegoView extends VerticalLayout {

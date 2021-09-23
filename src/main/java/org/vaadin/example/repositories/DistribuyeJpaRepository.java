@@ -70,7 +70,7 @@ public class DistribuyeJpaRepository implements Serializable {
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findDistribuye(distribuye.getIdDistribuidor()) != null) {
-                throw new PreexistingEntityException("Distribuye " + distribuye + " already exists.", ex);
+                throw new PreexistingEntityException("Distribuye " + distribuye + " ya existe.", ex);
             }
             throw ex;
         } finally {

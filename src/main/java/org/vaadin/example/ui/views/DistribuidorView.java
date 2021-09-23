@@ -21,7 +21,7 @@ import org.vaadin.example.services.DistribuyeService;
 import org.vaadin.example.ui.MainLayout;
 import org.vaadin.example.ui.Pagination.DistribuyePagination;
 
-@Route(value = "distribuidores", layout = MainLayout.class)
+@Route(value = "distribuidores", layout = MainLayout.class)  //si ocultamos no mostrará esta vista en las rutas públicas
 @PageTitle("Distribuidores | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class DistribuidorView extends VerticalLayout {
@@ -34,6 +34,7 @@ public class DistribuidorView extends VerticalLayout {
     private ContactFormDistribuye form; //Crea un campo de tipo formulario
 
     public DistribuidorView() {
+
         if (distribuyeService == null) {
             distribuyeService = new DistribuyeService();
         }
@@ -108,7 +109,7 @@ public class DistribuidorView extends VerticalLayout {
         //se activa cuando escribimos algo y pasa un  corto espacio de tiempo (al terminar de escribir)
         filterText.setValueChangeMode(ValueChangeMode.LAZY); //método recomendado para los filtros
         //si detecta un cambio en el campo filerText se activa
-        filterText.addValueChangeListener(e -> pagination.updateList()); 
+        filterText.addValueChangeListener(e -> pagination.updateList());
     }
 
     private HorizontalLayout getToolBar() {

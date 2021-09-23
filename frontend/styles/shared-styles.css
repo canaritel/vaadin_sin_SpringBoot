@@ -15,6 +15,19 @@ a[highlight] {
     margin: var(--lumo-space-m);
 }
 
+/* Login view ***************************************************
+***************************************************************/
+/* Utiliza CSS Flexbox para administrar el diseño */
+.login-view .content {
+    flex: 5;
+    min-width: 500px;
+}
+.login-view .information{
+    flex: 1;
+    background: var(--lumo-primary-color-50pct);
+    min-width: 300px;
+}
+
 /* List view ***************************************************
 ***************************************************************/
 /* Utiliza CSS Flexbox para administrar el diseño */
@@ -31,7 +44,6 @@ a[highlight] {
     padding: var(--lumo-space-m);  
     /* Utiliza la propiedad de tema personalizado Vaadin Lumo para agregar relleno estándar en la forma */
 }
-
 
 
 /* Distribuye view **********************************************
@@ -60,7 +72,6 @@ a[highlight] {
 }
 
 
-
 /* Juego view ***************************************************
 ****************************************************************/
 /* Utiliza CSS Flexbox para administrar el diseño */
@@ -80,7 +91,6 @@ a[highlight] {
 }
 
 
-
 /* Listado view *************************************************
 ****************************************************************/
 /* Utiliza CSS Flexbox para administrar el diseño */
@@ -98,6 +108,15 @@ a[highlight] {
     box-shadow: 10px 10px 8px #888888;
 }
 
+.listado-indice {
+    justify-content: center;
+    background-color: #BAEAD3;
+    border-radius: 12px;
+    box-shadow: 10px 10px 8px #e0e0e0;
+    font-size: 1.7em;
+    margin: 1em;
+    font-weight: bold;
+}
 
 
 /* Dashboard view ***********************************************
@@ -119,19 +138,10 @@ a[highlight] {
     background-color: #BAEAC3;
     border-radius: 12px;
     box-shadow: 10px 10px 8px #e0e0e0;
-    margin: 1em;
-    font-size: 40px ;
-   }
-
-.charts-view3 {
-    justify-content: center;
-    background-color: #BAEAD3;
-    border-radius: 12px;
-    box-shadow: 10px 10px 8px #e0e0e0;
-    margin: 1em;
-    font-size: 40px ;
+    font-size: 2em;
+    margin: 2em;
+    font-weight: bold;
 }
-
 
 
 /******************************************************************************

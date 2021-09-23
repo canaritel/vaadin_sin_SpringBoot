@@ -3,9 +3,11 @@
   <persistence-unit name="persistencia-vaadin-mysql" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>org.vaadin.example.entities.Usuario</class>
-    <class>org.vaadin.example.entities.RolAcceso</class>
     <class>org.vaadin.example.entities.Juego</class>
     <class>org.vaadin.example.entities.Distribuye</class>
+    <class>org.vaadin.example.entities.Accesos</class>
+    <class>org.vaadin.example.entities.Roles</class>
+    <class>org.vaadin.example.entities.Registros</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://PMYSQL114.dns-servicio.com:3306/6980251_hibernate?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=UTC&amp;useSSL=false"/>

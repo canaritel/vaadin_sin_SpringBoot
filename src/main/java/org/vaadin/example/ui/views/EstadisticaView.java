@@ -18,6 +18,7 @@ import com.storedobject.chart.YAxis;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -35,8 +36,9 @@ import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.ui.MainLayout;
 
-@Route(value = "dashboard", layout = MainLayout.class)
-@PageTitle("Dashboard | Vaadin CRM")
+@Route(value = "dashboard", layout = MainLayout.class) //si ocultamos no mostrará esta vista en las rutas públicas
+@PageTitle("Estadísticas | Vaadin CRM")
+@CssImport("./styles/shared-styles.css")
 public class EstadisticaView extends VerticalLayout {
 
     private JuegoService juegoService;
@@ -44,6 +46,7 @@ public class EstadisticaView extends VerticalLayout {
     private VerticalLayout verticalLayout1, verticalLayout2, verticalLayout3;
 
     public EstadisticaView() {
+
         if (juegoService == null) {
             juegoService = new JuegoService();
         }

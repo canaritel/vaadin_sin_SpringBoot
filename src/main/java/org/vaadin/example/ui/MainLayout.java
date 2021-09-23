@@ -10,6 +10,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,10 +19,11 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
+import static org.vaadin.example.services.AuthService.ROL;
 import org.vaadin.example.ui.views.ListadoView;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class MainLayout extends AppLayout implements RouterLayout  {
+public class MainLayout extends AppLayout implements RouterLayout {
 
     public MainLayout() {
         createHeader();
@@ -94,16 +96,26 @@ public class MainLayout extends AppLayout implements RouterLayout  {
                 VaadinIcon.BULLETS.create(),
                 new RouterLink("Listado", ListadoView.class));
 
-        Tab estadisticas = new Tab(
-                VaadinIcon.BAR_CHART.create(),
-                new RouterLink("Estadísticas", EstadisticaView.class));
+        if ("ADMIN".equals(ROL)) {
+            Notification.show("Tipo Administrador");
 
-        tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
+            Tab estadisticas = new Tab(
+                    VaadinIcon.BAR_CHART.create(),
+                    new RouterLink("Estadísticas", EstadisticaView.class));
 
+            tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
+
+        } else {
+            Notification.show("Tipo User");
+            tabs.add(usuarios, distribuidores, juegos, listas);
+        }
+
+        //tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
         return tabs;
     }
 
-    /*
+}
+/*
     private void createDrawer2() {
         RouterLink link1 = new RouterLink("Usuarios", UsuarioView.class);
         RouterLink link2 = new RouterLink("Distribuidores", DistribuidorView.class);
@@ -163,5 +175,4 @@ public class MainLayout extends AppLayout implements RouterLayout  {
         layout.add(logoLayout, menu);
         return layout;
     }
-     */
-}
+ */
