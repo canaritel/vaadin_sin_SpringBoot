@@ -40,6 +40,8 @@ import org.vaadin.example.ui.MainLayout;
 @PageTitle("Estadísticas | Vaadin CRM")
 @CssImport("./styles/shared-styles.css")
 public class EstadisticaView extends VerticalLayout {
+    
+    public static final String VIEW_NAME = "Estadistica";
 
     private JuegoService juegoService;
     private UsuarioService usuarioService;

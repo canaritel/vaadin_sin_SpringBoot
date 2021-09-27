@@ -57,6 +57,8 @@
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
+    "@types/validator": "13.1.0",
+    "babel-loader": "8.2.2",
     "chokidar": "^3.5.0",
     "compression-webpack-plugin": "4.0.1",
     "construct-style-sheets-polyfill": "2.4.6",
@@ -65,15 +67,24 @@
     "extra-watch-webpack-plugin": "1.0.3",
     "extract-loader": "5.1.0",
     "file-loader": "6.1.0",
+    "fork-ts-checker-webpack-plugin": "6.2.1",
+    "glob": "7.1.6",
+    "html-webpack-plugin": "4.5.1",
     "lit-css-loader": "0.0.4",
+    "loader-utils": "2.0.0",
     "raw-loader": "3.1.0",
     "ts-loader": "8.0.12",
     "typescript": "4.0.3",
+    "validator": "13.1.17",
     "webpack": "4.42.0",
     "webpack-babel-multi-target-plugin": "2.3.3",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "4.2.2"
+    "webpack-manifest-plugin": "3.0.0",
+    "webpack-merge": "4.2.2",
+    "workbox-core": "6.2.0",
+    "workbox-precaching": "6.2.0",
+    "workbox-webpack-plugin": "6.2.0"
   },
   "license": "UNLICENSED",
   "name": "no-name",
@@ -88,6 +99,7 @@
       "@polymer/paper-icon-button": "3.0.2",
       "@polymer/paper-toggle-button": "3.0.1",
       "@polymer/polymer": "3.2.0",
+      "@vaadin/router": "1.7.4",
       "@vaadin/vaadin-accordion": "1.2.0",
       "@vaadin/vaadin-app-layout": "2.2.0",
       "@vaadin/vaadin-avatar": "1.0.4",
@@ -132,12 +144,15 @@
       "cleave.js": "1.6.0",
       "construct-style-sheets-polyfill": "2.4.16",
       "echarts": "5.1.2",
+      "lit": "2.0.0-rc.4",
       "lit-element": "2.5.1",
       "lit-html": "1.4.1",
       "multiselect-combo-box": "2.4.2",
       "resize-observer-polyfill": "1.5.1"
     },
     "devDependencies": {
+      "@types/validator": "13.1.0",
+      "babel-loader": "8.2.2",
       "chokidar": "^3.5.0",
       "compression-webpack-plugin": "4.0.1",
       "construct-style-sheets-polyfill": "2.4.6",
@@ -146,16 +161,25 @@
       "extra-watch-webpack-plugin": "1.0.3",
       "extract-loader": "5.1.0",
       "file-loader": "6.1.0",
+      "fork-ts-checker-webpack-plugin": "6.2.1",
+      "glob": "7.1.6",
+      "html-webpack-plugin": "4.5.1",
       "lit-css-loader": "0.0.4",
+      "loader-utils": "2.0.0",
       "raw-loader": "3.1.0",
       "ts-loader": "8.0.12",
       "typescript": "4.0.3",
+      "validator": "13.1.17",
       "webpack": "4.42.0",
       "webpack-babel-multi-target-plugin": "2.3.3",
       "webpack-cli": "3.3.11",
       "webpack-dev-server": "3.11.0",
-      "webpack-merge": "4.2.2"
+      "webpack-manifest-plugin": "3.0.0",
+      "webpack-merge": "4.2.2",
+      "workbox-core": "6.2.0",
+      "workbox-precaching": "6.2.0",
+      "workbox-webpack-plugin": "6.2.0"
     },
-    "hash": "9c7887a151d7c82341fe22ac27adf19620de68aa536c33aaa0d99bac5d62d94b"
+    "hash": "ffb8b1ca9f64cd0db3c99c34011c2042797aaa776ae8dc6f01557ef3c8f810dd"
   }
 }

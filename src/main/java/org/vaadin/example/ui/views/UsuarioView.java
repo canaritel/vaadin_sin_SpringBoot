@@ -28,6 +28,8 @@ import org.vaadin.example.ui.Pagination.UsuarioPagination;
 @PageTitle("Usuarios | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class UsuarioView extends VerticalLayout {
+    
+    public static final String VIEW_NAME = "Usuarios";
 
     private UsuarioService usuarioService;
     private UsuarioPagination pagination;

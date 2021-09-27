@@ -26,6 +26,8 @@ import org.vaadin.example.ui.Pagination.DistribuyePagination;
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class DistribuidorView extends VerticalLayout {
 
+    public static final String VIEW_NAME = "Distribuidores";
+
     private DistribuyeService distribuyeService;
     private DistribuyePagination pagination;
     //private ListDataProvider<Distribuye> dataProvider;

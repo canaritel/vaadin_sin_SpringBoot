@@ -16,6 +16,8 @@ public class BasicAccessControl implements AccessControl {
             return false;
         }
 
+        //Método para leer la BD y comprobar
+        
         if (!username.equals(password)) {
             return false;
         }
@@ -31,7 +33,7 @@ public class BasicAccessControl implements AccessControl {
 
     @Override
     public boolean isUserInRole(String role) {
-        if ("admin".equals(role)) {
+        if ("ADMIN".equals(role)) {
             // Only the "admin" user is in the "admin" role
             return getPrincipalName().equals("admin");
         }

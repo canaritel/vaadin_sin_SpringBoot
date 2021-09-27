@@ -2,7 +2,6 @@ package org.vaadin.example.ui.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -19,12 +18,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import org.vaadin.example.entities.Accesos;
 import org.vaadin.example.entities.Registros;
 import org.vaadin.example.entities.Roles;
-import org.vaadin.example.services.AuthService;
 import org.vaadin.example.services.RegistroService;
 import org.vaadin.example.services.RolesService;
+import org.vaadin.example.ui.authentication.AccessControl;
+import org.vaadin.example.ui.authentication.AccessControlFactory;
 
 //@Route(value = "login", layout = MainLayout.class)
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login
@@ -33,14 +32,14 @@ import org.vaadin.example.services.RolesService;
 @RouteAlias(value = "") //permite que la ruta por defecto acceda a esta clase
 public class LoginView extends FlexLayout {
 
-    //private final AccessControl accessControl;
+    private final AccessControl accessControl;
     // private final AuthService authService = new AuthService();
-    private final AuthService authService;
-    private Accesos acceso;
+    // private final AuthService authService;
+    // private Accesos acceso;
 
     public LoginView() {
-        //accessControl = AccessControlFactory.getInstance().createAccessControl();
-        authService = new AuthService();
+        accessControl = AccessControlFactory.getInstance().createAccessControl();
+        //authService = new AuthService();
         buildUI();
     }
 
@@ -129,6 +128,12 @@ public class LoginView extends FlexLayout {
     }
 
     private void login(LoginForm.LoginEvent event) {
+        if (accessControl.signIn(event.getUsername(), event.getPassword())) {
+            getUI().get().navigate(UsuarioView.class);
+        } else {
+            event.getSource().setError(true);
+        }
+        /*
         try {
             authService.authenticate(event.getUsername(), event.getPassword());
             //UI.getCurrent().navigate(UsuarioView.class);
@@ -138,6 +143,7 @@ public class LoginView extends FlexLayout {
         } catch (AuthService.AuthException ex) {
             event.getSource().setError(true);
         }
+         */
     }
 
     private void crearAcceso() {
@@ -149,9 +155,9 @@ public class LoginView extends FlexLayout {
         Registros registro = new Registros();
         registro = registroService.leerRegistro(5);
 
-        acceso = new Accesos("user", "1234567", rol, registro);
+     //   acceso = new Accesos("user", "1234567", rol, registro);
 
-        authService.grabarAcceso(acceso);
+     //   authService.grabarAcceso(acceso);
 
     }
 

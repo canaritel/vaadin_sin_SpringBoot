@@ -30,6 +30,8 @@ import org.vaadin.example.utils.ConvertToImage;
 @PageTitle("Juegos | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class JuegoView extends VerticalLayout {
+    
+    public static final String VIEW_NAME = "Juegos";
 
     private JuegoService juegoService;
     private JuegoPagination pagination;
