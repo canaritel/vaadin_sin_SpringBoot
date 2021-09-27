@@ -9,6 +9,11 @@ import org.vaadin.example.ui.views.LoginView;
  * before allowing entering any page. It is registered in a file named com.vaadin.flow.server.VaadinServiceInitListener
  * in META-INF/services.
  */
+/*
+Revisar esta documentación para implementarlo correctamente "Como implementar un SPI"
+https://vaadin.com/docs/v14/flow/advanced/tutorial-service-init-listener
+https://programmerclick.com/article/85451408396/
+ */
 public class VaadinInitListener implements VaadinServiceInitListener {
 
     @Override
