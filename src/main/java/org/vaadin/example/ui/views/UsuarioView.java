@@ -29,6 +29,7 @@ import org.vaadin.example.ui.Pagination.UsuarioPagination;
 @RouteAlias(value = "", layout = MainLayout.class) //permite que la ruta por defecto acceda a esta clase
 @PageTitle("Usuarios | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
+//Para más información mirar: https://vaadin.com/docs/v14/flow/routing/tutorial-routing-exception-handling
 public class UsuarioView extends VerticalLayout implements HasUrlParameter<String> {
 
     public static final String VIEW_NAME = "Usuarios";
@@ -225,14 +226,8 @@ public class UsuarioView extends VerticalLayout implements HasUrlParameter<Strin
         return horizontal;
     }
 
-    /*
-    @Override
-    public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {
-       return HttpServletResponse.SC_NOT_FOUND;
-    }
-     */
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-        //To change body of generated methods, choose Tools | Templates.
+        //Hacemos que cualquier dirección web erronea por defecto sea redirigida a la raiz ""
     }
 }
