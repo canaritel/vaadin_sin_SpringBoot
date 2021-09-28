@@ -18,7 +18,6 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,14 +28,15 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 
-import org.vaadin.example.ui.authentication.AccessControl;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
 import org.vaadin.example.ui.views.ListadoView;
+import org.vaadin.example.ui.authentication.AccessControlInterface;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class MainLayout extends AppLayout implements RouterLayout {
 
     private Button logoutButton;
+    private Tabs tabs;
 
     public MainLayout() {
         createHeader();
@@ -89,11 +89,11 @@ public class MainLayout extends AppLayout implements RouterLayout {
         logoutButton = createMenuButton("Logout", VaadinIcon.SIGN_OUT.create());
         logoutButton.addClickListener(e -> logout());
         logoutButton.getElement().setAttribute("title", "Logout (Ctrl+L)");
-        addToDrawer(logoutButton);
+        // addToDrawer(logoutButton);
     }
 
     private Tabs createTabs() {
-        Tabs tabs = new Tabs();
+        tabs = new Tabs();
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addThemeVariants(TabsVariant.MATERIAL_FIXED);
         //tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL); //elimino barra 
@@ -120,22 +120,8 @@ public class MainLayout extends AppLayout implements RouterLayout {
                 createMenuLink(ListadoView.class, ListadoView.VIEW_NAME));
         //new RouterLink("Listado", ListadoView.class));
 
-        AccessControl accessControl = AccessControlFactory.getInstance()
-                .createAccessControl();
-        if (accessControl.isUserInRole(AccessControl.ADMIN_ROLE_NAME)) {
-            Tab estadisticas = new Tab(
-                    VaadinIcon.BAR_CHART.create(),
-                    createMenuLink(EstadisticaView.class, EstadisticaView.VIEW_NAME));
+        tabs.add(usuarios, distribuidores, juegos, listas); //añado las opciones Tabs generales
 
-            tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
-
-        } else {
-            tabs.add(usuarios, distribuidores, juegos, listas);
-        }
-
-        Notification.show(accessControl.getPrincipalName());
-
-        //tabs.add(usuarios, distribuidores, juegos, listas, estadisticas);
         return tabs;
     }
 
@@ -157,12 +143,12 @@ public class MainLayout extends AppLayout implements RouterLayout {
         return routerButton;
     }
 
-    private void registerAdminViewIfApplicable(AccessControl accessControl) {
+    private void registerAdminViewIfApplicable(AccessControlInterface accessControl) {
         // register the admin view dynamically only for any admin user logged in
-        if (accessControl.isUserInRole(AccessControl.ADMIN_ROLE_NAME)
+        if (accessControl.isUserInRole(AccessControlInterface.ADMIN_ROLE_NAME)
                 && !RouteConfiguration.forSessionScope()
                         .isRouteRegistered(EstadisticaView.class)) {
-            RouteConfiguration.forSessionScope().setRoute("admin",
+            RouteConfiguration.forSessionScope().setRoute(EstadisticaView.VIEW_NAME,
                     EstadisticaView.class, MainLayout.class);
             // as logout will purge the session route registry, no need to
             // unregister the view on logout
@@ -173,7 +159,6 @@ public class MainLayout extends AppLayout implements RouterLayout {
         AccessControlFactory.getInstance().createAccessControl().signOut();
     }
 
-    /*
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -183,82 +168,23 @@ public class MainLayout extends AppLayout implements RouterLayout {
                 KeyModifier.CONTROL);
 
         // add the admin view menu item if user has admin role
-        final AccessControl accessControl = AccessControlFactory.getInstance()
+        final AccessControlInterface accessControl = AccessControlFactory.getInstance()
                 .createAccessControl();
-        if (accessControl.isUserInRole(AccessControl.ADMIN_ROLE_NAME)) {
+        if (accessControl.isUserInRole(AccessControlInterface.ADMIN_ROLE_NAME)) {
 
             // Create extra navigation target for admins
             registerAdminViewIfApplicable(accessControl);
 
             // The link can only be created now, because the RouterLink checks
             // that the target is valid.
-            addToDrawer(createMenuLink(EstadisticaView.class, "Admin",
-                    VaadinIcon.DOCTOR.create()));
+            Tab estadisticas = new Tab(
+                    VaadinIcon.BAR_CHART.create(),
+                    createMenuLink(EstadisticaView.class, EstadisticaView.VIEW_NAME));
+            tabs.add(estadisticas);
         }
 
         // Finally, add logout button for all users
         addToDrawer(logoutButton);
     }
-     */
+
 }
-/*
-    private void createDrawer2() {
-        RouterLink link1 = new RouterLink("Usuarios", UsuarioView.class);
-        RouterLink link2 = new RouterLink("Distribuidores", DistribuidorView.class);
-        RouterLink link3 = new RouterLink("Juegos", JuegoView.class);
-        RouterLink link4 = new RouterLink("Estadísticas", EstadisticaView.class);
-
-        //link1.setHighlightCondition(HighlightConditions.sameLocation()); //hago que se inicie en este enlace
-        addToDrawer(new VerticalLayout(link1, link2, link3, link4));
-    }
-    
-    private Component createHeaderContent() {
-        HorizontalLayout layout = new HorizontalLayout();
-
-        // Configure styling for the header
-        layout.setId("header");
-        layout.getThemeList().set("light", true);
-        layout.setWidthFull();
-        layout.setSpacing(false);
-        layout.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        // Have the drawer toggle button on the left
-        layout.add(new DrawerToggle());
-
-        // Placeholder for the title of the current view.
-        // The title will be set after navigation.
-        viewTitle = new H2("Hola");
-        layout.add(viewTitle);
-
-        // A user icon
-        layout.add(new Image("images/avatar_60px.png", "Avatar"));
-
-        return layout;
-    }
-    
-     private Component createDrawerContent(Tabs menu) {
-        Image img = new Image("images/logo.png", "Vaadin Televoip logo");
-        img.setHeight("48px");
-
-        VerticalLayout layout = new VerticalLayout();
-
-        // Configure styling for the drawer
-        layout.setSizeFull();
-        layout.setPadding(false);
-        layout.setSpacing(false);
-        layout.getThemeList().set("spacing-s", true);
-        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
-
-        // Have a drawer header with an application logo
-        HorizontalLayout logoLayout = new HorizontalLayout();
-        logoLayout.setId("logo");
-        logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        layout.add(img);
-
-        //logoLayout.add(new H1("My Project"));
-        // Display the logo and the menu in the drawer
-        layout.add(logoLayout, menu);
-        return layout;
-    }
- */
