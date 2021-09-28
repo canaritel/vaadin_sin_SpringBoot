@@ -14,21 +14,23 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import org.vaadin.example.services.UsuarioService;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.ui.MainLayout;
 import org.vaadin.example.ui.Pagination.UsuarioPagination;
 
 @Route(value = "usuarios", layout = MainLayout.class)
-//@Route(value = "usuarios")  ////si ocultamos no mostrará esta vista en las rutas públicas
-//@RouteAlias(value = "", layout = MainLayout.class)
-//@Route(value = "usuarios")  //ruta por defecto
+@RouteAlias(value = "", layout = MainLayout.class) //permite que la ruta por defecto acceda a esta clase
 @PageTitle("Usuarios | Vaadin CRM")
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
-public class UsuarioView extends VerticalLayout {
-    
+public class UsuarioView extends VerticalLayout implements HasUrlParameter<String> {
+
     public static final String VIEW_NAME = "Usuarios";
 
     private UsuarioService usuarioService;
@@ -223,4 +225,14 @@ public class UsuarioView extends VerticalLayout {
         return horizontal;
     }
 
+    /*
+    @Override
+    public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {
+       return HttpServletResponse.SC_NOT_FOUND;
+    }
+     */
+    @Override
+    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+        //To change body of generated methods, choose Tools | Templates.
+    }
 }

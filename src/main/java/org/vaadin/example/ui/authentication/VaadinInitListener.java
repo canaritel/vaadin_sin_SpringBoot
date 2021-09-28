@@ -14,6 +14,7 @@ Revisar esta documentación para implementarlo correctamente "Como implementar u
 https://vaadin.com/docs/v14/flow/advanced/tutorial-service-init-listener
 https://programmerclick.com/article/85451408396/
  */
+
 public class VaadinInitListener implements VaadinServiceInitListener {
 
     @Override

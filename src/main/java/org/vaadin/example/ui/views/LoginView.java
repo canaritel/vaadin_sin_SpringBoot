@@ -29,7 +29,6 @@ import org.vaadin.example.ui.authentication.AccessControlFactory;
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login
 @PageTitle("Login | Vaadin CRM")
 @CssImport("./styles/shared-styles.css")
-@RouteAlias(value = "") //permite que la ruta por defecto acceda a esta clase
 public class LoginView extends FlexLayout {
 
     private final AccessControl accessControl;
@@ -129,7 +128,7 @@ public class LoginView extends FlexLayout {
 
     private void login(LoginForm.LoginEvent event) {
         if (accessControl.signIn(event.getUsername(), event.getPassword())) {
-            getUI().get().navigate(UsuarioView.class);
+            getUI().get().navigate("");
         } else {
             event.getSource().setError(true);
         }

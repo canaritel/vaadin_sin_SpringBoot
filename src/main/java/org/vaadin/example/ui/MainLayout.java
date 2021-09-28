@@ -139,8 +139,7 @@ public class MainLayout extends AppLayout implements RouterLayout {
         return tabs;
     }
 
-    private RouterLink createMenuLink(Class<? extends Component> viewClass,
-            String caption) {
+    private RouterLink createMenuLink(Class<? extends Component> viewClass, String caption) {
         final RouterLink routerLink = new RouterLink(null, viewClass);
         routerLink.setClassName("menu-link");
         //   routerLink.add(icon);
