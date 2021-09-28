@@ -23,39 +23,7 @@
         <jetty.version>9.4.43.v20210629</jetty.version>
         -->
     </properties>
-
-    <repositories>
-        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
-
-        <!-- Main Maven repository -->
-        <repository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <!-- Repository used by many Vaadin add-ons -->
-        <repository>
-            <id>Vaadin Directory</id>
-            <url>https://maven.vaadin.com/vaadin-addons</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-     
-    <pluginRepositories>
-        <!-- Maven Central repository requires https:// to access. OK ! -->
-        <pluginRepository>
-            <id>central</id>
-            <url>https://repo.maven.apache.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-    <!-- OK 2 -->
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -67,7 +35,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <!-- OK 3 -->
+
+    
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -103,40 +72,36 @@
         </dependency>
 
         <!-- Added to provide logging output as Vaadin uses -->
-        <!-- the unbound SLF4J no-operation (NOP) logger implementation 
-        OK 4-->
+        <!-- the unbound SLF4J no-operation (NOP) logger implementation -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
-        <!-- OK 5 -->
+        
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
-        <!-- OK 6 -->
+        
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.1.Final</version>
         </dependency>
         <!-- Bean validation implementation -->
-        <!-- OK 7 -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.1.0.Final</version>
         </dependency>
-        <!-- OK 8 -->
         <!-- Vaadin Testbench -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- OK 9 -->
         <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
@@ -144,7 +109,6 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        
         <!-- Dependencias de JPA e Hibernate -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -192,23 +156,19 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.49</version>
         </dependency>
-        
         <!-- Bean validation implementation-->
-        <!-- Bean validation implementation-->
-               
-        <!-- OK 10 -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-crud-flow</artifactId>
         </dependency>
-        <!-- OK 11 -->     
+          
         <dependency>
             <groupId>org.vaadin</groupId>
             <artifactId>textfieldformatter</artifactId>
             <version>5.2.0.pre</version>
             <type>jar</type>
         </dependency>
-       
+        <!-- Repositorios para estadíticas gratuitas -->
         <dependency>
             <groupId>com.storedobject.vaadin</groupId>
             <artifactId>so-components</artifactId>
@@ -229,6 +189,57 @@
             <type>jar</type>
         </dependency> -->
     </dependencies>   
+    
+    
+    
+    <repositories>
+        <!-- The order of definitions matters. Explicitly defining central here to make sure it has the highest priority. -->
+
+        <!-- Main Maven repository -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!-- Repository used by many Vaadin add-ons -->
+        <repository>
+            <id>Vaadin Directory</id>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+     
+    <pluginRepositories>
+        <!-- Maven Central repository requires https:// to access. OK ! -->
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+      
 
     <build>
         <defaultGoal>jetty:run</defaultGoal>
@@ -320,14 +331,17 @@
                             <scanIntervalSeconds>0</scanIntervalSeconds>
                             <stopPort>8081</stopPort>
                             <stopWait>5</stopWait>
+                            <daemon>false</daemon>
                             <stopKey>${project.artifactId}</stopKey>
+                            <scanIntervalSeconds>-1</scanIntervalSeconds>
                         </configuration>
                         <executions>
                             <execution>
                                 <id>start-jetty</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
-                                    <goal>deploy-war</goal>
+                                    <!--   <goal>deploy-war</goal> -->
+                                    <goal>start</goal>
                                 </goals>
                             </execution>
                             <execution>
