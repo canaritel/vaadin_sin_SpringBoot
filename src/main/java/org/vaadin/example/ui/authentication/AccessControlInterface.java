@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Simple interface for authentication and authorization checks.
  */
-public interface AccessControl extends Serializable {
+public interface AccessControlInterface extends Serializable {
 
     String ADMIN_ROLE_NAME = "ADMIN";
     String ADMIN_USERNAME = "admin";

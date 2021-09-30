@@ -17,13 +17,12 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import org.vaadin.example.entities.Registros;
 import org.vaadin.example.entities.Roles;
 import org.vaadin.example.services.RegistroService;
 import org.vaadin.example.services.RolesService;
-import org.vaadin.example.ui.authentication.AccessControl;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
+import org.vaadin.example.ui.authentication.AccessControlInterface;
 
 //@Route(value = "login", layout = MainLayout.class)
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login
@@ -31,7 +30,7 @@ import org.vaadin.example.ui.authentication.AccessControlFactory;
 @CssImport("./styles/shared-styles.css")
 public class LoginView extends FlexLayout {
 
-    private final AccessControl accessControl;
+    private final AccessControlInterface accessControl;
     // private final AuthService authService = new AuthService();
     // private final AuthService authService;
     // private Accesos acceso;
@@ -154,10 +153,8 @@ public class LoginView extends FlexLayout {
         Registros registro = new Registros();
         registro = registroService.leerRegistro(5);
 
-     //   acceso = new Accesos("user", "1234567", rol, registro);
-
-     //   authService.grabarAcceso(acceso);
-
+        //   acceso = new Accesos("user", "1234567", rol, registro);
+        //   authService.grabarAcceso(acceso);
     }
 
 }

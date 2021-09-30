@@ -26,7 +26,7 @@ import org.vaadin.example.utils.ConvertToImage;
 @PageTitle("Listado | Vaadin CRM")
 @CssImport("./styles/shared-styles.css")
 public class ListadoView extends FlexLayout {
-    
+
     public static final String VIEW_NAME = "Listado";
 
     private JuegoService juegoService;

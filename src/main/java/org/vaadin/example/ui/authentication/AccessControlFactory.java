@@ -2,7 +2,7 @@ package org.vaadin.example.ui.authentication;
 
 public class AccessControlFactory {
     private static final AccessControlFactory INSTANCE = new AccessControlFactory();
-    private final AccessControl accessControl = new BasicAccessControl();
+    private final AccessControlInterface accessControl = new BasicAccessControl();
 
     private AccessControlFactory() {
     }
@@ -11,7 +11,7 @@ public class AccessControlFactory {
         return INSTANCE;
     }
 
-    public AccessControl createAccessControl() {
+    public AccessControlInterface createAccessControl() {
         return accessControl;
     }
 }

@@ -14,21 +14,23 @@ Revisar esta documentación para implementarlo correctamente "Como implementar u
 https://vaadin.com/docs/v14/flow/advanced/tutorial-service-init-listener
 https://programmerclick.com/article/85451408396/
  */
-
 public class VaadinInitListener implements VaadinServiceInitListener {
 
     @Override
     public void serviceInit(ServiceInitEvent initEvent) {
-        final AccessControl accessControl = AccessControlFactory.getInstance()
+
+        final AccessControlInterface accessControl = AccessControlFactory.getInstance()
                 .createAccessControl();
 
         initEvent.getSource().addUIInitListener(uiInitEvent -> {
             uiInitEvent.getUI().addBeforeEnterListener(enterEvent -> {
+
                 if (!accessControl.isUserSignedIn() && !LoginView.class
                         .equals(enterEvent.getNavigationTarget())) {
                     enterEvent.rerouteTo(LoginView.class);
                 }
             });
         });
+
     }
 }

@@ -4,11 +4,11 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 
 /**
- * Default mock implementation of {@link AccessControl}. This implementation
+ * Default mock implementation of {@link AccessControlInterface}. This implementation
  * accepts any string as a user if the password is the same string, and
  * considers the user "admin" as the only administrator.
  */
-public class BasicAccessControl implements AccessControl {
+public class BasicAccessControl implements AccessControlInterface {
 
     @Override
     public boolean signIn(String username, String password) {
