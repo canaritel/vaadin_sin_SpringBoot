@@ -27,7 +27,6 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
-
 import org.vaadin.example.ui.authentication.AccessControlFactory;
 import org.vaadin.example.ui.views.ListadoView;
 import org.vaadin.example.ui.authentication.AccessControlInterface;
