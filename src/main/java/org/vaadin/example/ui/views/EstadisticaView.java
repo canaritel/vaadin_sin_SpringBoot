@@ -22,7 +22,6 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,9 +33,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.vaadin.example.services.JuegoService;
 import org.vaadin.example.services.UsuarioService;
-import org.vaadin.example.ui.MainLayout;
 
-@Route(value = "dashboard", layout = MainLayout.class) //si ocultamos no mostrará esta vista en las rutas públicas
+//@Route(value = "dashboard") //si ocultamos no mostrará esta vista en las rutas públicas
 @PageTitle("Estadísticas | Vaadin CRM")
 @CssImport("./styles/shared-styles.css")
 public class EstadisticaView extends VerticalLayout {
