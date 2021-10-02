@@ -1,3 +1,22 @@
+/* Login View ************************************************
+**************************************************************/
+
+.login-rich-content {
+  background-image: url("https://canaritel.es/descargas/earth.jpg");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  height: 500px;
+}
+.login-rich-content vaadin-login-form {
+  align-items: center;
+  display: flex;
+  max-width: 300px;
+}
+.login-rich-content vaadin-login-form-wrapper {
+  background-image: none;
+}
+
 /* Main layout ************************************************
 **************************************************************/
 
