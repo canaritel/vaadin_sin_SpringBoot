@@ -158,6 +158,9 @@ public class MainLayout extends AppLayout implements RouterLayout {
         AccessControlFactory.getInstance().createAccessControl().signOut();
     }
 
+    //Mediante este interesante método llamado Fragments podemos añadir acciones 
+    //hemos de ver que no es llamado desde ningún otro método, sino que se sobreescribe y se inserta como parte del propio código inicial
+    //entiendo es ejecutado al final de terminar de ejecutarse el método principal, https://www.it-swarm-es.com/es/java/cuando-se-llama-onattach-durante-el-fragment-lifecycle/825180811/
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
@@ -170,10 +173,8 @@ public class MainLayout extends AppLayout implements RouterLayout {
         final AccessControlInterface accessControl = AccessControlFactory.getInstance()
                 .createAccessControl();
         if (accessControl.isUserInRole(AccessControlInterface.ADMIN_ROLE_NAME)) {
-
             // Create extra navigation target for admins
             registerAdminViewIfApplicable(accessControl);
-
             // The link can only be created now, because the RouterLink checks
             // that the target is valid.
             Tab estadisticas = new Tab(
