@@ -2,13 +2,15 @@ package org.vaadin.example.ui.authentication;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
+import org.vaadin.example.services.AuthService;
 
 /**
- * Default mock implementation of {@link AccessControlInterface}. This implementation
- * accepts any string as a user if the password is the same string, and
- * considers the user "admin" as the only administrator.
+ * Default mock implementation of {@link AccessControlInterface}. This implementation accepts any string as a user if
+ * the password is the same string, and considers the user "admin" as the only administrator.
  */
 public class BasicAccessControl implements AccessControlInterface {
+
+    private AuthService authService = new AuthService();
 
     @Override
     public boolean signIn(String username, String password) {
@@ -16,9 +18,9 @@ public class BasicAccessControl implements AccessControlInterface {
             return false;
         }
 
-        //Método para leer la BD y comprobar
-        
-        if (!username.equals(password)) {
+        try {
+            authService.authenticate(username, password);
+        } catch (AuthService.AuthException ex) {
             return false;
         }
 

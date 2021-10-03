@@ -1,7 +1,9 @@
-package org.vaadin.example.ui.authentication;
+package org.vaadin.example.ui;
 
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
+import org.vaadin.example.ui.authentication.AccessControlFactory;
+import org.vaadin.example.ui.authentication.AccessControlInterface;
 import org.vaadin.example.ui.views.LoginView;
 
 /**
@@ -14,6 +16,7 @@ Revisar esta documentación para implementarlo correctamente "Como implementar u
 https://vaadin.com/docs/v14/flow/advanced/tutorial-service-init-listener
 https://programmerclick.com/article/85451408396/
  */
+//Este método hará que se ejecute primero la clase LoginView
 public class VaadinInitListener implements VaadinServiceInitListener {
 
     @Override

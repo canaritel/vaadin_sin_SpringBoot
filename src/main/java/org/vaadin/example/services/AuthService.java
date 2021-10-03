@@ -1,6 +1,5 @@
 package org.vaadin.example.services;
 
-import java.util.ArrayList;
 import org.vaadin.example.entities.Accesos;
 import org.vaadin.example.entities.Roles;
 import org.vaadin.example.repositories.AccesosJpaRepository;
@@ -36,7 +35,6 @@ public class AuthService {
 
     public void getAuthorizedRoutes(Roles rol) {
         //ArrayList<AuthorizeRoute> listRoutes = new ArrayList<>();
-
         if (rol.getNombreRol().equals("USER")) {
             ROL = "USER";
         } else if (rol.getNombreRol().equals("ADMIN")) {

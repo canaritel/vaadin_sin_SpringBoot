@@ -17,7 +17,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <vaadin.version>21.0.1</vaadin.version>
-        <jetty.version>10.0.6</jetty.version>
+        <jetty.version>9.4.43.v20210629</jetty.version>
         <!--
         https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin
         <jetty.version>9.4.43.v20210629</jetty.version>
