@@ -1,4 +1,4 @@
-package org.vaadin.example.ui.authentication;
+package org.vaadin.example.interfaces;
 
 import java.io.Serializable;
 
@@ -8,7 +8,6 @@ import java.io.Serializable;
 public interface AccessControlInterface extends Serializable {
 
     String ADMIN_ROLE_NAME = "ADMIN";
-    String ADMIN_USERNAME = "admin";
 
     boolean signIn(String username, String password);
 
@@ -19,4 +18,7 @@ public interface AccessControlInterface extends Serializable {
     String getPrincipalName();
 
     void signOut();
+    
+    boolean initFast();
+
 }

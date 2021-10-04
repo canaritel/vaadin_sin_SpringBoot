@@ -3,7 +3,7 @@ package org.vaadin.example.ui;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
-import org.vaadin.example.ui.authentication.AccessControlInterface;
+import org.vaadin.example.interfaces.AccessControlInterface;
 import org.vaadin.example.ui.views.LoginView;
 
 /**

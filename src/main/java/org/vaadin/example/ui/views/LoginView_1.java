@@ -22,7 +22,7 @@ import org.vaadin.example.services.AuthService;
 import org.vaadin.example.services.RegistroService;
 import org.vaadin.example.services.RolesService;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
-import org.vaadin.example.ui.authentication.AccessControlInterface;
+import org.vaadin.example.interfaces.AccessControlInterface;
 /*
 //@Route(value = "login", layout = MainLayout.class)
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login

@@ -6,26 +6,19 @@ import org.vaadin.example.repositories.AccesosJpaRepository;
 
 public class AuthService {
 
-    //private AuthorizeRoute authorizeRoute;
     public AuthService() {
     }
 
     public static String ROL = "user";
-
-    //creamos nuestra propia excepción
-    public class AuthException extends Exception {
-
-    }
-
     private final AccesosJpaRepository accesoRepository = new AccesosJpaRepository();   //variable de tipo FINAL para hacerlo inamovible y constante
 
-    public void authenticate(String username, String password) throws AuthException {
+    public boolean authenticate(String username, String password) {
         Accesos acceso = accesoRepository.getByUsermame(username);
         if (acceso != null && checkPassword(password, acceso.getPasswordSalt(), acceso.getPasswordHash())) {
             createRoutes(acceso.getRol());
-
+            return true;
         } else {
-            throw new AuthException();
+            return false;
         }
     }
 
@@ -34,7 +27,6 @@ public class AuthService {
     }
 
     public void getAuthorizedRoutes(Roles rol) {
-        //ArrayList<AuthorizeRoute> listRoutes = new ArrayList<>();
         if (rol.getNombreRol().equals("USER")) {
             ROL = "USER";
         } else if (rol.getNombreRol().equals("ADMIN")) {

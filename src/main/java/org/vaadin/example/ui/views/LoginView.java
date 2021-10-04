@@ -16,14 +16,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.vaadin.example.entities.Accesos;
 import org.vaadin.example.entities.Registros;
 import org.vaadin.example.entities.Roles;
-import org.vaadin.example.services.AuthService;
 import org.vaadin.example.services.RegistroService;
 import org.vaadin.example.services.RolesService;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
-import org.vaadin.example.ui.authentication.AccessControlInterface;
+import org.vaadin.example.interfaces.AccessControlInterface;
 
 //@Route(value = "login", layout = MainLayout.class)
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login
@@ -35,8 +33,8 @@ public class LoginView extends VerticalLayout {
 
     public LoginView() {
         accessControl = AccessControlFactory.getInstance().createAccessControl();
-        //authService = new AuthService();
         buildUI();
+        arranqueRapido();
     }
 
     private void buildUI() {
@@ -51,7 +49,6 @@ public class LoginView extends VerticalLayout {
         loginForm.addForgotPasswordListener(
                 event -> Notification.show("Una pista: la misma que el username"));
 
-        //loginForm.setOpened(true);
         //Nuevos botones
         // The login button is disabled when clicked to prevent multiple submissions.
         // To restore it, call component.setEnabled(true)
@@ -108,7 +105,7 @@ public class LoginView extends VerticalLayout {
                 .setMessage("Confirme su usuario y contraseña e inténtelo nuevamente.");
         i18n.setAdditionalInformation(
                 "El acceso en modo usuario permite solo crear y editar. "
-                + "Los datos de acceso son: \"user | user\""
+                + "Los datos de acceso son: \"user | 1234567\""
                 + ". Para el acceso de tipo administrador (con todos los"
                 + " permisos) deberá crear una cuenta.");
 
@@ -120,7 +117,6 @@ public class LoginView extends VerticalLayout {
         //loginInformation.setClassName("information");
         // Personalización del acceso
         // Cargamos las imágenes
-        //Image imgLogo = new Image("images/logo.png", "Vaadin Televoip logo");
         Image imgLogo = new Image("images/Televoip.png", "Vaadin Televoip logo");
         imgLogo.setHeight("120px");
 
@@ -149,6 +145,13 @@ public class LoginView extends VerticalLayout {
         // Accesos  acceso = new Accesos("admin", "123456789", rol, registro);
         // AuthService authService = new AuthService();
         // authService.grabarAcceso(acceso);
+    }
+
+    //Método para agilizar el arranque e inicio de la base de datos hosteada
+    private void arranqueRapido() {
+        if (accessControl.initFast()) {
+
+        }
     }
 
 }

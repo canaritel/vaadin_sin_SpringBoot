@@ -29,7 +29,7 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
 import org.vaadin.example.ui.views.ListadoView;
-import org.vaadin.example.ui.authentication.AccessControlInterface;
+import org.vaadin.example.interfaces.AccessControlInterface;
 
 @CssImport("./styles/shared-styles.css") //aplicamos CSS, en Netbeans ver en Files carpeta Frontend - Styles
 public class MainLayout extends AppLayout implements RouterLayout {
@@ -45,7 +45,7 @@ public class MainLayout extends AppLayout implements RouterLayout {
     private void createHeader() {
         //https://stackoverflow.com/questions/57553973/where-should-i-place-my-vaadin-10-static-files/57553974#57553974
         // Cargamos las imágenes
-        Image imgLogo = new Image("images/logo.png", "Vaadin Televoip logo");
+        Image imgLogo = new Image("images/vaadin_logo_televoip.png", "Televoip logo");
         imgLogo.setHeight("48px");
 
         Image imgAvatar = new Image("images/avatar_60px.png", "avatar");

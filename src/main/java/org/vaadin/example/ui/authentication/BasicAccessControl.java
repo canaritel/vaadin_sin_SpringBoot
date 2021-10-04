@@ -1,5 +1,6 @@
 package org.vaadin.example.ui.authentication;
 
+import org.vaadin.example.interfaces.AccessControlInterface;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import org.vaadin.example.services.AuthService;
@@ -10,7 +11,7 @@ import org.vaadin.example.services.AuthService;
  */
 public class BasicAccessControl implements AccessControlInterface {
 
-    private AuthService authService = new AuthService();
+    private final AuthService authService = new AuthService();
 
     @Override
     public boolean signIn(String username, String password) {
@@ -18,14 +19,12 @@ public class BasicAccessControl implements AccessControlInterface {
             return false;
         }
 
-        try {
-            authService.authenticate(username, password);
-        } catch (AuthService.AuthException ex) {
+        if (authService.authenticate(username, password)) {
+            CurrentUser.set(username);
+            return true;
+        } else {
             return false;
         }
-
-        CurrentUser.set(username);
-        return true;
     }
 
     @Override
@@ -39,7 +38,6 @@ public class BasicAccessControl implements AccessControlInterface {
             // Only the "admin" user is in the "admin" role
             return getPrincipalName().equals("admin");
         }
-
         // All users are in all non-admin roles
         return true;
     }
@@ -54,4 +52,11 @@ public class BasicAccessControl implements AccessControlInterface {
         VaadinSession.getCurrent().getSession().invalidate();
         UI.getCurrent().navigate("");
     }
+
+    //La única misión de este método es iniciar la conexión hacia la BD, de esta forma mejoramos la velocidad en el proceso de logeo
+    @Override
+    public boolean initFast() {
+        return (authService.authenticate("pepe", "123456"));
+    }
+
 }
