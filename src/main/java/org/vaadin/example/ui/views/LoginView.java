@@ -56,7 +56,7 @@ public class LoginView extends VerticalLayout {
         // To restore it, call component.setEnabled(true)
         // try {
         Button restoreLogin = new Button("Crear nueva cuenta",
-                // event -> crearAcceso());
+                //event -> crearAcceso());
                 event -> Notification.show("Para acceder como administrador utilice admin / admin"));
         restoreLogin.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
 
@@ -146,8 +146,9 @@ public class LoginView extends VerticalLayout {
         Registros registro = new Registros();
         registro = registroService.leerRegistro(5); //para user
 
-        Accesos acceso = new Accesos("dos", "2222", rol, registro);
+        Accesos acceso = new Accesos("user", "1234567", rol, registro);
         AuthService authService = new AuthService();
+        Notification.show("Cuenta creada..");
         authService.grabarAcceso(acceso);
     }
 
