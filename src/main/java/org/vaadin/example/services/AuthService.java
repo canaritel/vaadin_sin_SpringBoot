@@ -1,5 +1,6 @@
 package org.vaadin.example.services;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.vaadin.example.entities.Accesos;
 import org.vaadin.example.entities.Roles;
 import org.vaadin.example.repositories.AccesosJpaRepository;
@@ -40,8 +41,7 @@ public class AuthService {
 
     //Creamos un nuevo método para comprobar la clave
     private boolean checkPassword(String password, String passwordSalt, String passwordHash) {
-        //return DigestUtils.sha1Hex(password + passwordSalt).equals(passwordHash);
-        return password.equals(passwordHash);
+        return DigestUtils.sha1Hex(password + passwordSalt).equals(passwordHash);
     }
 
 }

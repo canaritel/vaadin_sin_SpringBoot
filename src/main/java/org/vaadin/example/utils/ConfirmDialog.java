@@ -9,9 +9,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ConfirmDialog extends Dialog {
-    
-    //Para saber como usarlo mirar método AdminView de Bookstore-example
 
+    //Para saber como usarlo mirar método AdminView de Bookstore-example
     public ConfirmDialog(String caption, String text, String confirmButtonText,
             Runnable confirmListener) {
 
@@ -30,10 +29,11 @@ public class ConfirmDialog extends Dialog {
             confirmListener.run();
             close();
         });
-        confirm.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirm.addThemeVariants(ButtonVariant.LUMO_ERROR);
         buttons.add(confirm);
 
         final Button cancel = new Button("Cancelar", e -> close());
+        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         buttons.add(cancel);
 
     }

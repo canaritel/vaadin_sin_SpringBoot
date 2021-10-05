@@ -4,6 +4,7 @@ import org.vaadin.example.interfaces.AccessControlInterface;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinSession;
 import org.vaadin.example.services.AuthService;
+import static org.vaadin.example.services.AuthService.ROL;
 
 /**
  * Default mock implementation of {@link AccessControlInterface}. This implementation accepts any string as a user if
@@ -25,6 +26,7 @@ public class BasicAccessControl implements AccessControlInterface {
         } else {
             return false;
         }
+
     }
 
     @Override
@@ -32,19 +34,14 @@ public class BasicAccessControl implements AccessControlInterface {
         return !CurrentUser.get().isEmpty();
     }
 
+    //Este método devuelve true si el ROL del usuario que accede es de tipo admin
     @Override
-    public boolean isUserInRole(String role) {
-        if ("ADMIN".equals(role)) {
-            // Only the "admin" user is in the "admin" role
-            return getPrincipalName().equals("admin");
+    public boolean isUserInRole() {
+        if ("ADMIN".equals(ROL)) {
+            return true;
         }
         // All users are in all non-admin roles
-        return true;
-    }
-
-    @Override
-    public String getPrincipalName() {
-        return CurrentUser.get();
+        return false;
     }
 
     @Override
@@ -57,6 +54,7 @@ public class BasicAccessControl implements AccessControlInterface {
     @Override
     public boolean initFast() {
         return (authService.authenticate("pepe", "123456"));
+
     }
 
 }

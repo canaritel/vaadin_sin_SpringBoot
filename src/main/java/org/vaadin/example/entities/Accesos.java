@@ -86,24 +86,23 @@ public class Accesos implements Serializable {
     }
 
     /*
-    public Accesos(Integer idAcceso, String username, String password, boolean activo, Roles rol, Registros registro) {
-        this.idAcceso = idAcceso;
+    public Accesos(String username, String password, Roles rol, Registros registro) throws NoSuchAlgorithmException, InvalidKeySpecException {
         this.username = username;
-        this.passwordSalt = RandomStringUtils.random(32);
-        this.passwordHash = DigestUtils.sha1Hex(password + passwordSalt);
-        this.activationCode = RandomStringUtils.randomAlphanumeric(32);
-        this.activo = activo;
         this.rol = rol;
         this.registro = registro;
+        this.passwordSalt = RandomStringUtils.random(32);
+        this.passwordHash = generateStrongPasswordHash(password);
+        this.activationCode = RandomStringUtils.randomAlphanumeric(32);
     }
      */
+
     //Creamos un nuevo constructor específico para el acceso
     public Accesos(String username, String password, Roles rol, Registros registro) {
         this.username = username;
         this.rol = rol;
         this.registro = registro;
-        this.passwordSalt = password; // RandomStringUtils.random(32);
-        this.passwordHash = password; // DigestUtils.sha1Hex(password + passwordSalt);
+        this.passwordSalt = RandomStringUtils.randomAlphanumeric(32);
+        this.passwordHash = DigestUtils.sha1Hex(password + passwordSalt);
         this.activationCode = RandomStringUtils.randomAlphanumeric(32);
     }
 

@@ -144,9 +144,8 @@ public class MainLayout extends AppLayout implements RouterLayout {
 
     private void registerAdminViewIfApplicable(AccessControlInterface accessControl) {
         // register the admin view dynamically only for any admin user logged in
-        if (accessControl.isUserInRole(AccessControlInterface.ADMIN_ROLE_NAME)
-                && !RouteConfiguration.forSessionScope()
-                        .isRouteRegistered(EstadisticaView.class)) {
+        if (accessControl.isUserInRole() && !RouteConfiguration.forSessionScope()
+                .isRouteRegistered(EstadisticaView.class)) {
             RouteConfiguration.forSessionScope().setRoute(EstadisticaView.VIEW_NAME,
                     EstadisticaView.class, MainLayout.class);
             // as logout will purge the session route registry, no need to
@@ -172,7 +171,7 @@ public class MainLayout extends AppLayout implements RouterLayout {
         // add the admin view menu item if user has admin role
         final AccessControlInterface accessControl = AccessControlFactory.getInstance()
                 .createAccessControl();
-        if (accessControl.isUserInRole(AccessControlInterface.ADMIN_ROLE_NAME)) {
+        if (accessControl.isUserInRole()) {
             // Create extra navigation target for admins
             registerAdminViewIfApplicable(accessControl);
             // The link can only be created now, because the RouterLink checks

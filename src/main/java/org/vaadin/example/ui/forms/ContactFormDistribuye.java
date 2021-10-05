@@ -18,6 +18,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 import java.util.List;
 import org.vaadin.example.entities.Distribuye;
+import org.vaadin.example.utils.ConfirmDialog;
 
 public class ContactFormDistribuye extends FormLayout {
 
@@ -49,7 +50,6 @@ public class ContactFormDistribuye extends FormLayout {
         //binder.bind(textDireccion, Distribuye::getDireccion, Distribuye::setDireccion);
         //binder.bind(textCiudad, Distribuye::getCiudad, Distribuye::setCiudad);
         //binder.bind(comboBox, Distribuye::getPais, Distribuye::setPais);
-        
         //IMPORTANTE activar asRequired para evitar errores o warning en la ejecución
         binder.forField(textNombre).asRequired()
                 .withValidator(name -> name.length() >= 5, "El nombre debe tener al menos 5 carácteres")
@@ -120,9 +120,16 @@ public class ContactFormDistribuye extends FormLayout {
 
     private void validateAndDelete() {
         //no es necesario validar los campos para Eliminar
-        //if (binder.isValid()) {
-        fireEvent(new DeleteEvent(this, binder.getBean()));
-        // } 
+        //if (!binder.equals(null)) {
+        // Activamos una ventana de confirmación al eliminar
+        ConfirmDialog dialog = new ConfirmDialog(
+                "Por favor confirme",
+                "¿Está seguro de eliminar este registro?.",
+                "Eliminar", () -> {
+                    fireEvent(new DeleteEvent(this, binder.getBean()));
+                });
+
+        dialog.open();
     }
 
     public void EncenderCampo(boolean valor) {

@@ -18,6 +18,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 import org.vaadin.example.entities.Usuario;
+import org.vaadin.example.utils.ConfirmDialog;
 // importamos una nueva función para comprobaciones numéricas en campos de texto
 import org.vaadin.textfieldformatter.phone.PhoneI18nFieldFormatter;
 
@@ -124,8 +125,15 @@ public class ContactFormUser extends FormLayout {
     private void validateAndDelete() {
         //no es necesario validar los campos para Eliminar
         //if (!binder.equals(null)) {
-        fireEvent(new DeleteEvent(this, binder.getBean()));
-        // }
+        // Activamos una ventana de confirmación al eliminar
+        ConfirmDialog dialog = new ConfirmDialog(
+                "Por favor confirme",
+                "¿Está seguro de eliminar este registro?.",
+                "Eliminar", () -> {
+                    fireEvent(new DeleteEvent(this, binder.getBean()));
+                });
+
+        dialog.open();
     }
 
     // Eventos declarados en la misma clase

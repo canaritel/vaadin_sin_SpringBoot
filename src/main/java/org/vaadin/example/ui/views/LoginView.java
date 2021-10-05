@@ -16,12 +16,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.vaadin.example.entities.Accesos;
 import org.vaadin.example.entities.Registros;
 import org.vaadin.example.entities.Roles;
 import org.vaadin.example.services.RegistroService;
 import org.vaadin.example.services.RolesService;
 import org.vaadin.example.ui.authentication.AccessControlFactory;
 import org.vaadin.example.interfaces.AccessControlInterface;
+import org.vaadin.example.services.AuthService;
 
 //@Route(value = "login", layout = MainLayout.class)
 @Route(value = "login") //no carga la clase MainLayout, perfecto para el Login
@@ -52,8 +54,9 @@ public class LoginView extends VerticalLayout {
         //Nuevos botones
         // The login button is disabled when clicked to prevent multiple submissions.
         // To restore it, call component.setEnabled(true)
+        // try {
         Button restoreLogin = new Button("Crear nueva cuenta",
-                //  event -> crearAcceso());
+                // event -> crearAcceso());
                 event -> Notification.show("Para acceder como administrador utilice admin / admin"));
         restoreLogin.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_CONTRAST);
 
@@ -130,27 +133,27 @@ public class LoginView extends VerticalLayout {
             getUI().get().navigate("");
         } else {
             event.getSource().setError(true);
+            Notification.show("errrorrrrrr");
         }
     }
 
     private void crearAcceso() {
         RolesService rolService = new RolesService();
         Roles rol = new Roles();
-        rol = rolService.leerRoles(2); //para admin
+        rol = rolService.leerRoles(1); //para user
 
         RegistroService registroService = new RegistroService();
         Registros registro = new Registros();
-        registro = registroService.leerRegistro(6); //para admin
+        registro = registroService.leerRegistro(5); //para user
 
-        // Accesos  acceso = new Accesos("admin", "123456789", rol, registro);
-        // AuthService authService = new AuthService();
-        // authService.grabarAcceso(acceso);
+        Accesos acceso = new Accesos("dos", "2222", rol, registro);
+        AuthService authService = new AuthService();
+        authService.grabarAcceso(acceso);
     }
 
     //Método para agilizar el arranque e inicio de la base de datos hosteada
     private void arranqueRapido() {
         if (accessControl.initFast()) {
-
         }
     }
 

@@ -43,6 +43,7 @@ import org.vaadin.example.entities.Juego;
 import org.vaadin.example.entities.Usuario;
 import org.vaadin.example.services.DistribuyeService;
 import org.vaadin.example.services.UsuarioService;
+import org.vaadin.example.utils.ConfirmDialog;
 import org.vaadin.example.utils.ConvertToImage;
 
 public class ContactFormJuego extends FormLayout {
@@ -181,10 +182,16 @@ public class ContactFormJuego extends FormLayout {
 
     private void validateAndDelete() {
         //no es necesario validar los campos para Eliminar
-        //if (binder.isValid()) {
-        crearFileImagen();
-        fireEvent(new DeleteEvent(this, binder.getBean()));
-        // } 
+        //if (!binder.equals(null)) {
+        // Activamos una ventana de confirmación al eliminar
+        ConfirmDialog dialog = new ConfirmDialog(
+                "Por favor confirme",
+                "¿Está seguro de eliminar este registro?.",
+                "Eliminar", () -> {
+                    fireEvent(new DeleteEvent(this, binder.getBean()));
+                });
+
+        dialog.open();
     }
 
     private void crearComboSistemaOperativo() {
@@ -290,8 +297,8 @@ public class ContactFormJuego extends FormLayout {
 
     /**
      * ****************************************************************************
-     * Vaadin viene con un sistema de manejo de eventos para componentes. Usado para escuchar eventos de cambio de valor desde la vista
-     * principal. Podremos de esta forma llamar a los métodos desde el método superior DistribuidorView
+     * Vaadin viene con un sistema de manejo de eventos para componentes. Usado para escuchar eventos de cambio de valor
+     * desde la vista principal. Podremos de esta forma llamar a los métodos desde el método superior DistribuidorView
      * *****************************************************************************
      */
 //ContactFormEventes una superclase común para todos los eventos. Contiene el contact que fue editado o eliminado.

@@ -7,18 +7,14 @@ import java.io.Serializable;
  */
 public interface AccessControlInterface extends Serializable {
 
-    String ADMIN_ROLE_NAME = "ADMIN";
-
     boolean signIn(String username, String password);
 
     boolean isUserSignedIn();
 
-    boolean isUserInRole(String role);
-
-    String getPrincipalName();
+    boolean isUserInRole();
 
     void signOut();
-    
+
     boolean initFast();
 
 }
